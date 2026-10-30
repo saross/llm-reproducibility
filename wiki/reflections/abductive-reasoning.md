@@ -1783,3 +1783,48 @@ Before a blinded run, render the agent's full prompt and scan it against
 the blinding list: every hit outside the blinding instruction is a leak to
 remove or a pointer to fix. Where a file the task needs also leaks, change
 the file rather than blinding it.
+
+## 2026-10-30 — The gate failed the attempt it had admitted
+
+**Session:** 789afcf9-4b9d-470c-b39e-162c7557b8a4
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Designing the review-only mode, I planned a gate step that re-runs
+`check-attempt` before the fresh review. Before building on it, I re-gated a
+scratch copy of attempt 04, the attempt the study counts at 13/18, admitted
+and adjudicated under gate 1.3.2. The current gate failed it: "input tree
+added adjudicated-result.json after the final run run-05 started".
+
+### Probe
+
+The gate's input-tree check compares the attempt with the final run's sealed
+pre-inventory, exempting the lane's own records, listed in
+`DOCUMENT_NAMES`. Gate 1.3.2 introduced `adjudicated-result.json` but never
+added it there. Nothing had noticed, because adjudication is the last step
+and nothing re-gates after it. With the name added, the copy passed. Its
+issues kept their ids and fingerprints, less the one obligation gate 1.3.2
+had retired, and Astra later confirmed that the 22-file input inventory
+equals run-05's sealed pre-inventory.
+
+### Belief revision
+
+I had taken "admitted and adjudicated" to mean "consistent under the
+current gate", but admission reads the stored gate report and never
+re-runs the gate. A record added after the last gate run is invisible to
+every check that ran before it existed. The review-only mode, the first
+step to re-gate an adjudicated attempt, would have failed on its first
+real use, at the API gate's cost.
+
+### What would change this belief
+
+A gate that re-runs as part of admission, or a test that re-gates a fixture
+attempt after adjudicating it, would make this class visible without a
+probe. The re-gate test added here does the latter for attempt 04 only.
+
+### Implications for practice
+
+Before designing a step that re-runs an earlier stage, re-run that stage on
+the real records first. A pipeline's late records are the ones its early
+checks have never seen.

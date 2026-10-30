@@ -1736,3 +1736,75 @@ exclusions; he approved the Q5 and R2 condition lists on 10-19.
 by hand between rounds. Max plan, so costs are API-equivalent. Plan
 workflow v1.2 changed after Astra's approval; continuity notes to tell her
 with the criterion 4 material.
+
+## Session: 2026-10-30 — Blinding scan 1.1 (PR #14) and the review-only mode (PR #15), reviewed in seven relayed rounds and merged
+
+*Session 789afcf9-4b9d-470c-b39e-162c7557b8a4 (Opus 5.5), zbook; primary
+throughout.*
+
+**Setup:** synced (0 ahead, 0 behind); Shawn installed `docker-buildx` on
+zbook, unblocking the pre-commit suite.
+
+**PR #14, blinding scan 1.1 (lane v1.7).** It closes the planner pilot's F4:
+bare-name Bash reads went unseen.
+
+- **Shawn's rulings:**
+  - a command match blocks admission only when its word is evidently a
+    path, and is otherwise a warning;
+  - names listed bare in output are recorded, with no ruling;
+  - later, roles replace the file-extension leg (after Astra's first
+    review).
+- **Astra's four rounds**, each closed:
+  - at `7876470`: the exemption, subshells, clustered options, and
+    suffixes, closed in `1b93991` and `31892ad`;
+  - at `b23ef4f`: conditional state, awk assignments, and unresolved
+    expansions, closed in `774bddf` and `b2c9586`;
+  - at `b2c9586`: R1 in two modes, closed in `f5dcb7b`, a walk over every
+    possible shell state;
+  - at `f5dcb7b`: pipelines, closed in `d7ecf0d`.
+- **Labels:** `fac4805` labels warnings "possibly a blinded read", after a
+  side agent's note.
+- **Approved** at `d7ecf0d`: 14 focused tests, 1,152 parity cases, 25 Bash
+  fixtures, and all 160 state cases.
+
+**PR #15, the review-only mode (lane v1.8, run audit 1.2,
+`reproduction-review.workflow.js` v1.0).**
+
+- **Built** in `c601fe3` and `d02e75b`.
+- **Shawn's choices:** a labelled copy of attempt 04 for the pilot, and a
+  clean staged copy for the reviewer.
+- **Fixed:** a gate 1.3.2 defect, `DOCUMENT_NAMES` lacking
+  `adjudicated-result.json`.
+- **Astra's rounds:**
+  - at `d02e75b`: F1 to F4, closed in `a3ac8dc` and `ac0d99c`;
+  - a side agent's note: re-audits keep staging verification, `097233c`;
+  - at `ac0d99c`: the identity key, closed in `4e490b3`;
+  - approved at `4e490b3`.
+
+**Merge:**
+
+- PR #14's branch was merged into #15's (`ec0bb3d`): the header and
+  manifest reconciled, a combined test added, and both approved harnesses
+  passing on the combined code.
+- With Shawn's approval, PR #14 merged as `1b91eb5` and PR #15 as
+  `37a3fe7`. GitHub first reported #15 as conflicting, though git merged it
+  cleanly; merging `main` in (`6cf63bd`) fixed that.
+- `main`: 806 pass, 7 skip; attempt 04 still at 13/18.
+
+**Records:**
+
+- PR #14 comment, posted with Shawn's approval (issuecomment-6514208269).
+- The review exchange is committed in
+  `wiki/planning/reviews/2026-10-30-astra-pr14-pr15/` (`45d3626`): Astra's
+  seven messages, extracted verbatim from the transcript, and Claude's
+  requests and replies.
+- Continuity updated through `386dddd`.
+
+**Contextual assumptions:**
+
+- **Mail:** agent mail was unreachable from zbook, so Shawn relayed every
+  message by hand. The reply drafts sat in the session's scratch folder
+  until committed.
+- **Models:** Fable was not used (rationed); Astra was the only reviewer.
+- **The pilot** is not run: it needs amd-tower (attempt 04's image) and a
+  fresh session, because a workflow script was added.

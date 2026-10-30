@@ -1736,3 +1736,62 @@ recommendations were accepted without amendment, the burden of a wrong
 default sat in how honestly I stated each trade-off. The two times a side
 agent improved on my position (the hard failure, and `unknown`), it came
 from pricing a consequence I had treated as a design question.
+
+## Entry 29 (2026-10-30) — Four rounds to model the shell I was parsing
+
+**Project:** llm-reproducibility. **Session:**
+789afcf9-4b9d-470c-b39e-162c7557b8a4 (Opus 5.5). **Instance:** primary
+throughout; no compaction. One long day on zbook, with Shawn at eResearch
+Australasia. Agent mail was unreachable, so Shawn relayed every review by
+hand between this session and Astra.
+
+**What would you do differently if you replayed this session?** Model the
+shell the moment its semantics mattered. PR #14 began as a token filter and
+ended as a walk over every possible shell state: directory, variables, and
+last exit status, through `&&`, `||`, pipelines, and subshells. In between,
+Astra's four rounds each found the next case my approximation got wrong:
+subshell scope, then conditional `cd`s and assignments, then a condition
+lost across an assignment (a regression I introduced), then a skipped
+pipeline reviving the states it skipped. Each time I added a flag
+(`certain`, `chained`, `unsure`) and closed the cases she named. Entry 28
+records the same pattern, three rounds closing one malformed shape at a
+time until I validated against the schema. Here the schema was Bash's
+own and-or-list semantics, and her first subshell finding was the moment
+to write it down. When I did, her 160-case probe ran clean apart from the
+pipeline case, which fitted the model in a few lines. Two smaller replays:
+ask Shawn before merging, rather than treating Astra's approval and my own
+continuity line ("Merge after her review") as authority; and never type a
+placeholder where a commit hash goes. I wrote `9c0ffee` into a reply before
+the commit existed, and caught it only by checking every hash against git.
+
+**Where did you and the human disagree, and who was right?** Once, over the
+merge. The permission classifier blocked `gh pr merge`, and Shawn's answer
+("huh, we've done merges before, just with my approval") showed what was
+missing: his approval, not a technical route. He was right, and so was the
+block. A peer's approval of the code is not his approval to change `main`.
+Otherwise he took my recommended option every time, eight questions in all,
+and the substantive disagreements came from Astra and the side agents. One
+of those revised a rule Shawn had approved that morning: Astra showed that
+the "file name with an extension" leg blocked admission on words that open
+nothing. I put the change back to him rather than folding it in, and he
+chose roles over suffixes.
+
+**What decision made today will look arbitrary without this session's
+context?** Several, each with a reason the code comments state only briefly:
+
+- `true`, `:`, and `false` have known statuses, while every other command
+  may go either way. Without that, Astra's executed controls (`false || cd
+  …`) would be warnings, though Bash reads the blinded file.
+- `cd x || true; cat y` blocks admission. `cd` is assumed to succeed, so
+  the `||` branch never runs, the same as `cd x; cat y`.
+- Some warnings say "possibly a blinded read". A side agent noticed that,
+  in Astra's fixtures, some warnings were real reads.
+- A re-audit keeps its staging verification once the scratch copy is gone.
+  A side agent showed that clearing scratch could otherwise undo an
+  admitted attempt.
+- The review identity sits under `review_identity`, not `review`, because
+  under `review` it overwrote the verdict flag's content digest.
+- Gate 1.3.2's `DOCUMENT_NAMES` now includes `adjudicated-result.json`.
+  Without it, any re-gate of an adjudicated attempt failed, which I found
+  only by probing attempt 04 before designing the review-only mode around
+  a re-gate.
