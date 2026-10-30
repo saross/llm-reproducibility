@@ -1,7 +1,20 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.6
+**Version:** 1.7
+
+v1.7 (2026-10-30) is blinding scan 1.1, an operational follow-up to the
+gate 1.3.2 planner pilot (results F4): the run audit's scan of Bash calls
+judged only path-like tokens, so a blinded file read by its bare name
+(``cd …/reproduction-system && cat lodged-rules.yaml``) went unseen, and a
+blinded name in a listing raised nothing. Every token is now judged, also
+under the directory a ``cd`` earlier in the command moved to, and the
+operands of ``ls``, ``cat``, ``cd``, and the like are judged as
+directories too. Shawn's tiering (2026-10-30): a match in a command is a
+blinded access only when its word is evidently a path, and otherwise a
+warning to rule on; a name listed bare in output is recorded, with no
+ruling. Nothing scan 1.0 caught is judged more leniently, and the run
+audit's format is unchanged (``RUN_AUDIT_VERSION`` 1.1).
 
 v1.6 (2026-10-18) is gate 1.3.2, criterion 1 (the design's opening note):
 every issue states its scope (``targets`` or ``paper``), and a target
@@ -210,7 +223,7 @@ import sys
 import tempfile
 import textwrap
 from collections import Counter
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from datetime import date as date_type, datetime, time as time_type, timedelta, timezone
 from pathlib import Path
 from types import ModuleType
@@ -367,9 +380,10 @@ ATTEMPT_DIR_RE = re.compile(r"^\s*Attempt directory: (\S+)$", re.MULTILINE)
 RELAY_FRAME = "[Workflow harness — user request]"
 COMPUTED_FRAME = "[Workflow harness — computed task]"
 NEUTRAL_LAUNCH_RE = re.compile(r"\s*Run the approved stage\.?\s*", re.IGNORECASE)
-# Tokens in a Bash command that could name a local file: split on shell
-# punctuation, then keep path-like tokens that are not URLs (a URL's path
-# segment — e.g. a Wikipedia /wiki/ link — is not a local access).
+# Tokens in shell text that could name a local file: split on shell
+# punctuation; the blinding scan then drops URLs (a URL's path segment —
+# e.g. a Wikipedia /wiki/ link — is not a local access) and judges the rest,
+# bare names included (name_forms).
 SHELL_SPLIT_RE = re.compile(r"[\s'\"=;|&<>()`,]+")
 DATE_SUFFIX_RE = re.compile(r"-\d{8}$")
 # The harness spills an over-long tool result to a file and says so in the
@@ -8204,9 +8218,224 @@ def own_spill_files(lines: list[str]) -> set[str]:
 
 
 def path_tokens(text: str) -> list[str]:
-    """Path-like tokens in shell text (URLs excluded)."""
+    """Path-like tokens in shell text (URLs excluded).
+
+    The launch-message scan's filter. Bash commands and their output are
+    judged by ``shell_names`` and ``name_forms``, which keep bare names.
+    """
     return [t for t in SHELL_SPLIT_RE.split(text)
             if t and "://" not in t and ("/" in t or t.endswith((".json", ".md", ".csv")))]
+
+
+# Version 1.0 judged only path_tokens, so a file named bare after a cd went
+# unjudged and a bare name in a listing raised nothing (the gate 1.3.2
+# planner pilot, results F4). Version 1.1 judges every token, tiered by
+# Shawn (2026-10-30): a match in a command is a blinded access only when
+# the word is evidently a path, and otherwise a warning to rule; a name
+# listed bare in output is recorded, with no ruling. Nothing 1.0 caught is
+# judged more leniently. The audit record carries this version.
+BLINDING_SCAN_VERSION = "1.1"
+# A bare word with a file extension names a file (lodged-rules.yaml, S1.xlsx).
+FILE_NAME_RE = re.compile(r"[^/]*\.[A-Za-z0-9]{1,10}")
+
+
+def name_forms(token: str, directories: Iterable[str] = ()) -> list[str]:
+    """The forms of one shell token that the blinding scan judges.
+
+    Every token is judged as written, bare names included. A token holding
+    a ``/`` is also judged normalised and with a trailing slash, so
+    ``ls ~/agent-mail`` meets the blinded ``agent-mail/`` and ``a/./b``
+    meets ``a/b``. A relative token is also judged under each directory
+    given, normalised, so ``attempt-04`` under ``out/x/reproduction`` meets
+    ``reproduction/attempt-04``. A bare name placed under a directory gets
+    no trailing slash: in ``cd outputs && grep -r validation .`` the word
+    is a pattern, not the directory ``outputs/validation/``.
+
+    Args:
+        token: One token of shell text or output, split by ``SHELL_SPLIT_RE``.
+        directories: Directories the token may be relative to.
+
+    Returns:
+        The forms, empty for an empty token or a URL.
+    """
+    if not token or "://" in token:
+        return []
+    forms = [token]
+    if "/" in token:
+        normal = posixpath.normpath(token)
+        forms += [normal, normal + "/"]
+    if not token.startswith(("/", "~", "-", "$")):
+        for directory in directories:
+            placed = posixpath.normpath(directory.rstrip("/") + "/" + token)
+            forms += [placed, placed + "/"] if "/" in token else [placed]
+    return forms
+
+
+# Commands whose every operand is a path, so that ``ls wiki`` is judged as
+# the directory ``wiki/``. Not grep, sed, or awk, whose first operand is a
+# pattern or a program. For find, only the starting points before its
+# expression (``-name wiki`` is a pattern, ``-exec`` a command).
+PATH_OPERAND_COMMANDS = frozenset({"cd", "pushd", "ls", "tree", "find", "du", "stat", "file",
+                                   "cat", "head", "tail", "less", "more", "wc"})
+# Their options that take the next word as a count, format, or pattern, so
+# that word is no operand: the pattern in ``ls -I wiki`` hides wiki.
+VALUE_OPTIONS = {"head": {"-n", "-c"}, "tail": {"-n", "-c"},
+                 "ls": {"-I", "--ignore", "--hide", "-w", "--width", "-T", "--tabsize"},
+                 "tree": {"-L", "-I", "-P", "-o", "-H", "-T", "--filelimit", "--timefmt"},
+                 "du": {"-d", "--max-depth", "-B", "--block-size", "-t", "--threshold",
+                        "--exclude", "-X", "--exclude-from"},
+                 "stat": {"-c", "--format", "--printf"}, "file": {"-m", "--magic-file"}}
+
+
+def path_operands(name: str, given: list[str]) -> list[str]:
+    """The words after a ``PATH_OPERAND_COMMANDS`` command that are paths:
+    not its options or their values, and for find only the starting points
+    (past -H, -L, -P, -D, and -O, up to the first word of its expression)."""
+    if name == "find":
+        words = list(given)
+        while words and re.fullmatch(r"-[HLP]|-D\S*|-O\d*", words[0]):
+            words = words[2:] if words[0] == "-D" else words[1:]
+        points: list[str] = []
+        for word in words:
+            if word.startswith(("-", "(", "!", ",", ")")) and word != "-":
+                break
+            points.append(word)
+        return points
+    takes_value = VALUE_OPTIONS.get(name, set())
+    operands: list[str] = []
+    skip = False
+    for word in given:
+        if skip:
+            skip = False
+        elif word == "-" or not word.startswith("-"):
+            operands.append(word)
+        else:
+            skip = word in takes_value
+    return operands
+
+
+def unbracket(segment: str) -> str:
+    """A segment without the unbalanced brackets of a subshell or group
+    around it, as in ``(cd x && ls y)``; ``$(pwd)`` and ``${D}`` are
+    balanced and stay."""
+    text = segment.strip()
+    for opener, closer in (("(", ")"), ("{", "}")):
+        while text.startswith(opener) and text.count(opener) > text.count(closer):
+            text = text[1:].lstrip()
+        while text.endswith(closer) and text.count(closer) > text.count(opener):
+            text = text[:-1].rstrip()
+    return text
+
+
+def shell_places(command: str) -> list[dict]:
+    """Each segment of a shell command, its variables expanded, with the
+    directory an earlier ``cd`` in the same command moved it to.
+
+    The walk is the write-provenance scan's (``scan_shell``): assignments
+    are followed, so ``D=out/x; cd $D`` is placed; heredoc bodies are left
+    out; and the directory starts unknown at each call, since a subagent's
+    ``cd`` does not carry to its next call. A ``cd`` from that unknown
+    start leaves a relative directory, under which a blinded substring can
+    still be met. A ``cd`` inside ``( )`` is kept past the subshell, which
+    can only add names to judge.
+
+    Returns:
+        ``[{"cwd", "segment", "operands"}]``: the directory in effect for
+        the segment (None before any ``cd``), the segment, and, when its
+        command is in ``PATH_OPERAND_COMMANDS``, its operands.
+    """
+    variables: dict[str, str] = {}
+    cwd: str | None = None
+    places: list[dict] = []
+    text, _ = split_heredocs(command)
+    for _, raw in shell_segments(mask_comments(text)):
+        segment = expand_variables(unbracket(raw), variables)
+        if not segment:
+            continue
+        words = shell_words(segment)
+        k, name = command_word(words)
+        assigned = words[:k] if k == len(words) else (
+            words[k + 1:] if name == "export" else [])
+        for word in assigned:
+            found = ASSIGNMENT_RE.fullmatch(word)
+            if found and "$(" not in found.group(2) and "`" not in found.group(2):
+                variables[found.group(1)] = found.group(2)
+        operands = (path_operands(name, words[k + 1:])
+                    if name in PATH_OPERAND_COMMANDS else [])
+        places.append({"cwd": cwd, "segment": segment, "operands": operands})
+        if name in ("cd", "pushd"):
+            target = operands[0] if operands else "~"
+            cwd = None if target == "-" else posixpath.normpath(
+                target if cwd is None or target.startswith(("/", "~")) else cwd + "/" + target)
+    return places
+
+
+def shell_names(command: str) -> list[tuple[str, bool]]:
+    """Every form of every name a Bash command could open, for the blinding
+    scan, each with whether its word is evidently a path.
+
+    Judged: each token of the command as written (heredoc bodies and
+    comments included, as in scan 1.0), and each token of each segment,
+    variables expanded, under the directory an earlier ``cd`` moved it to.
+    An operand of a command in ``PATH_OPERAND_COMMANDS`` is also judged as
+    a directory, with a trailing slash, so ``ls wiki`` meets ``wiki/``.
+
+    A word is evidently a path when it holds a ``/``, is such an operand,
+    or is a file name with an extension (``FILE_NAME_RE``); every word scan
+    1.0 judged is one. Any other word may be a search pattern, as
+    ``attempt-04`` is in ``cd …/reproduction && grep -r attempt-04 .``, so
+    its match is a warning to rule, not a blinded access (Shawn,
+    2026-10-30).
+
+    A read by bare name is judged, so ``cd …/reproduction-system && cat
+    lodged-rules.yaml`` is caught, as ``cat reproduction-system/lodged-rules.yaml``
+    always was. Not judged: a recursive read of a blinded directory's
+    parent (``grep -r x outputs/``), which only its output can show, and a
+    path built by command substitution.
+
+    Returns:
+        ``[(form, evident)]`` in the order judged, each form once; a form
+        reached by an evident word and another word is evident.
+    """
+    names: dict[str, bool] = {}
+
+    def judge(token: str, around: list[str], operand: bool = False) -> None:
+        evident = operand or "/" in token or bool(FILE_NAME_RE.fullmatch(token))
+        forms = name_forms(token, around)
+        if operand:
+            forms += [form.rstrip("/") + "/" for form in forms]
+        for form in forms:
+            names[form] = names.get(form, False) or evident
+
+    for token in SHELL_SPLIT_RE.split(command):
+        judge(token, [])
+    for place in shell_places(command):
+        around = [place["cwd"]] if place["cwd"] else []
+        for token in SHELL_SPLIT_RE.split(place["segment"]):
+            judge(token, around)
+        for operand in place["operands"]:
+            judge(operand, around, operand=True)
+    return list(names.items())
+
+
+def shell_directories(command: str) -> list[str]:
+    """Directories whose entries a command's output may name bare: each
+    directory a ``cd`` put it in, and each path or path operand it names
+    (placed under the ``cd`` too), so the ``attempt-04`` that
+    ``ls out/x/reproduction`` prints is judged as
+    ``out/x/reproduction/attempt-04``."""
+    found: list[str] = []
+    for place in shell_places(command):
+        cwd = place["cwd"]
+        if cwd:
+            found.append(cwd)
+        paths = [t for t in SHELL_SPLIT_RE.split(place["segment"])
+                 if "/" in t and "://" not in t]
+        for token in paths + place["operands"]:
+            found.append(token)
+            if cwd and not token.startswith(("/", "~", "-", "$")):
+                found.append(posixpath.normpath(cwd + "/" + token))
+    return list(dict.fromkeys(found))
 
 
 class Blinding:
@@ -8269,7 +8498,7 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
             record["receipts"]["valid"] = False
             record["receipts"]["problems"].append(
                 f"effort {provenance.group(3)!r} != run config {config['effort']!r}")
-    contaminating, warnings = [], []
+    contaminating, warnings, noted = [], [], []
     own_spills = own_spill_files(lines)
     for access in reconcile.file_accesses(lines, gate):
         targets = [access["target"]] if access["tool"] == "Read" else \
@@ -8283,26 +8512,50 @@ def audit_agent(lines: list[str], agent_type: str, config: dict, manifest: dict,
                 bucket.append({"tool": access["tool"], "path": target, "rule": rule})
                 break
     for call in bash_calls(lines):
-        command_hits = [(t, blinding.hit(t)) for t in path_tokens(call["command"])]
-        command_hits = [(t, r) for t, r in command_hits if r]
-        if command_hits:
+        command = call["command"][:300]
+        command_hits = [(form, evident, rule) for form, evident in shell_names(call["command"])
+                        for rule in [blinding.hit(form)] if rule]
+        evident_hits = [hit for hit in command_hits if hit[1]]
+        if evident_hits:
             bucket = warnings if call["errored"] else contaminating
-            bucket.append({"tool": "Bash", "path": command_hits[0][0],
-                           "rule": command_hits[0][1], "command": call["command"][:300]})
+            bucket.append({"tool": "Bash", "path": evident_hits[0][0],
+                           "rule": evident_hits[0][2], "command": command})
             continue
-        output_hits = [t for t in path_tokens(call["output"])
-                       if blinding.hit(t) and display_path(t) not in own_spills]
-        if output_hits:
-            warnings.append({"tool": "Bash", "path": output_hits[0],
+        if command_hits:
+            warnings.append({"tool": "Bash", "path": command_hits[0][0],
+                             "rule": f"{command_hits[0][2]}, named by a word that may be a "
+                                     f"search pattern, not a path (review)",
+                             "command": command})
+        # A listing names entries bare, relative to the directory listed, so
+        # each output token is also judged under the command's directories.
+        # A path-like token (scan 1.0's) that matches is a warning, as in 1.0;
+        # a bare name is recorded only (Shawn, 2026-10-30: a name seen in a
+        # listing is not an access). Own spill files are skipped by token.
+        directories = shell_directories(call["command"])
+        listed: dict[bool, list[str]] = {True: [], False: []}
+        for token in dict.fromkeys(SHELL_SPLIT_RE.split(call["output"])):
+            if display_path(token) in own_spills:
+                continue
+            form = next((f for f in name_forms(token, directories) if blinding.hit(f)), None)
+            if form:
+                listed["/" in token or token.endswith((".json", ".md", ".csv"))].append(form)
+        if listed[True]:
+            warnings.append({"tool": "Bash", "path": listed[True][0],
                              "rule": "blinded path named in command output (review)",
-                             "command": call["command"][:300]})
+                             "command": command})
+        if listed[False]:
+            noted.append({"tool": "Bash", "path": listed[False][0],
+                          "rule": "blinded name listed bare in command output (recorded; "
+                                  "no ruling)", "command": command})
     # F3: the relayed launch message reaches the agent ahead of everything it
     # opens, so a blinded path named there is a blinded access.
     for token in path_tokens(launch or ""):
         rule = blinding.hit(token)
         if rule:
             contaminating.append({"tool": "launch-message", "path": token, "rule": rule})
-    record["blinding"] = {"contaminating": contaminating, "warnings": warnings}
+    record["blinding"] = {"scan_version": BLINDING_SCAN_VERSION,
+                          "contaminating": contaminating, "warnings": warnings,
+                          "noted": noted}
     allowed_roots = [m.group(1) for m in (ATTEMPT_DIR_RE.search(prompt),
                                           SCRATCH_RE.search(prompt)) if m]
     record["writes_outside_scope"] = [
@@ -9053,9 +9306,9 @@ def render_audit(report: dict) -> str:
     out = [f"# Run audit — {report['run_id']}", "",
            f"Workflow run `{report['workflow_run']}`, audited {report['audited_at']}. "
            f"**Clean: {report['clean']}**", "",
-           "| Agent | Type | Paper | Receipts | Contaminating | Warnings | Writes out "
-           "of scope | Output tok | Input-side tok | USD | Wall-clock (s) |",
-           "|---|---|---|---|---|---|---|---|---|---|---|"]
+           "| Agent | Type | Paper | Receipts | Contaminating | Warnings | Noted | Writes "
+           "out of scope | Output tok | Input-side tok | USD | Wall-clock (s) |",
+           "|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in report["agents"]:
         receipts = ("valid" if r["receipts"]["valid"] else "INVALID") \
             if r.get("receipts") else "n/a"
@@ -9063,6 +9316,7 @@ def render_audit(report: dict) -> str:
         out.append("| " + " | ".join(md_cell(v) for v in (
             r["agent_id"][:10], r["agent_type"], r["paper"], receipts,
             len(r["blinding"]["contaminating"]), len(r["blinding"]["warnings"]),
+            len(r["blinding"].get("noted") or []),
             len(r["writes_outside_scope"]), usage["output_tokens"],
             usage["input_tokens"] + usage["cache_creation_input_tokens"]
             + usage["cache_read_input_tokens"], r["cost_usd"],
@@ -9076,7 +9330,8 @@ def render_audit(report: dict) -> str:
             f"{b['cost_usd']:.2f}" + (f" (+{b['unpriced_agents']} unpriced)"
                                       if b["unpriced_agents"] else ""),
             round(b["agent_wallclock_seconds"] / 60, 1))) + " |")
-    problems = [r for r in report["agents"] if not r["clean"] or r["blinding"]["warnings"]]
+    problems = [r for r in report["agents"] if not r["clean"] or r["blinding"]["warnings"]
+                or r["blinding"].get("noted")]
     if problems:
         out += ["", "## Findings", ""]
         for r in problems:
@@ -9085,6 +9340,9 @@ def render_audit(report: dict) -> str:
                            f"`{item['path']}` ({item['rule']})")
             for item in r["blinding"]["warnings"]:
                 out.append(f"- {r['agent_id'][:10]} warning {item['tool']} "
+                           f"`{item['path']}` ({item['rule']})")
+            for item in r["blinding"].get("noted") or []:
+                out.append(f"- {r['agent_id'][:10]} noted {item['tool']} "
                            f"`{item['path']}` ({item['rule']})")
             for path in r["writes_outside_scope"]:
                 out.append(f"- **{r['agent_id'][:10]}** write outside scope `{path}`")

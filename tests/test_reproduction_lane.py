@@ -1854,6 +1854,119 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(record["writes_outside_scope"], ["/elsewhere/notes.md"])
         self.assertFalse(record["clean"])
 
+    def bash_audit(self, forbidden: list[str], *calls: tuple[str, str]) -> dict:
+        """The blinding block of an audit of one agent's Bash calls."""
+        config = {"run_id": "t", "effort": "high",
+                  "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
+                  "schemas": {}, "pricing_usd_per_mtok": {},
+                  "blinding": {"forbidden_substrings": forbidden, "cross_paper_slugs": []}}
+        uses = [{"type": "tool_use", "id": f"b{n}", "name": "Bash", "input": {"command": c}}
+                for n, (c, _) in enumerate(calls)]
+        results = [{"type": "tool_result", "tool_use_id": f"b{n}", "content": out}
+                   for n, (_, out) in enumerate(calls)]
+        lines = transcript({"message": {"role": "user", "content": "  Paper: a-2024\n"}},
+                           {"message": {"role": "assistant", "content": uses}},
+                           {"message": {"role": "user", "content": results}})
+        reconcile = load_script("reconcile_run_bare", "reconcile-run.py")
+        record = lane.audit_agent(lines, "general-purpose", config, {"agent_definitions": {}},
+                                  reconcile, reconcile.load_gate_module(), None)
+        self.assertEqual(record["blinding"]["scan_version"], lane.BLINDING_SCAN_VERSION)
+        return record["blinding"]
+
+    def test_a_bare_name_read_after_cd_is_a_blinded_access(self):
+        """The gate 1.3.2 planner pilot's F4: scan 1.0 judged only path-like
+        tokens, so a blinded file read by its bare name gave no hit at all."""
+        blinding = self.bash_audit(
+            ["lodged-rules.yaml", "reproduction/attempt-01"],
+            ("cd /repo/reproduction-system && cat lodged-rules.yaml", "rule text"),
+            ("cd /repo/out/a-2024/reproduction && head attempt-01/log.md", "log text"),
+            ("D=/repo/out/a-2024/reproduction; cd $D/attempt-02 && cat ../attempt-01/x", ""),
+            ("cd /repo/out/a-2024/reproduction/attempt-02 && Rscript run.R", "ok"))
+        self.assertEqual([c["path"] for c in blinding["contaminating"]],
+                         ["lodged-rules.yaml", "/repo/out/a-2024/reproduction/attempt-01/log.md",
+                          "/repo/out/a-2024/reproduction/attempt-01/x"])
+        self.assertEqual(blinding["warnings"], [])
+
+    def test_a_word_that_may_be_a_pattern_is_a_warning_not_an_access(self):
+        """Shawn, 2026-10-30: a match blocks admission only when the word is
+        evidently a path; a search word after a cd is ruled on instead."""
+        blinding = self.bash_audit(
+            ["lodged-rules.yaml", "reproduction/attempt-01"],
+            ("cd /repo/out/a-2024/reproduction && grep -rn attempt-01 attempt-02/", "none"),
+            ("grep -rn lodged-rules.yaml /repo/reproduction-system", "x"),
+            ("cd /repo/out/a-2024/reproduction && ls attempt-01", "log.md"))
+        self.assertEqual([c["path"] for c in blinding["contaminating"]],
+                         ["lodged-rules.yaml", "/repo/out/a-2024/reproduction/attempt-01"])
+        self.assertEqual([w["path"] for w in blinding["warnings"]],
+                         ["/repo/out/a-2024/reproduction/attempt-01"])
+        self.assertIn("search pattern", blinding["warnings"][0]["rule"])
+
+    def test_bare_names_in_a_listing_are_noted_without_a_ruling(self):
+        """Shawn, 2026-10-30, after his 2026-10-21 ruling on the pilot's ls of
+        reproduction-system/: a name seen in a listing is not an access, so it
+        is recorded but raises no issue; an entry is judged under the
+        directory listed. Path-like names in output stay warnings, as in scan
+        1.0, and so do the bare .json, .md, and .csv names it judged."""
+        blinding = self.bash_audit(
+            ["lodged-rules.yaml", "reproduction/attempt-01", "extraction.json"],
+            ("ls reproduction-system/", "README.md\nlodged-rules.yaml\nprompts\n"),
+            ("ls /repo/out/a-2024/reproduction", "attempt-01\nattempt-02\n"),
+            ("cd /repo/out/a-2024/reproduction && ls", "attempt-01\nattempt-02\n"),
+            ("ls /repo/out/a-2024/reproduction/attempt-02", "plan.json\nlog.md\n"),
+            ("grep -rl T05 /repo/out/a-2024", "/repo/out/a-2024/reproduction/attempt-01/x.md\n"),
+            ("ls /repo/out/a-2024", "extraction.json\nreproduction\n"))
+        self.assertEqual(blinding["contaminating"], [])
+        self.assertEqual([w["path"] for w in blinding["warnings"]],
+                         ["/repo/out/a-2024/reproduction/attempt-01/x.md", "extraction.json"])
+        self.assertEqual([n["path"] for n in blinding["noted"]],
+                         ["lodged-rules.yaml", "/repo/out/a-2024/reproduction/attempt-01",
+                          "/repo/out/a-2024/reproduction/attempt-01"])
+        report = {"run_id": "t", "workflow_run": "wf_x", "audited_at": "now", "clean": True,
+                  "per_paper": {}, "agents": [{
+                      "agent_id": "agent-1", "agent_type": "p", "paper": "a-2024",
+                      "receipts": None, "clean": True, "writes_outside_scope": [],
+                      "usage": {"output_tokens": 0, "input_tokens": 0,
+                                "cache_creation_input_tokens": 0,
+                                "cache_read_input_tokens": 0},
+                      "cost_usd": 0.0, "wallclock_seconds": 0.0, "blinding": blinding}]}
+        self.assertIn("noted Bash `lodged-rules.yaml`", lane.render_audit(report))
+
+    def test_shell_names_judge_operands_as_directories_but_not_patterns(self):
+        def names(command: str) -> list[str]:
+            return [form for form, _ in lane.shell_names(command)]
+        self.assertIn("wiki/", names("ls wiki"))
+        self.assertIn("~/agent-mail/", names("(cd ~ && ls agent-mail)"))
+        self.assertIn("~/agent-mail/", names("{ cd ~; tree agent-mail; }"))
+        self.assertIn("outputs/validation/", names("cd outputs && ls validation"))
+        # A grep pattern is a name to judge as written, never as a directory,
+        # and it is not evidently a path.
+        grep = dict(lane.shell_names("cd outputs && grep -r validation ."))
+        self.assertFalse(grep["outputs/validation"])
+        self.assertNotIn("outputs/validation/", grep)
+        self.assertNotIn("wiki/", names("grep -rn wiki README.md"))
+        # Of find, only the starting points are paths; option values of ls
+        # and the like are counts or patterns.
+        self.assertIn("wiki/", names("find -L wiki -name '*.md'"))
+        for command in ("find . -name wiki", "find . -type f -exec grep -l wiki {} \\;",
+                        "ls -I wiki outputs", "tree -I wiki -L 2 ."):
+            self.assertNotIn("wiki/", names(command), command)
+            self.assertFalse(dict(lane.shell_names(command))["wiki"], command)
+        self.assertEqual(names("curl -sL https://x.org/wiki/PMI"), ["curl", "-sL"])
+        self.assertTrue(dict(lane.shell_names("cat lodged-rules.yaml"))["lodged-rules.yaml"])
+        self.assertEqual(lane.unbracket("(cd x"), "cd x")
+        self.assertEqual(lane.unbracket("cat $(pwd)"), "cat $(pwd)")
+        self.assertEqual(lane.unbracket("cat ${D}"), "cat ${D}")
+
+    def test_every_word_scan_1_0_judged_is_still_evidently_a_path(self):
+        """Nothing scan 1.0 caught is judged more leniently by 1.1."""
+        for command in ("cat /repo/wiki/continuity.md", "jq . extraction.json",
+                        "head notes.md && wc -l t.csv", "D=a/b; cat $D/c",
+                        "python3 -c \"open('out/x/assessment/a.json')\"",
+                        "cat <<'EOF' > f\nsee reproduction/attempt-01/log.md\nEOF"):
+            evident = dict(lane.shell_names(command))
+            for token in lane.path_tokens(command):
+                self.assertTrue(evident[token], (command, token))
+
 
 class LaunchManifestTests(unittest.TestCase):
     """Receipts are checked against the manifest at the run's launch commit,
