@@ -1,7 +1,26 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.6
+**Version:** 1.8
+
+v1.8 (2026-10-30) is gate 1.3.2, criterion 4's review-only mode (the
+design's "The review-only mode as designed"): a run configuration with
+``mode: review-only`` re-reviews executed attempts with a fresh reviewer
+and no executor. ``build-review-args`` binds each attempt's persisted
+executor result, only as the attempt's run audit cleared it for the attempt
+as it stands (a changed comparison is refused: corrections go into new
+attempts, Shawn 2026-10-13); the review workflow's gate step runs
+``check-attempt`` with the executor's launch commit and ``stage-review``,
+which copies the reviewable state and the gate report for the reviewer
+(Shawn, 2026-10-30: a clean copy, never the attempt with the earlier review
+blinded). Run audit 1.2 binds each role to its own run and carries the
+executor's clearance; ``persist-results`` persists only the reviewer, and
+the replaced review, run audit, and adjudicated result move to
+``superseded/<workflow run>/``; admission and ``adjudicate`` bind each role
+to its own run, and results whose roles share one run derive as before.
+Also fixed: the input-tree check now exempts the adjudicated result, whose
+absence from the document names made any re-gate of an adjudicated attempt
+fail. (v1.7 is blinding scan 1.1, PR #14.)
 
 v1.6 (2026-10-18) is gate 1.3.2, criterion 1 (the design's opening note):
 every issue states its scope (``targets`` or ``paper``), and a target
@@ -245,6 +264,13 @@ AUDIT_FILE = "transcript-audit.json"
 # 1.3 final review's F8): each governed role's receipts, blinding, and write
 # scope, and the escalations and review concerns a human must resolve.
 RUN_AUDIT_FILE = "run-audit.json"
+# Records a later review replaced (the review-only mode, 2026-10-30), kept as
+# history under the workflow run that made them. Like the snapshot records,
+# they sit outside every inventory and so outside the reviewed state.
+SUPERSEDED_DIR = "superseded"
+# A run configuration either executes approved plans, or re-reviews executed
+# attempts with no executor (``mode: review-only``; gate 1.3.2 criterion 4).
+RUN_MODES = ("execute", "review-only")
 # Where the executor transcribes published values (executor v1.7, F6).
 PUBLISHED_VALUES_DIR = "published-values"
 DEFAULT_CODE_MANIFEST_SCHEMA = "reproduction-system/schemas/authors-code-manifest.json"
@@ -674,6 +700,9 @@ def load_config(path: Path) -> dict:
             problems.append(f"schemas.{name} missing")
     if not isinstance((config["blinding"] or {}).get("forbidden_substrings"), list):
         problems.append("blinding.forbidden_substrings must be a list")
+    config.setdefault("mode", "execute")
+    if config["mode"] not in RUN_MODES:
+        problems.append(f"mode must be one of {RUN_MODES}")
     slugs = [p.get("slug") for p in config["papers"] or []]
     if not slugs or not all(slugs) or len(set(slugs)) != len(slugs):
         problems.append("papers must be a non-empty list with unique slugs")
@@ -801,10 +830,26 @@ def receipt_keys(agent_type: str) -> list[str]:
     return names
 
 
+def withheld_records(config: dict) -> list[str]:
+    """In review-only mode, the records each attempt withholds from its
+    reviewer, as blinded substrings: the earlier review, the executor's
+    report, the rulings, the audits, the adjudicated result, and the history
+    under ``superseded/``. The reviewer reads a staged copy without them
+    (``stage_review``); these blind the attempt's own, for the prompt and
+    for the audit alike. The gate step names none of them.
+    """
+    if config.get("mode") != "review-only":
+        return []
+    names = sorted(n for n in POST_REVIEW_FILES if n != GATE_FILE) + [f"{SUPERSEDED_DIR}/"]
+    return [f"{paper['slug']}/reproduction/attempt-{config['attempt']:02d}/{name}"
+            for paper in config["papers"] for name in names]
+
+
 def blinding_args(config: dict) -> dict:
     """The blinding block handed to every governed spawn."""
     blinding = config["blinding"]
-    return {"forbidden_substrings": list(blinding["forbidden_substrings"]),
+    return {"forbidden_substrings": list(blinding["forbidden_substrings"])
+            + withheld_records(config),
             "cross_paper_slugs": list(blinding.get("cross_paper_slugs") or [])}
 
 
@@ -844,6 +889,9 @@ def lodged_rules_args(config: dict) -> list[dict]:
 def cmd_build_plan_args(args: argparse.Namespace) -> int:
     """Build args for reproduction-plan.workflow.js."""
     config = load_config(args.config)
+    if config["mode"] != "execute":
+        raise LaneError(f"this run configuration is mode {config['mode']!r}, which plans "
+                        f"nothing: a review-only run re-reviews executed attempts")
     lodged = lodged_rules_args(config)
     launch_commit = resolve_launch_commit()
     papers = []
@@ -1778,44 +1826,65 @@ def cmd_rule_flags(args: argparse.Namespace) -> int:
 # Execute stage
 # ---------------------------------------------------------------------------
 
+def approved_paper(config: dict, paper: dict) -> tuple[dict | None, str | None]:
+    """A paper's approved plan as the stage-2 builders hand it on.
+
+    The plan and its approval must both be committed, the decision must be
+    ``approve``, and the plan must still hash to the approved digest.
+
+    Returns:
+        ``(item, None)``, the args fields every stage-2 workflow takes, or
+        ``(None, reason)`` when the paper has no approved plan to run.
+
+    Raises:
+        LaneError: when the plan changed after its approval.
+    """
+    slug = paper["slug"]
+    target_dir = attempt_dir(config, slug)
+    plan_path, approval_path = target_dir / PLAN_FILE, target_dir / APPROVAL_FILE
+    if not plan_path.is_file() or not approval_path.is_file():
+        return None, "no plan or no approval record"
+    approval = json.loads(approval_path.read_text(encoding="utf-8"))
+    if approval.get("decision") != "approve":
+        return None, f"decision is {approval.get('decision')!r}"
+    digest = sha256_file(plan_path)
+    if approval.get("plan_sha256") != digest:
+        raise LaneError(f"{slug}: plan sha256 {digest[:12]}… does not match the "
+                        f"approved {str(approval.get('plan_sha256'))[:12]}… — the plan "
+                        f"changed after approval")
+    require_committed(plan_path)
+    require_committed(approval_path)
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))["plan"]
+    return {"slug": slug, "attempt": config["attempt"],
+            "attempt_dir": str(target_dir), "plan_path": str(plan_path),
+            "plan_sha256": digest, "approval_path": str(approval_path),
+            "target_ids": [t["target_id"] for t in plan["verification_targets"]],
+            **paper_inputs(paper),
+            "deposits": paper.get("deposits") or [],
+            "run_notes": str(paper.get("run_notes") or "").strip(),
+            "image_tag": f"llmr-{slug}-attempt-{config['attempt']:02d}"}, None
+
+
 def cmd_build_exec_args(args: argparse.Namespace) -> int:
     """Build args for reproduction-execute.workflow.js (approved papers only)."""
     config = load_config(args.config)
+    if config["mode"] != "execute":
+        raise LaneError(f"this run configuration is mode {config['mode']!r}: build its args "
+                        f"with build-review-args")
     launch_commit = resolve_launch_commit()
     papers, skipped = [], []
     for paper in config["papers"]:
         slug = paper["slug"]
+        item, reason = approved_paper(config, paper)
+        if item is None:
+            skipped.append({"slug": slug, "reason": reason})
+            continue
         target_dir = attempt_dir(config, slug)
-        plan_path, approval_path = target_dir / PLAN_FILE, target_dir / APPROVAL_FILE
-        if not plan_path.is_file() or not approval_path.is_file():
-            skipped.append({"slug": slug, "reason": "no plan or no approval record"})
-            continue
-        approval = json.loads(approval_path.read_text(encoding="utf-8"))
-        if approval.get("decision") != "approve":
-            skipped.append({"slug": slug,
-                            "reason": f"decision is {approval.get('decision')!r}"})
-            continue
-        digest = sha256_file(plan_path)
-        if approval.get("plan_sha256") != digest:
-            raise LaneError(f"{slug}: plan sha256 {digest[:12]}… does not match the "
-                            f"approved {str(approval.get('plan_sha256'))[:12]}… — the plan "
-                            f"changed after approval")
-        require_committed(plan_path)
-        require_committed(approval_path)
         if (target_dir / COMPARISON_FILE).exists():
             raise LaneError(f"{slug}: {display_path(target_dir / COMPARISON_FILE)} already "
                             f"exists — this attempt has been executed")
-        plan = json.loads(plan_path.read_text(encoding="utf-8"))["plan"]
         scratch = Path(args.scratch_root).expanduser() / config["run_id"] / slug
-        papers.append({"slug": slug, "attempt": config["attempt"],
-                       "attempt_dir": str(target_dir), "plan_path": str(plan_path),
-                       "plan_sha256": digest, "approval_path": str(approval_path),
-                       "target_ids": [t["target_id"] for t in plan["verification_targets"]],
-                       **paper_inputs(paper),
-                       "deposits": paper.get("deposits") or [],
-                       "run_notes": str(paper.get("run_notes") or "").strip(),
-                       "executor_scratch_dir": str(scratch / "executor"),
-                       "image_tag": f"llmr-{slug}-attempt-{config['attempt']:02d}"})
+        papers.append({**item, "executor_scratch_dir": str(scratch / "executor")})
     if not papers:
         raise LaneError("no approved papers — nothing to execute: "
                         + "; ".join(f"{s['slug']}: {s['reason']}" for s in skipped))
@@ -1832,6 +1901,66 @@ def cmd_build_exec_args(args: argparse.Namespace) -> int:
                "repo_root": str(REPO_ROOT),
                "blinding": blinding_args(config), "papers": papers, "skipped": skipped},
               args.out)
+    return 0
+
+
+def cmd_build_review_args(args: argparse.Namespace) -> int:
+    """Build args for reproduction-review.workflow.js (gate 1.3.2 criterion 4).
+
+    A review-only run re-reviews an executed attempt with a fresh reviewer
+    and no executor. Each paper needs an approved plan, an executed
+    comparison, and a persisted executor result that the attempt's run audit
+    cleared for the attempt as it stands (``carried_executor``); any other
+    paper is refused, never skipped, since a review-only run names the
+    attempts it is for. The args bind that executor result, and the
+    reviewer reads a staged copy under the scratch root.
+    """
+    config = load_config(args.config)
+    if config["mode"] != "review-only":
+        raise LaneError(f"this run configuration is mode {config['mode']!r}: a review-only run "
+                        f"needs mode: review-only")
+    launch_commit = resolve_launch_commit()
+    papers, skipped = [], []
+    for paper in config["papers"]:
+        slug = paper["slug"]
+        item, reason = approved_paper(config, paper)
+        if item is None:
+            raise LaneError(f"{slug}: {reason}, so there is nothing to re-review")
+        target_dir = attempt_dir(config, slug)
+        if not (target_dir / COMPARISON_FILE).is_file():
+            raise LaneError(f"{slug}: no {COMPARISON_FILE}: the attempt has not been executed")
+        if (target_dir / RECORDS_DIR / LOCK_FILE).exists():
+            raise LaneError(f"{slug}: a run lock is held ({RECORDS_DIR}/{LOCK_FILE})")
+        entry, _, problems = carried_executor(target_dir)
+        if problems:
+            raise LaneError(f"{slug}: the executor result cannot be bound: "
+                            + "; ".join(problems))
+        scratch = Path(args.scratch_root).expanduser() / config["run_id"] / slug
+        papers.append({**item, "review_dir": str(scratch / "review"),
+                       "executor": {key: entry.get(key) for key in (
+                           "run_id", "workflow_run", "agent_id", "payload_sha256",
+                           "launch_commit")}})
+    emit_args({"mode": "review-only", "run_id": config["run_id"], "attempt": config["attempt"],
+               "effort": config["effort"], "launch_commit": launch_commit,
+               "agent_types": {"reviewer": config["agents"]["reviewer"]},
+               "receipt_keys": {"reviewer": receipt_keys(config["agents"]["reviewer"])},
+               "rulings": [str(r).strip() for r in config.get("rulings") or []],
+               "schemas": {"review": runtime_schema(expand(config["schemas"]["review"]))},
+               "repo_root": str(REPO_ROOT),
+               "blinding": blinding_args(config), "papers": papers, "skipped": skipped},
+              args.out)
+    return 0
+
+
+def cmd_stage_review(args: argparse.Namespace) -> int:
+    """Stage an attempt's reviewable state for a review-only reviewer.
+
+    Prints the state copied and counts; the withheld records are counted,
+    not named, since their names under the attempt are blinded.
+    """
+    result = stage_review(args.attempt_dir.expanduser().resolve(), args.to)
+    shown = {**result, "withheld": len(result["withheld"])}
+    print(json.dumps(shown, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -1890,8 +2019,8 @@ def walk_tree(target_dir: Path) -> tuple[list[Path], list[str]]:
     for dirpath, dirnames, filenames in os.walk(target_dir, followlinks=False):
         here = Path(dirpath)
         rel_dir = here.relative_to(target_dir)
-        if rel_dir.parts[:1] in ((SNAPSHOT_DIR,), ("__pycache__",)) or "__pycache__" in \
-                rel_dir.parts:
+        if rel_dir.parts[:1] in ((SNAPSHOT_DIR,), (SUPERSEDED_DIR,), ("__pycache__",)) \
+                or "__pycache__" in rel_dir.parts:
             dirnames[:] = []
             continue
         for name in list(dirnames):
@@ -2530,12 +2659,16 @@ LANE_PROFILE = (f"{LANE_PROFILE_MARKER}\n"
                 f'sys.source("{LANE_MOUNT}/hook.R", envir = new.env(parent = baseenv()))\n')
 PROJECT_PROFILE = ".Rprofile.project"
 # Executor documents: never copied into a run and never loadable (spec §3).
-# Everything else in the attempt directory is the input tree.
+# Everything else in the attempt directory is the input tree. The adjudicated
+# result (gate 1.3.2) and the review-only mode's history are lane records
+# written after every run; until 2026-10-30 the first was missing here, so
+# any re-gate of an adjudicated attempt failed on "input tree added
+# adjudicated-result.json after the final run".
 DOCUMENT_NAMES = frozenset({
     PLAN_FILE, PLAN_VIEW_FILE, APPROVAL_FILE, CODE_MANIFEST_FILE, EXECUTION_FILE,
-    GATE_FILE, RULINGS_FILE, AUDIT_FILE, RUN_AUDIT_FILE, REVIEW_FILE, "log.md",
-    "environment.md",
-    "comparisons", "outputs", RECORDS_DIR, SNAPSHOT_DIR, "__pycache__"})
+    GATE_FILE, RULINGS_FILE, AUDIT_FILE, RUN_AUDIT_FILE, REVIEW_FILE, ADJUDICATED_FILE,
+    "log.md", "environment.md",
+    "comparisons", "outputs", RECORDS_DIR, SNAPSHOT_DIR, SUPERSEDED_DIR, "__pycache__"})
 # Interpreters run-container starts the entry with, by suffix.
 ENTRY_INTERPRETERS = {".r": "Rscript", ".sh": "bash"}
 # Front-end calls that start no interpreter needing the hook: R RHOME,
@@ -6364,8 +6497,13 @@ def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
 # workflow's results, for the attempt as its reviewer was handed it.
 # Version 1.1 records the workflow run, each role's agent and accepted
 # payload digest, and the reviewed artefact state; admission refuses an audit
-# without them.
-RUN_AUDIT_VERSION = "1.1"
+# without them. Version 1.2 (the review-only mode, 2026-10-30) also records
+# each role's own run, workflow run, and launch commit, since a review-only
+# run binds an executor from an earlier workflow run. A 1.1 audit, in which
+# both roles share the audit's run, is still read.
+RUN_AUDIT_VERSION = "1.2"
+READ_RUN_AUDIT_VERSIONS = ("1.1", "1.2")
+IDENTITY_KEYS = ("run_id", "workflow_run", "launch_commit")
 # Records written after the review, or that hold its results: the rest of
 # the attempt is the state the reviewer was handed. A run lock is transient.
 # The adjudicated result (gate 1.3.2) is derived from the others, so writing
@@ -6415,9 +6553,11 @@ def reviewed_states(run_dir: Path, config: dict) -> dict[str, list[str]]:
             continue
         lines = transcript.read_text(encoding="utf-8").splitlines()
         paper = PAPER_RE.search(first_user_text(lines))
+        # The review-only workflow's gate step also stages the reviewer's
+        # copy, which prints the state it copied.
         found = [state for call in timed_tool_calls(lines)
-                 if call["name"] == "Bash" and "check-attempt" in str(
-                     call["input"].get("command") or "")
+                 if call["name"] == "Bash" and re.search(r"\b(?:check-attempt|stage-review)\b",
+                                                         str(call["input"].get("command") or ""))
                  for state in ARTEFACT_STATE_RE.findall(call["output"])]
         if paper and found:
             states.setdefault(paper.group(1), set()).add(found[-1])
@@ -6451,7 +6591,7 @@ def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict],
         elif not entry.get("clean"):
             reasons.append(f"the run audit found the {role} unclean: "
                            f"{'; '.join(entry.get('problems') or [])[:400]}")
-    if run_audit.get("run_audit_version") != RUN_AUDIT_VERSION:
+    if run_audit.get("run_audit_version") not in READ_RUN_AUDIT_VERSIONS:
         reasons.append(f"the run audit is version {run_audit.get('run_audit_version')!r}, "
                        f"which does not bind results (run audit-run again)")
     if bound is None:
@@ -6475,6 +6615,14 @@ def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict],
             elif audited.get("payload_sha256") != given.get("payload_sha256"):
                 reasons.append(f"the {role}'s result is not the one the run audit cleared "
                                f"(its payload digest differs)")
+            else:
+                # Each role is bound to the run that produced it (run audit
+                # 1.2): a review-only run's executor is an earlier run's.
+                cleared = role_identity(run_audit, role)
+                for key in ("run_id", "workflow_run"):
+                    if key in given and cleared.get(key) != given[key]:
+                        reasons.append(f"the run audit cleared the {role} of {key} "
+                                       f"{cleared.get(key)!r}, not {given[key]!r}")
     reviewed = run_audit.get("reviewed_state_sha256")
     recorded = run_audit.get("reviewed_states") or []
     if not reviewed:
@@ -6500,6 +6648,16 @@ def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict],
         reasons.append(f"{len(unruled)} unruled run-audit issue(s): {', '.join(unruled[:5])}"
                        + (" …" if len(unruled) > 5 else ""))
     return reasons
+
+
+def role_identity(run_audit: dict, role: str) -> dict:
+    """The run, workflow run, and launch commit a run audit cleared a role
+    under: the role's own (run audit 1.2), or, in a 1.1 audit, where both
+    roles came from one workflow run, the audit's."""
+    if run_audit.get("run_audit_version") == "1.1":
+        return {key: run_audit.get(key) for key in IDENTITY_KEYS}
+    entry = (run_audit.get("roles") or {}).get(role) or {}
+    return {key: entry.get(key) for key in IDENTITY_KEYS}
 
 
 def role_audit(record: dict) -> dict:
@@ -7046,9 +7204,150 @@ def review_issues(role: str, payload: dict | None, warnings: list[dict],
     return issues
 
 
+def supersede(target_dir: Path, name: str, workflow_run: str | None) -> Path | None:
+    """Move a record a later review replaces into the attempt's history.
+
+    The record goes to ``superseded/<workflow run>/<name>``, under the
+    workflow run that made it, outside the reviewed state. Moving the same
+    record twice is harmless; a different record already there is refused.
+
+    Returns:
+        Where the record now is, or None when there was none to move.
+    """
+    source = target_dir / name
+    if not source.is_file():
+        return None
+    label = re.sub(r"[^A-Za-z0-9_.-]", "_", str(workflow_run or "")) or "unknown-run"
+    dest = target_dir / SUPERSEDED_DIR / label / name
+    if dest.exists():
+        if sha256_file(dest) != sha256_file(source):
+            raise LaneError(f"{display_path(dest)} already holds a different record: resolve "
+                            f"by hand")
+        source.unlink()
+        return dest
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    source.rename(dest)
+    return dest
+
+
+def carried_executor(target_dir: Path, workflow_run: str | None = None
+                     ) -> tuple[dict, dict | None, list[str]]:
+    """The executor clearance a review-only run carries (gate 1.3.2,
+    criterion 4): it spawns no executor, so the persisted executor result
+    is bound explicitly, and only as an earlier run audit cleared it.
+
+    The attempt's run audit must have cleared exactly the result in
+    ``execution-report.json`` (agent, payload digest, run, and workflow
+    run), clean, for the attempt as it stands. The state it cleared is the
+    one its run's reviewer was handed; an attempt changed since then is
+    refused, since corrections go into new attempts (Shawn, 2026-10-13).
+
+    Args:
+        target_dir: The attempt directory.
+        workflow_run: The review-only run being audited. A run audit already
+            written by that run carries its executor entry as it stands;
+            any other is the earlier run's, whose clearance is taken up.
+
+    Returns:
+        ``(entry, payload, problems)``: the executor's run-audit entry, with
+        its run, workflow run, launch commit, the state it was cleared for,
+        and the audit it came from, unclean when there are problems; the
+        executor's payload; and the problems.
+    """
+    execution = read_record(target_dir, EXECUTION_FILE)
+    prior = read_record(target_dir, RUN_AUDIT_FILE)
+    problems: list[str] = []
+    if execution is None:
+        return ({"clean": False, "problems": [f"no persisted executor result ({EXECUTION_FILE})"]},
+                None, [f"no persisted executor result ({EXECUTION_FILE})"])
+    if prior is None:
+        problems.append(f"no run audit ({RUN_AUDIT_FILE}) cleared the executor result")
+        prior = {}
+    elif prior.get("run_audit_version") not in READ_RUN_AUDIT_VERSIONS:
+        problems.append(f"the run audit is version {prior.get('run_audit_version')!r}, which "
+                        f"does not bind results")
+    entry = dict((prior.get("roles") or {}).get("executor") or {})
+    if prior and (workflow_run is None or prior.get("workflow_run") != workflow_run):
+        entry.update(role_identity(prior, "executor"))
+        entry["cleared_state_sha256"] = prior.get("reviewed_state_sha256")
+        entry["carried_from"] = {"workflow_run": prior.get("workflow_run"),
+                                 "run_audit_sha256": sha256_file(target_dir / RUN_AUDIT_FILE)}
+    payload = execution.get("payload")
+    if not entry:
+        problems.append("the run audit has no executor")
+    elif entry.get("agent_id") != execution.get("agent_id") \
+            or entry.get("payload_sha256") != json_digest(payload):
+        problems.append("the run audit did not clear this executor result (agent or payload "
+                        "digest differs)")
+    elif not entry.get("clean"):
+        problems.append("the run audit found the executor unclean")
+    for key in ("run_id", "workflow_run", "launch_commit"):
+        if entry and entry.get(key) != execution.get(key):
+            problems.append(f"the executor result's {key} {execution.get(key)!r} is not the "
+                            f"cleared executor's {entry.get(key)!r}")
+    if entry and entry.get("cleared_state_sha256") != artefact_state(target_dir):
+        problems.append("the attempt has changed since its executor's result was reviewed: "
+                        "corrections go into a new attempt, not a review-only run")
+    if problems:
+        entry = {**entry, "clean": False,
+                 "problems": list(entry.get("problems") or []) + problems}
+    return entry, payload, problems
+
+
+def stage_review(target_dir: Path, review_dir: Path) -> dict:
+    """Copy an attempt's reviewable state, with its gate report, for a
+    review-only reviewer (Shawn, 2026-10-30: a clean copy, never the
+    attempt with the earlier review blinded by name).
+
+    Every file in the reviewed state is copied, and the gate report the
+    reviewer must read; the other post-review records (the earlier review,
+    the executor's report, rulings, audits, and the adjudicated result) are
+    withheld. The copy's state must digest equal to the attempt's.
+
+    Returns:
+        The state copied (``artefact_state_sha256``, as check-attempt
+        prints it, so that the harness records the reviewed state), the
+        copy's path, the files copied, and those withheld.
+
+    Raises:
+        LaneError: when the attempt has symlink problems or no gate report,
+            the copy would sit inside the attempt, the destination is not
+            empty, or the copy's state differs.
+    """
+    files, problems = walk_tree(target_dir)
+    if problems:
+        raise LaneError("the attempt cannot be staged: " + "; ".join(problems))
+    if not (target_dir / GATE_FILE).is_file():
+        raise LaneError(f"no {GATE_FILE}: run check-attempt before staging")
+    review_dir = review_dir.expanduser().resolve()
+    if review_dir == target_dir.resolve() or target_dir.resolve() in review_dir.parents:
+        raise LaneError("the review copy cannot sit inside the attempt")
+    if review_dir.exists() and any(review_dir.iterdir()):
+        raise LaneError(f"{display_path(review_dir)} is not empty: stage into a fresh folder")
+    copied, withheld = [], []
+    for path in files:
+        rel = path.relative_to(target_dir).as_posix()
+        if rel in POST_REVIEW_FILES and rel != GATE_FILE:
+            withheld.append(rel)
+            continue
+        dest = review_dir / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, dest)
+        copied.append(rel)
+    state = artefact_state(target_dir)
+    if artefact_state(review_dir) != state:
+        raise LaneError("the review copy's state differs from the attempt's: the attempt "
+                        "changed while it was copied; stage again into a fresh folder")
+    return {"attempt_dir": display_path(target_dir), "review_dir": str(review_dir),
+            "artefact_state_sha256": state, "files_copied": len(copied),
+            "withheld": sorted(withheld),
+            "gate_report_sha256": sha256_file(review_dir / GATE_FILE)}
+
+
 def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
                       roles: dict[str, tuple[dict, dict | None]],
-                      reviewed: list[str] | None = None) -> dict:
+                      reviewed: list[str] | None = None,
+                      carried: tuple[dict, dict | None] | None = None) -> dict:
     """The attempt's run audit: each governed role's verdict, the workflow
     identities it was made under, and the issues for a ruling (F8).
 
@@ -7061,24 +7360,37 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
             ``select_results`` chose them.
         reviewed: The attempt states the workflow's gate checks recorded
             (``reviewed_states``); exactly one is the reviewed state.
+        carried: In review-only mode, ``(executor entry, executor payload)``
+            from ``carried_executor``: the earlier run audit's clearance of
+            the executor, which no spawn in this run produced. Its issues
+            are derived again from its payload, so they keep their
+            fingerprints and rulings.
     """
     try:
         approval = json.loads((target_dir / APPROVAL_FILE).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         approval = {}
     # Each role is bound to its accepted result by digest (D-Astra-3), so a
-    # retried result cannot inherit this audit's clearance.
+    # retried result cannot inherit this audit's clearance, and to the run
+    # that produced it (run audit 1.2).
     audits = {role: {**role_audit(record),
-                     "payload_sha256": json_digest(payload) if payload is not None else None}
+                     "payload_sha256": json_digest(payload) if payload is not None else None,
+                     "run_id": config["run_id"], "workflow_run": run_dir_name,
+                     "launch_commit": (record.get("provenance") or {}).get("launch_commit")}
               for role, (record, payload) in roles.items()}
+    payloads = {role: payload for role, (_, payload) in roles.items()}
+    if carried is not None:
+        audits["executor"], payloads["executor"] = carried
     # Gate 1.3.2: target references are checked against the locked plan; a
     # malformed one becomes a paper-wide issue to rule, not a hard failure.
     locked = locked_targets(target_dir)
     reviewed = sorted(set(reviewed or ()))
     issues: list[Issue] = []
-    for role, (_, payload) in sorted(roles.items()):
-        issues += review_issues(role, payload, audits[role]["warnings"], target_dir, locked)
-    for text in sorted({a["launch_message"] for a in audits.values() if a["launch_message"]}):
+    for role, payload in sorted(payloads.items()):
+        issues += review_issues(role, payload, audits[role].get("warnings") or [], target_dir,
+                                locked)
+    for text in sorted({a["launch_message"] for a in audits.values()
+                        if a.get("launch_message")}):
         if not NEUTRAL_LAUNCH_RE.fullmatch(text):
             issues.append(Issue.flag(
                 "launch-message", json_digest(text)[:12], f"the workflow was launched with "
@@ -7087,16 +7399,17 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
                 f"could steer or unblind the run", files={"text": json_digest(text)}))
     seen: set[str] = set()
     unique = [i for i in issues if not (i.issue_id in seen or seen.add(i.issue_id))]
-    executor = roles.get("executor", ({}, None))[0]
+    # The audit's launch commit is the executor's, which the gate checks the
+    # sealed run records against; a review-only reviewer's is its own entry's.
     return {"run_audit_version": RUN_AUDIT_VERSION, "audited_at": now_utc(),
             "run_id": config["run_id"],
             "workflow_run": run_dir_name, "attempt_dir": display_path(target_dir),
-            "launch_commit": (executor.get("provenance") or {}).get("launch_commit"),
+            "launch_commit": (audits.get("executor") or {}).get("launch_commit"),
             "plan_sha256": approval.get("plan_sha256"),
             "reviewed_state_sha256": reviewed[0] if len(reviewed) == 1 else None,
             "reviewed_states": reviewed,
             "artefact_state_sha256": artefact_state(target_dir),
-            "roles": audits, "missing_roles": sorted({"executor", "reviewer"} - set(roles)),
+            "roles": audits, "missing_roles": sorted({"executor", "reviewer"} - set(audits)),
             "issues": issue_records(unique)}
 
 
@@ -7649,26 +7962,52 @@ def expected_overall(review: dict) -> str | None:
     return "CONFIRMED" if concerns == 0 else "QUALIFIED" if concerns <= 2 else "CHALLENGED"
 
 
+def persisted_binding(target_dir: Path) -> dict | None:
+    """The persisted executor result's identity, as admission binds it."""
+    execution = read_record(target_dir, EXECUTION_FILE)
+    if execution is None:
+        return None
+    return {"run_id": execution.get("run_id"), "workflow_run": execution.get("workflow_run"),
+            "agent_id": execution.get("agent_id"),
+            "payload_sha256": json_digest(execution.get("payload"))}
+
+
 def cmd_persist_results(args: argparse.Namespace) -> int:
-    """Persist executor and reviewer payloads into their attempt directories."""
+    """Persist executor and reviewer payloads into their attempt directories.
+
+    In review-only mode only the reviewer is persisted. Its review replaces
+    the review of record, which, with the adjudicated result derived from
+    it, moves to ``superseded/<its workflow run>/``; the executor is bound
+    from its persisted record, as the run audit carried it.
+    """
     config = load_config(args.config)
     run_dir = args.run_dir.expanduser().resolve()
     results = journal_results(run_dir)
+    review_only = config["mode"] == "review-only"
     problems = []
     selections: dict[str, dict[str, dict]] = {}
-    for role in ("executor", "reviewer"):
+    for role in (("reviewer",) if review_only else ("executor", "reviewer")):
         selections[role], dead = select_results(results, config["agents"][role], config)
         problems += [f"{role} for {slug} returned no result — re-run that item"
                      for slug in dead]
     # What admission must find the run audit cleared (D-Astra-3): this
-    # workflow run's results for each paper, by agent and payload digest.
+    # workflow run's results for each paper, by agent and payload digest,
+    # each with the run that produced it (run audit 1.2).
     bound = {slug: {"run_id": config["run_id"], "workflow_run": run_dir.name,
-                    "roles": {role: {"agent_id": chosen[slug]["agent_id"],
+                    "roles": {role: {"run_id": config["run_id"], "workflow_run": run_dir.name,
+                                     "agent_id": chosen[slug]["agent_id"],
                                      "payload_sha256": json_digest(chosen[slug]["result"])}
                               for role, chosen in selections.items() if slug in chosen}}
              for slug in sorted({slug for chosen in selections.values() for slug in chosen})}
+    if review_only:
+        for slug, binding in bound.items():
+            executor = persisted_binding(attempt_dir(config, slug))
+            if executor is not None:
+                binding["roles"]["executor"] = executor
     for role, filename, schema_key in (("executor", EXECUTION_FILE, "execution"),
                                        ("reviewer", REVIEW_FILE, "review")):
+        if role not in selections:
+            continue
         chosen = selections[role]
         schema = full_schema(expand(config["schemas"][schema_key]))
         for slug, item in sorted(chosen.items()):
@@ -7684,7 +8023,13 @@ def cmd_persist_results(args: argparse.Namespace) -> int:
                     notes.append(f"overall {payload.get('overall')!r} disagrees with the "
                                  f"framework's concern-count rule ({expected!r})")
             path = attempt_dir(config, slug) / filename
-            if path.exists() and not args.force:
+            earlier = read_record(attempt_dir(config, slug), filename) or {}
+            if review_only and path.exists() and earlier.get("workflow_run") != run_dir.name:
+                # The review of record is replaced, never overwritten: it and
+                # the result derived from it become history.
+                for name in (REVIEW_FILE, ADJUDICATED_FILE):
+                    supersede(attempt_dir(config, slug), name, earlier.get("workflow_run"))
+            elif path.exists() and not args.force:
                 problems.append(f"{display_path(path)} exists — pass --force to replace")
                 continue
             # Gate 1.3 admission (spec §6): an attempt with sealed run records
@@ -7783,14 +8128,16 @@ def adjudicate(target_dir: Path) -> dict:
     if comparison.get("plan_sha256") != plan_digest:
         reasons.append("the comparison was not made under this plan")
     # The results being adjudicated are the persisted ones; admission is
-    # assessed afresh for exactly them (D-Astra-3's binding).
-    bound = {"run_id": execution.get("run_id"), "workflow_run": execution.get("workflow_run"),
-             "roles": {role: {"agent_id": doc.get("agent_id"),
+    # assessed afresh for exactly them (D-Astra-3's binding). Each role is
+    # bound to the run that produced it, and the run audit to the review's
+    # run: a review-only run reviews an earlier run's executor, and
+    # admission refuses any pair a run audit did not clear (run audit 1.2).
+    bound = {"run_id": review.get("run_id"), "workflow_run": review.get("workflow_run"),
+             "roles": {role: {"run_id": doc.get("run_id"),
+                              "workflow_run": doc.get("workflow_run"),
+                              "agent_id": doc.get("agent_id"),
                               "payload_sha256": json_digest(doc.get("payload"))}
                        for role, doc in (("executor", execution), ("reviewer", review))}}
-    for key in ("run_id", "workflow_run"):
-        if review.get(key) != execution.get(key):
-            reasons.append(f"the persisted executor and reviewer results differ in {key}")
     # Spec §6: a record persisted ineligible becomes eligible only through a
     # fresh persist-results after the rulings, never downstream of it.
     for name, doc in ((EXECUTION_FILE, execution), (REVIEW_FILE, review)):
@@ -7885,9 +8232,16 @@ def adjudicate(target_dir: Path) -> dict:
     set_by = verdict_rulings[0] if verdict_rulings else None
     challenge = (review.get("payload") or {}).get("verdict_challenge")
     challenge = challenge if isinstance(challenge, dict) else {}
+    # A review-only run's review names its own run; a result whose roles
+    # share one run derives exactly as before.
+    review_run = ({"review_run": {"run_id": review.get("run_id"),
+                                  "workflow_run": review.get("workflow_run")}}
+                  if (review.get("run_id"), review.get("workflow_run"))
+                  != (execution.get("run_id"), execution.get("workflow_run")) else {})
     return {
         "adjudication_version": ADJUDICATION_VERSION, "gate_version": report.get("gate_version"),
         "run_id": execution.get("run_id"), "workflow_run": execution.get("workflow_run"),
+        **review_run,
         "coverage": {"targets_enumerated": len(locked), "targets_credited": len(credited),
                      "coverage_fraction": round(len(credited) / len(locked), 4) if locked
                      else 0.0,
@@ -8214,7 +8568,8 @@ class Blinding:
 
     def __init__(self, config: dict, own_slug: str) -> None:
         blinding = config["blinding"]
-        self.forbidden = [str(s) for s in blinding["forbidden_substrings"]]
+        self.forbidden = [str(s) for s in blinding["forbidden_substrings"]] \
+            + withheld_records(config)
         pattern = blinding.get("exempt_regex")
         self.exempt = re.compile(pattern) if pattern else None
         self.others = [s for s in blinding.get("cross_paper_slugs") or [] if s != own_slug]
@@ -8945,6 +9300,33 @@ def audit_execution(lines: list[str], target_dir: Path, manifest_doc: dict | Non
             "issues": issue_records(unique_issues)}
 
 
+def write_attempt_run_audit(config: dict, run_dir_name: str, attempt_path: Path,
+                            roles: dict[str, tuple[dict, dict | None]],
+                            reviewed: list[str] | None) -> dict:
+    """Write an attempt's run audit for one workflow run (``audit-run``).
+
+    In review-only mode the executor's clearance is carried from the
+    attempt's earlier run audit (``carried_executor``), and that audit
+    becomes history under its own workflow run before this one replaces it;
+    a re-audit of the same run replaces its own audit.
+
+    Returns:
+        The run audit written.
+    """
+    carried = None
+    if config["mode"] == "review-only":
+        entry, payload, problems = carried_executor(attempt_path, run_dir_name)
+        carried = (entry, payload)
+        for problem in problems:
+            print(f"{attempt_path.name}: executor not carried: {problem}", file=sys.stderr)
+        prior = read_record(attempt_path, RUN_AUDIT_FILE) or {}
+        if prior.get("workflow_run") not in (None, run_dir_name):
+            supersede(attempt_path, RUN_AUDIT_FILE, prior.get("workflow_run"))
+    doc = attempt_run_audit(config, run_dir_name, attempt_path, roles, reviewed, carried)
+    write_json(attempt_path / RUN_AUDIT_FILE, doc)
+    return doc
+
+
 def cmd_audit_run(args: argparse.Namespace) -> int:
     """Audit every agent in a workflow run directory; exit 1 if any is unclean."""
     config = load_config(args.config)
@@ -8963,8 +9345,11 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
     # refuses two results for one paper rather than keeping the last
     # transcript in filename order (D-Astra-3).
     results = journal_results(run_dir)
+    # A review-only run spawns no executor: the attempt's earlier run audit
+    # carries the executor's clearance (carried_executor).
+    review_only = config["mode"] == "review-only"
     selections = {role: select_results(results, config["agents"][role], config)[0]
-                  for role in ("executor", "reviewer")}
+                  for role in (("reviewer",) if review_only else ("executor", "reviewer"))}
     records: dict[str, dict] = {}
     for transcript in sorted(run_dir.glob("agent-*.jsonl")):
         meta_path = transcript.with_name(f"{transcript.stem}.meta.json")
@@ -9017,9 +9402,8 @@ def cmd_audit_run(args: argparse.Namespace) -> int:
                  for role, chosen in selections.items()
                  if slug in chosen and chosen[slug]["agent_id"] in records}
         if attempt_path.is_dir():
-            write_json(attempt_path / RUN_AUDIT_FILE,
-                       attempt_run_audit(config, run_dir.name, attempt_path, roles,
-                                         states.get(slug)))
+            write_attempt_run_audit(config, run_dir.name, attempt_path, roles,
+                                    states.get(slug))
     per_paper: dict[str, dict] = {}
     for record in agents:
         bucket = per_paper.setdefault(record["paper"] or "(none)", {
@@ -9145,6 +9529,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--scratch-root", required=True)
     p.add_argument("--out", type=Path, default=None)
     p.set_defaults(func=cmd_build_exec_args)
+
+    p = sub.add_parser("build-review-args",
+                       help="args for the review-only workflow (mode: review-only)")
+    p.add_argument("--config", type=Path, required=True)
+    p.add_argument("--scratch-root", required=True)
+    p.add_argument("--out", type=Path, default=None)
+    p.set_defaults(func=cmd_build_review_args)
+
+    p = sub.add_parser("stage-review",
+                       help="copy an attempt's reviewable state for a review-only reviewer")
+    p.add_argument("attempt_dir", type=Path)
+    p.add_argument("--to", type=Path, required=True, help="a fresh folder outside the attempt")
+    p.set_defaults(func=cmd_stage_review)
 
     p = sub.add_parser("check-attempt", help="deterministic artefact gate")
     p.add_argument("attempt_dir", type=Path)
