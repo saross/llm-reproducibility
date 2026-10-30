@@ -1854,6 +1854,313 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(record["writes_outside_scope"], ["/elsewhere/notes.md"])
         self.assertFalse(record["clean"])
 
+    def bash_audit(self, forbidden: list[str], *calls: tuple[str, str],
+                   exempt: str | None = None) -> dict:
+        """The blinding block of an audit of one agent's Bash calls."""
+        config = {"run_id": "t", "effort": "high",
+                  "agents": {"planner": "p", "executor": "e", "reviewer": "r"},
+                  "schemas": {}, "pricing_usd_per_mtok": {},
+                  "blinding": {"forbidden_substrings": forbidden, "cross_paper_slugs": [],
+                               "exempt_regex": exempt}}
+        uses = [{"type": "tool_use", "id": f"b{n}", "name": "Bash", "input": {"command": c}}
+                for n, (c, _) in enumerate(calls)]
+        results = [{"type": "tool_result", "tool_use_id": f"b{n}", "content": out}
+                   for n, (_, out) in enumerate(calls)]
+        lines = transcript({"message": {"role": "user", "content": "  Paper: a-2024\n"}},
+                           {"message": {"role": "assistant", "content": uses}},
+                           {"message": {"role": "user", "content": results}})
+        reconcile = load_script("reconcile_run_bare", "reconcile-run.py")
+        record = lane.audit_agent(lines, "general-purpose", config, {"agent_definitions": {}},
+                                  reconcile, reconcile.load_gate_module(), None)
+        self.assertEqual(record["blinding"]["scan_version"], lane.BLINDING_SCAN_VERSION)
+        return record["blinding"]
+
+    def test_a_bare_name_read_after_cd_is_a_blinded_access(self):
+        """The gate 1.3.2 planner pilot's F4: scan 1.0 judged only path-like
+        tokens, so a blinded file read by its bare name gave no hit at all."""
+        blinding = self.bash_audit(
+            ["lodged-rules.yaml", "reproduction/attempt-01"],
+            ("cd /repo/reproduction-system && cat lodged-rules.yaml", "rule text"),
+            ("cd /repo/out/a-2024/reproduction && head attempt-01/log.md", "log text"),
+            ("D=/repo/out/a-2024/reproduction; cd $D/attempt-02 && cat ../attempt-01/x", ""),
+            ("cd /repo/out/a-2024/reproduction/attempt-02 && Rscript run.R", "ok"))
+        self.assertEqual([c["path"] for c in blinding["contaminating"]],
+                         ["lodged-rules.yaml", "/repo/out/a-2024/reproduction/attempt-01/log.md",
+                          "/repo/out/a-2024/reproduction/attempt-01/x"])
+        self.assertEqual(blinding["warnings"], [])
+
+    def test_a_word_that_may_be_a_pattern_is_a_warning_not_an_access(self):
+        """Shawn, 2026-10-30: a match blocks admission only when the word is
+        evidently a path; a pattern, an option's value, or literal text is
+        ruled on instead, file-name-shaped or not (Astra's review of PR #14,
+        P2-4). A word scan 1.0 judged keeps 1.0's evidence in any role."""
+        blinding = self.bash_audit(
+            ["lodged-rules.yaml", "reproduction/attempt-01", "extraction.json", "cc-archives"],
+            ("cd /repo/out/a-2024/reproduction && grep -rn attempt-01 attempt-02/", "none"),
+            ("grep -rn lodged-rules.yaml /repo/reproduction-system", "x"),
+            ("ls -I lodged-rules.yaml .", "README.md"),
+            ("find . -name lodged-rules.yaml", ""),
+            ("printf '%s\\n' cc-archives.example", ""),
+            ("grep -rn extraction.json .", ""),
+            ("cd /repo/reproduction-system && grep -n rule lodged-rules.yaml", "r"),
+            ("cd /repo/out/a-2024/reproduction && ls attempt-01", "log.md"))
+        self.assertEqual([c["path"] for c in blinding["contaminating"]],
+                         ["extraction.json", "lodged-rules.yaml",
+                          "/repo/out/a-2024/reproduction/attempt-01"])
+        self.assertEqual([w["path"] for w in blinding["warnings"]],
+                         ["/repo/out/a-2024/reproduction/attempt-01", "lodged-rules.yaml",
+                          "lodged-rules.yaml", "lodged-rules.yaml", "cc-archives.example"])
+        self.assertTrue(all("search pattern" in w["rule"] for w in blinding["warnings"]))
+
+    def test_the_harness_exemption_holds_for_every_form(self):
+        """Astra's review of PR #14, P1-1: the directory form of an exempt
+        instrument-delivery file matched .claude/projects/, so reading it
+        contaminated, and naming it in output warned. Other transcript files
+        stay blinded."""
+        exempt = r"/tool-results/hook-[0-9a-f-]+-\d+-additionalContext\.txt$"
+        delivery = "/home/u/.claude/projects/x/tool-results/hook-ab12-3-additionalContext.txt"
+        blinding = self.bash_audit([".claude/projects/"], (f"cat {delivery}", "instrument text"),
+                                   ("printf ready", delivery), exempt=exempt)
+        self.assertEqual((blinding["contaminating"], blinding["warnings"], blinding["noted"]),
+                         ([], [], []))
+        blinding = self.bash_audit([".claude/projects/"],
+                                   ("cat /home/u/.claude/projects/x/s.jsonl", ""), exempt=exempt)
+        self.assertEqual([c["path"] for c in blinding["contaminating"]],
+                         ["/home/u/.claude/projects/x/s.jsonl"])
+
+    def test_subshells_keep_their_own_directory_and_variables(self):
+        """Astra's review of PR #14, P1-2, both directions, as she confirmed
+        them with real Bash: a cd inside ( ) or $( ) does not escape it, and
+        the outer directory holds after it. A pipeline's cd changes nothing."""
+        def evident(command: str) -> list[str]:
+            blind = lane.Blinding({"blinding": {"forbidden_substrings":
+                                                ["reproduction/attempt-04"]}}, "a-2024")
+            return [f for f, g in lane.shell_name_grades(command, blind.hit)
+                    if g == lane.ACCESS and blind.hit(f)][:1]
+        self.assertEqual(evident("cd /repo; (cd reproduction && pwd); cat attempt-04/plan.json"),
+                         [])
+        self.assertEqual(evident("cd /repo/reproduction; (cd /tmp && pwd); "
+                                 "cat attempt-04/plan.json"),
+                         ["/repo/reproduction/attempt-04/plan.json"])
+        self.assertEqual(evident("cd /r; cd reproduction; (cd .. && pwd); "
+                                 "cat attempt-04/plan.json"),
+                         ["/r/reproduction/attempt-04/plan.json"])
+        self.assertEqual(evident("D=$(cd /repo/reproduction && pwd); cat attempt-04/plan.json"),
+                         [])
+        self.assertEqual(evident("cd /repo; (D=reproduction); cat $D/attempt-04/x"), [])
+        self.assertEqual(evident("cd /r/reproduction | true; cat attempt-04/plan.json"), [])
+        # A subshell closed on a line of its own still restores the outer directory.
+        self.assertEqual(evident("cd /r; (cd reproduction\n)\ncat attempt-04/plan.json"), [])
+        self.assertEqual(evident("cd /r/reproduction; (cd /tmp\n)\ncat attempt-04/plan.json"),
+                         ["/r/reproduction/attempt-04/plan.json"])
+
+    def test_an_uncertain_location_is_a_warning(self):
+        """Where the walk cannot be sure of the directory, a placed match is
+        ruled on, never a blinded access (P1-2: "uncertain locations must not
+        become definite contamination"); where it can, it stays one."""
+        blind = lane.Blinding({"blinding": {"forbidden_substrings":
+                                            ["reproduction/attempt-04"]}}, "a-2024")
+
+        def tier(command: str) -> str:
+            return self.tier(command, ["reproduction/attempt-04"])
+        for command in ("[ -d reproduction ] && cd reproduction; cat attempt-04/plan.json",
+                        "cd /r/reproduction && cat attempt-04/plan.json)",
+                        "cd /r/reproduction; cd /tmp || cat attempt-04/plan.json"):
+            self.assertEqual(tier(command), "warning", command)
+        # cd is assumed to succeed, so the || branch never runs.
+        for command in ("[ -d /r/reproduction ] && cd /r/reproduction && cat attempt-04/x",
+                        "cd /r/reproduction || exit 1; cat attempt-04/plan.json",
+                        "cd /r/reproduction || true; cat attempt-04/plan.json",
+                        "cd /r/reproduction; cat attempt-04/plan.json"):
+            self.assertEqual(tier(command), "access", command)
+
+    @staticmethod
+    def tier(command: str, forbidden: list[str]) -> str:
+        """How the scan grades a command: a blinded access, a warning, or
+        nothing."""
+        blind = lane.Blinding({"blinding": {"forbidden_substrings": forbidden}}, "a-2024")
+        hits = [g for f, g in lane.shell_name_grades(command, blind.hit) if blind.hit(f)]
+        return ("access" if lane.ACCESS in hits else "warning" if hits else "none")
+
+    def test_a_branch_the_shell_may_skip_leaves_its_location_uncertain(self):
+        """Astra's re-checks of PR #14 (R1 at b23ef4f, and at b2c9586), each
+        case confirmed with real Bash: a command after && runs only where the
+        last status is success, one after || only where it is failure, and a
+        skipped branch leaves the state Bash kept. The walk follows every
+        possible state; a read in all of them is an access, in some a
+        warning. true, :, and false have known statuses."""
+        blinded = ["reproduction/attempt-04"]
+        cases = {
+            # Her chain fixtures: Bash read SAFE where "none", BLINDED where "access".
+            "D=safe; false && X=1 && D=reproduction; cd $D; cat attempt-04/plan.json": "none",
+            "D=safe; true && X=1 && D=reproduction; cd $D; cat attempt-04/plan.json": "access",
+            "false && X=1 && cd reproduction; cat attempt-04/plan.json": "none",
+            "true && X=1 && cd reproduction; cat attempt-04/plan.json": "access",
+            "D=safe; false && D=other && D=reproduction; cd $D; cat attempt-04/plan.json": "none",
+            "D=reproduction; cd $D; cat attempt-04/plan.json": "access",
+            "D=reproduction; false && D=safe; cd $D; cat attempt-04/plan.json": "access",
+            "cd reproduction; true || cd ../safe; cat attempt-04/plan.json": "access",
+            # Her R1 cases at b23ef4f.
+            "true || cd reproduction && cat attempt-04/plan.json": "none",
+            "false || cd reproduction && cat attempt-04/plan.json": "access",
+            'D=safe; false && D=reproduction; cd "$D"; cat attempt-04/plan.json': "none",
+            # The same shapes after a command of unknown status.
+            "test -d x && X=1 && cd reproduction; cat attempt-04/plan.json": "warning",
+            "D=reproduction; test -d x && D=safe; cd $D; cat attempt-04/plan.json": "warning",
+            "test -d x || cd reproduction && cat attempt-04/plan.json": "warning",
+            "D=/r/reproduction && cd $D && cat attempt-04/plan.json": "access",
+            # An assignment from a command substitution is unknown, not stale.
+            "D=reproduction; D=$(pwd); cd $D; cat attempt-04/plan.json": "none",
+        }
+        for command, grade in cases.items():
+            self.assertEqual(self.tier("cd /fx; " + command, blinded), grade, command)
+
+    def test_a_pipeline_runs_whole_where_its_first_command_runs(self):
+        """Astra's re-check of PR #14 at f5dcb7b, confirmed with real Bash: a
+        pipeline the && before it skips must not revive the states it skipped;
+        it runs, whole, where its first command runs, and only its last
+        command's status reaches them. Both directions, with known and
+        unknown conditions."""
+        blinded = ["reproduction/attempt-04"]
+        read = "cd $D; cat attempt-04/plan.json"
+        cases = {
+            f"D=safe; false && true | true && D=reproduction; {read}": "none",
+            f"D=reproduction; false && true | true && D=safe; {read}": "access",
+            f"D=safe; true && true | true && D=reproduction; {read}": "access",
+            f"D=reproduction; true && true | true && D=safe; {read}": "none",
+            f"D=safe; test -d x && true | true && D=reproduction; {read}": "warning",
+            f"D=reproduction; test -d x && true | true && D=safe; {read}": "warning",
+            f"D=safe; true | false && D=reproduction; {read}": "none",
+            f"D=safe; false | true && D=reproduction; {read}": "access",
+        }
+        for command, grade in cases.items():
+            self.assertEqual(self.tier("cd /fx; " + command, blinded), grade, command)
+
+    def test_a_possible_read_says_so(self):
+        """A side agent's note on the re-check: a warning on a path argument
+        the scan could not resolve may be a real blinded read (in Astra's
+        Bash fixtures these opened the file), so its rule says to check the
+        transcript; a pattern's says it may be a pattern."""
+        blinding = self.bash_audit(
+            ["reproduction/attempt-04", "lodged-rules.yaml"],
+            ("cd /repo; test -d x || cd reproduction && cat attempt-04/plan.json", "BLINDED"),
+            ('cat "${F:-lodged-rules.yaml}"', "BLINDED"),
+            ("grep -rn lodged-rules.yaml .", ""))
+        self.assertEqual(blinding["contaminating"], [])
+        rules = [w["rule"] for w in blinding["warnings"]]
+        self.assertEqual(len(rules), 3)
+        for rule in rules[:2]:
+            self.assertIn("possibly a blinded read", rule)
+            self.assertIn("check in the transcript", rule)
+        self.assertIn("may be a search pattern", rules[2])
+
+    def test_awk_assignments_are_not_files(self):
+        """R2: awk takes name=value operands as variable assignments."""
+        self.assertEqual(self.tier("awk 'BEGIN {print 1}' label=lodged-rules.yaml",
+                                   ["lodged-rules.yaml"]), "warning")
+        self.assertEqual(self.tier("awk '{print}' lodged-rules.yaml", ["lodged-rules.yaml"]),
+                         "access")
+
+    def test_unresolved_expansions_are_not_definite_paths(self):
+        """R3: an argument whose expansion the walk cannot resolve is no
+        definite path; a literal path, and scan 1.0's evidence, still are."""
+        blinded = ["lodged-rules.yaml"]
+        for command in ('F=safe.txt; cat "${F:-lodged-rules.yaml}"',
+                        'unset F; cat "${F:-lodged-rules.yaml}"',
+                        'cat "$(printf safe.txt; : lodged-rules.yaml)"'):
+            self.assertEqual(self.tier(command, blinded), "warning", command)
+        for command in ("cat 'lodged-rules.yaml'", "grep -f lodged-rules.yaml lodged-rules.yaml",
+                        'cat "${F:-rules/lodged-rules.yaml}"'):
+            self.assertEqual(self.tier(command, blinded), "access", command)
+
+    def test_value_options_in_every_form(self):
+        """Astra's review of PR #14, P2-3: a value-taking option separated,
+        clustered, attached, or long, leaves its value out of the paths; a
+        pattern-first command's other operands are paths."""
+        for command in ("ls -I wiki .", "ls -lI wiki .", "ls -Iwiki .", "ls -lIwiki .",
+                        "ls --ignore wiki .", "ls --ignore=wiki ."):
+            places = lane.shell_places(command)
+            self.assertEqual(places[0]["runs"][0]["paths"], ["."], command)
+        cases = {"head -n20 a.R": ["a.R"], "head -n 20 a.R": ["a.R"], "tail -20 a.R": ["a.R"],
+                 "grep -A 3 pat f1 f2": ["f1", "f2"], "grep -e pat f1": ["f1"],
+                 "grep -rniepat f1": ["f1"], "grep -rn pat f1": ["f1"],
+                 "sed -n 1,5p f1": ["f1"], "sed -e s/a/b/ f1": ["f1"],
+                 "awk -F, '{print $1}' f1": ["f1"], "awk -f prog.awk f1": ["f1"],
+                 "file -f names.txt": ["names.txt"], "cat -- -x": ["-x"],
+                 "printf '%s' f1": [], "echo wiki": []}
+        for command, paths in cases.items():
+            self.assertEqual(lane.shell_places(command)[0]["runs"][0]["paths"], paths,
+                             command)
+
+    def test_bare_names_in_a_listing_are_noted_without_a_ruling(self):
+        """Shawn, 2026-10-30, after his 2026-10-21 ruling on the pilot's ls of
+        reproduction-system/: a name seen in a listing is not an access, so it
+        is recorded but raises no issue; an entry is judged under the
+        directory listed. Path-like names in output stay warnings, as in scan
+        1.0, and so do the bare .json, .md, and .csv names it judged."""
+        blinding = self.bash_audit(
+            ["lodged-rules.yaml", "reproduction/attempt-01", "extraction.json"],
+            ("ls reproduction-system/", "README.md\nlodged-rules.yaml\nprompts\n"),
+            ("ls /repo/out/a-2024/reproduction", "attempt-01\nattempt-02\n"),
+            ("cd /repo/out/a-2024/reproduction && ls", "attempt-01\nattempt-02\n"),
+            ("ls /repo/out/a-2024/reproduction/attempt-02", "plan.json\nlog.md\n"),
+            ("grep -rl T05 /repo/out/a-2024", "/repo/out/a-2024/reproduction/attempt-01/x.md\n"),
+            ("ls /repo/out/a-2024", "extraction.json\nreproduction\n"))
+        self.assertEqual(blinding["contaminating"], [])
+        self.assertEqual([w["path"] for w in blinding["warnings"]],
+                         ["/repo/out/a-2024/reproduction/attempt-01/x.md", "extraction.json"])
+        self.assertEqual([n["path"] for n in blinding["noted"]],
+                         ["lodged-rules.yaml", "/repo/out/a-2024/reproduction/attempt-01",
+                          "/repo/out/a-2024/reproduction/attempt-01"])
+        report = {"run_id": "t", "workflow_run": "wf_x", "audited_at": "now", "clean": True,
+                  "per_paper": {}, "agents": [{
+                      "agent_id": "agent-1", "agent_type": "p", "paper": "a-2024",
+                      "receipts": None, "clean": True, "writes_outside_scope": [],
+                      "usage": {"output_tokens": 0, "input_tokens": 0,
+                                "cache_creation_input_tokens": 0,
+                                "cache_read_input_tokens": 0},
+                      "cost_usd": 0.0, "wallclock_seconds": 0.0, "blinding": blinding}]}
+        self.assertIn("noted Bash `lodged-rules.yaml`", lane.render_audit(report))
+
+    def test_shell_names_judge_operands_as_directories_but_not_patterns(self):
+        def names(command: str) -> list[str]:
+            return [form for form, _ in lane.shell_names(command)]
+        self.assertIn("wiki/", names("ls wiki"))
+        self.assertIn("~/agent-mail/", names("(cd ~ && ls agent-mail)"))
+        self.assertIn("~/agent-mail/", names("{ cd ~; tree agent-mail; }"))
+        self.assertIn("outputs/validation/", names("cd outputs && ls validation"))
+        # A grep pattern is a name to judge as written, never as a directory,
+        # and it is not evidently a path.
+        grep = dict(lane.shell_names("cd outputs && grep -r validation ."))
+        self.assertFalse(grep["outputs/validation"])
+        self.assertNotIn("outputs/validation/", grep)
+        self.assertNotIn("wiki/", names("grep -rn wiki README.md"))
+        # Of find, only the starting points are paths; option values of ls
+        # and the like are counts or patterns.
+        self.assertIn("wiki/", names("find -L wiki -name '*.md'"))
+        for command in ("find . -name wiki", "find . -type f -exec grep -l wiki {} \\;",
+                        "ls -I wiki outputs", "tree -I wiki -L 2 ."):
+            self.assertNotIn("wiki/", names(command), command)
+            self.assertFalse(dict(lane.shell_names(command))["wiki"], command)
+        self.assertEqual(names("curl -sL https://x.org/wiki/PMI"), ["curl", "-sL"])
+        self.assertTrue(dict(lane.shell_names("cat lodged-rules.yaml"))["lodged-rules.yaml"])
+        self.assertEqual(lane.unbracket("(cd x"), ("cd x", 1, 0))
+        self.assertEqual(lane.unbracket("ls y)"), ("ls y", 0, -1))
+        self.assertEqual(lane.unbracket("D=$(cd x"), ("D=$(cd x", 0, 1))
+        self.assertEqual(lane.unbracket("cat $(pwd)"), ("cat $(pwd)", 0, 0))
+        self.assertEqual(lane.unbracket("cat ${D}"), ("cat ${D}", 0, 0))
+        self.assertEqual(lane.unbracket("(( n += 1 ))"), ("(( n += 1 ))", 0, 0))
+
+    def test_every_word_scan_1_0_judged_is_still_evidently_a_path(self):
+        """Nothing scan 1.0 caught is judged more leniently by 1.1."""
+        for command in ("cat /repo/wiki/continuity.md", "jq . extraction.json",
+                        "head notes.md && wc -l t.csv", "D=a/b; cat $D/c",
+                        "python3 -c \"open('out/x/assessment/a.json')\"",
+                        "cat <<'EOF' > f\nsee reproduction/attempt-01/log.md\nEOF"):
+            evident = dict(lane.shell_names(command))
+            for token in lane.path_tokens(command):
+                self.assertTrue(evident[token], (command, token))
+
 
 class LaunchManifestTests(unittest.TestCase):
     """Receipts are checked against the manifest at the run's launch commit,

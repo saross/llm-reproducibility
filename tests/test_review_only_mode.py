@@ -287,6 +287,30 @@ class ReviewOnlyTests(unittest.TestCase):
         execute = {**self.config, "mode": "execute"}
         self.assertEqual(lane.withheld_records(execute), [])
 
+    def test_withheld_records_and_the_scan_work_together(self):
+        """PR #14 with PR #15 (Astra's merge note): in review-only mode a
+        reviewer's bare-name read of a withheld record after a cd into the
+        attempt is a blinded access (scan 1.1's placement meets the automatic
+        withholding); its directory form is too; the harness-file exemption
+        still holds; and reads of the staged copy are clean."""
+        config = {**self.config, "blinding": {
+            "forbidden_substrings": [".claude/projects/"], "cross_paper_slugs": [],
+            "exempt_regex": r"/tool-results/hook-[0-9a-f-]+-\d+-additionalContext\.txt$"}}
+        blind = lane.Blinding(config, SLUG)
+
+        def grade(command: str) -> str:
+            hits = [g for f, g in lane.shell_name_grades(command, blind.hit) if blind.hit(f)]
+            return "access" if lane.ACCESS in hits else "warning" if hits else "none"
+        copy = self.root / "scratch" / "review-only-test" / SLUG / "review"
+        delivery = "/home/u/.claude/projects/x/tool-results/hook-ab12-3-additionalContext.txt"
+        self.assertEqual(grade(f"cd {self.dir} && cat {lane.REVIEW_FILE}"), "access")
+        self.assertEqual(grade(f"cd {self.dir} && ls {lane.SUPERSEDED_DIR}"), "access")
+        self.assertEqual(grade(f"cd {self.dir}; grep -rn concern {lane.RULINGS_FILE}"), "access")
+        self.assertEqual(grade(f"cat {delivery}"), "none")
+        self.assertEqual(grade(f"cd {copy} && cat {lane.GATE_FILE} comparisons/comparison.json"),
+                         "none")
+        self.assertEqual(grade(f"cd {self.dir} && cat {lane.COMPARISON_FILE}"), "none")
+
     # -- 3 and 4. the run audit, persistence, and adjudication -----------------
 
     def test_a_review_only_run_is_audited_persisted_and_adjudicated(self):
