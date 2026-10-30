@@ -1968,6 +1968,51 @@ class AuditTests(unittest.TestCase):
                         "cd /r/reproduction; cat attempt-04/plan.json"):
             self.assertEqual(tier(command), "access", command)
 
+    @staticmethod
+    def tier(command: str, forbidden: list[str]) -> str:
+        """How the scan grades a command: a blinded access, a warning, or
+        nothing."""
+        blind = lane.Blinding({"blinding": {"forbidden_substrings": forbidden}}, "a-2024")
+        hits = [e for f, e in lane.shell_names(command) if blind.hit(f)]
+        return "access" if any(hits) else "warning" if hits else "none"
+
+    def test_a_branch_the_shell_may_skip_leaves_its_location_uncertain(self):
+        """Astra's re-check of PR #14, R1, confirmed with real Bash: a cd or
+        an assignment reached through || or after another command's && may
+        not run, so what it would place is a warning, never an access."""
+        blinded = ["reproduction/attempt-04"]
+        for command in ("cd /repo; true || cd reproduction && cat attempt-04/plan.json",
+                        "cd /repo; false || cd reproduction && cat attempt-04/plan.json",
+                        "D=safe; false && D=reproduction; cd $D; cat attempt-04/plan.json",
+                        'D=safe; false && D=reproduction; cd "$D"; cat attempt-04/plan.json',
+                        "D=safe; true && D=reproduction; cd $D; cat attempt-04/plan.json"):
+            self.assertEqual(self.tier(command, blinded), "warning", command)
+        for command in ("D=/r/reproduction; cd $D && cat attempt-04/plan.json",
+                        "D=/r/reproduction && cd $D && cat attempt-04/plan.json"):
+            self.assertEqual(self.tier(command, blinded), "access", command)
+        # An assignment from a command substitution is forgotten, not left stale.
+        self.assertEqual(self.tier("D=reproduction; D=$(pwd); cd $D; cat attempt-04/plan.json",
+                                   blinded), "none")
+
+    def test_awk_assignments_are_not_files(self):
+        """R2: awk takes name=value operands as variable assignments."""
+        self.assertEqual(self.tier("awk 'BEGIN {print 1}' label=lodged-rules.yaml",
+                                   ["lodged-rules.yaml"]), "warning")
+        self.assertEqual(self.tier("awk '{print}' lodged-rules.yaml", ["lodged-rules.yaml"]),
+                         "access")
+
+    def test_unresolved_expansions_are_not_definite_paths(self):
+        """R3: an argument whose expansion the walk cannot resolve is no
+        definite path; a literal path, and scan 1.0's evidence, still are."""
+        blinded = ["lodged-rules.yaml"]
+        for command in ('F=safe.txt; cat "${F:-lodged-rules.yaml}"',
+                        'unset F; cat "${F:-lodged-rules.yaml}"',
+                        'cat "$(printf safe.txt; : lodged-rules.yaml)"'):
+            self.assertEqual(self.tier(command, blinded), "warning", command)
+        for command in ("cat 'lodged-rules.yaml'", "grep -f lodged-rules.yaml lodged-rules.yaml",
+                        'cat "${F:-rules/lodged-rules.yaml}"'):
+            self.assertEqual(self.tier(command, blinded), "access", command)
+
     def test_value_options_in_every_form(self):
         """Astra's review of PR #14, P2-3: a value-taking option separated,
         clustered, attached, or long, leaves its value out of the paths; a

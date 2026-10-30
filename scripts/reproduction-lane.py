@@ -16,7 +16,10 @@ scan 1.0 would have found it, or when its word is a path argument at a
 location the walk is sure of, and otherwise a warning to rule on; a name
 listed bare in output is recorded, with no ruling. The walk keeps the
 directory and variables of a subshell or command substitution to itself,
-reads value-taking options in every form, and judges the harness-file
+treats a ``cd`` or an assignment reached through ``||``, or after another
+command's ``&&``, as possibly skipped, grades an argument it cannot resolve
+as a warning, reads value-taking options in every form, leaves awk's
+``name=value`` operands out of the paths, and judges the harness-file
 exemption on the file each form names. Nothing scan 1.0 caught is judged
 more leniently, and the run audit's format is unchanged
 (``RUN_AUDIT_VERSION`` 1.1).
@@ -8344,7 +8347,8 @@ def path_arguments(name: str, given: list[str]) -> list[str]:
     of its expression), and every operand but the pattern of a
     ``PATTERN_FIRST_COMMANDS`` command, whose first operand is the pattern
     unless an option gives it. Options and their values (``VALUE_OPTIONS``)
-    are never paths; words after ``--`` always are. Any other command takes
+    are never paths, nor are awk's ``name=value`` assignments; words after
+    ``--`` always are. Any other command takes
     no path arguments here, and its words are judged as text (Astra's
     review of PR #14, P2-4).
     """
@@ -8383,6 +8387,10 @@ def path_arguments(name: str, given: list[str]) -> list[str]:
                     break
     if name in PATTERN_FIRST_COMMANDS and not pattern_given:
         operands = operands[1:]
+    if name in ("awk", "gawk"):
+        # An operand of the form name=value assigns an awk variable and
+        # opens nothing (Astra's re-check, R2).
+        operands = [w for w in operands if not ASSIGNMENT_RE.fullmatch(w)]
     return operands
 
 
@@ -8434,29 +8442,44 @@ def shell_places(command: str) -> list[dict]:
     a command substitution keeps its own directory and variables, restored
     when it closes, and a command in a pipeline runs in a subshell, so its
     ``cd`` and assignments change nothing after it. Commands are assumed to
-    succeed. A location is uncertain where that cannot settle it: after a
-    ``cd`` that another command's success decided (``[ -d x ] && cd x``),
-    once its ``&&`` chain ends; after a ``cd x ||``, unless what follows the
-    ``||`` is ``exit`` or ``return``; after a ``cd`` to a
-    target the walk cannot resolve (a variable it did not see set, ``-``),
-    which leaves the directory unknown; and throughout a command whose
-    brackets do not balance.
+    succeed, but not to be reached: in an and-or list a command after
+    ``||`` may be skipped, and one after ``&&`` hangs on the command before
+    it (Astra's re-check, R1). So a location is uncertain:
+
+    - after a ``cd`` reached through ``||`` (``true || cd x && cat y``,
+      where the ``cd`` never runs);
+    - after a ``cd`` that another command's success decided
+      (``[ -d x ] && cd x``), once its ``&&`` chain ends;
+    - after a ``cd x ||``, unless what follows the ``||`` is ``exit`` or
+      ``return``;
+    - after a ``cd`` to a target the walk cannot resolve (an unset or
+      uncertain variable, ``-``), which leaves the directory unknown;
+    - throughout a command whose brackets do not balance.
+
+    A variable is uncertain when its assignment was reached through ``&&``
+    or ``||`` after another command (``false && D=x``), or made from an
+    uncertain one; an assignment from a command substitution is forgotten,
+    since its value is unknown. A path argument is definite only when it
+    holds no expansion left unresolved and its segment uses no uncertain
+    variable; any other is unsure.
 
     Returns:
-        ``[{"cwd", "certain", "segment", "name", "paths"}]``: the directory in
-        effect for the segment (None while unknown), whether it is certain,
-        the segment, its command's name, and the words that command takes
-        as paths (``path_arguments``).
+        ``[{"cwd", "certain", "segment", "name", "paths", "unsure_paths"}]``:
+        the directory in effect for the segment (None while unknown),
+        whether it is certain, the segment, its command's name, and the
+        words that command takes as paths (``path_arguments``), definite and
+        unsure.
     """
     variables: dict[str, str] = {}
+    unsure: set[str] = set()
     cwd: str | None = None
     certain, chained, balanced = True, False, True
-    stack: list[tuple[str | None, bool, bool, dict[str, str]]] = []
+    stack: list[tuple[str | None, bool, bool, dict[str, str], set[str]]] = []
     places: list[dict] = []
     text, _ = split_heredocs(command)
     text = mask_comments(text)
     segments = shell_segments(text)
-    last = ""
+    last = ""  # the kind of the previous segment: "cd", "assign", or "command"
     for n, (offset, raw) in enumerate(segments):
         before = (text[segments[n - 1][0] + len(segments[n - 1][1]):offset].strip()
                   if n else "")
@@ -8464,47 +8487,68 @@ def shell_places(command: str) -> list[dict]:
                  if n + 1 < len(segments) else "")
         body, opened, net = unbracket(raw)
         for _ in range(opened):
-            stack.append((cwd, certain, chained, dict(variables)))
+            stack.append((cwd, certain, chained, dict(variables), set(unsure)))
         # A cd decided by another command's success holds only along the
         # && chain that follows it.
         if chained and before != "&&":
             certain, chained = False, False
+        referenced = {m.group(1) or m.group(2) for m in SHELL_VARIABLE_RE.finditer(body)}
+        doubtful = bool(referenced & unsure)
         segment = expand_variables(body, variables)
         if segment:
             words = shell_words(segment)
             k, name = command_word(words)
-            paths = path_arguments(name, words[k + 1:])
+            given = path_arguments(name, words[k + 1:])
+            definite = [] if doubtful else [w for w in given if "$" not in w and "`" not in w]
             places.append({"cwd": cwd, "certain": certain, "segment": segment,
-                           "name": name, "paths": paths})
+                           "name": name, "paths": definite,
+                           "unsure_paths": [w for w in given if w not in definite]})
+            # Reached only if the command before succeeded (&&) or failed (||).
+            conditional = before == "||" or (before == "&&" and last == "command")
             if "|" not in (before, after):
                 assigned = words[:k] if k == len(words) else (
                     words[k + 1:] if name == "export" else [])
                 for word in assigned:
                     found = ASSIGNMENT_RE.fullmatch(word)
-                    if found and "$(" not in found.group(2) and "`" not in found.group(2):
-                        variables[found.group(1)] = found.group(2)
+                    if not found:
+                        continue
+                    if "$(" in found.group(2) or "`" in found.group(2):
+                        variables.pop(found.group(1), None)
+                        unsure.add(found.group(1))
+                        continue
+                    variables[found.group(1)] = found.group(2)
+                    if conditional or doubtful:
+                        unsure.add(found.group(1))
+                    else:
+                        unsure.discard(found.group(1))
                 if name in ("cd", "pushd"):
-                    target = paths[0] if paths else "~"
+                    target = given[0] if given else "~"
                     if target == "-" or "$" in target or "`" in target:
                         cwd, certain, chained = None, False, False
                     else:
                         absolute = target.startswith(("/", "~"))
-                        certain = absolute or cwd is None or certain
+                        if before == "||" or doubtful:
+                            certain, chained = False, False
+                        elif before == "&&" and last == "command":
+                            certain, chained = absolute or cwd is None or certain, True
+                        elif before == "&&":
+                            certain = absolute or certain
+                        else:
+                            certain, chained = absolute or cwd is None or certain, False
                         cwd = posixpath.normpath(target if absolute or cwd is None
                                                  else cwd + "/" + target)
-                        chained = before in ("&&", "||") and last not in ("cd", "pushd")
                         rescue = (shell_words(unbracket(segments[n + 1][1])[0])
                                   if n + 1 < len(segments) else [])
                         if after == "||" and command_word(rescue)[1] not in ("exit", "return"):
                             certain, chained = False, False
-            last = name
+            last = "cd" if name in ("cd", "pushd") else "assign" if not name else "command"
         for _ in range(max(net, 0)):
-            stack.append((cwd, certain, chained, dict(variables)))
+            stack.append((cwd, certain, chained, dict(variables), set(unsure)))
         for _ in range(max(-net, 0)):
             if not stack:
                 balanced = False
                 break
-            cwd, certain, chained, variables = stack.pop()
+            cwd, certain, chained, variables, unsure = stack.pop()
     if stack or not balanced:
         for place in places:
             place["certain"] = False
@@ -8527,8 +8571,10 @@ def shell_names(command: str) -> list[tuple[str, bool]]:
       normalised, as a directory (``ls wiki`` meets ``wiki/``), and placed
       under a ``cd``'s directory when that location is certain;
     - every other form is warning-grade: words in other roles (a pattern,
-      an option's value, literal text), and placed forms where the location
-      is uncertain.
+      an option's value, literal text), placed forms where the location is
+      uncertain, and path arguments the walk could not resolve, such as
+      ``"${F:-x}"``, ``"$(...)"``, or a path from an uncertain variable
+      (Astra's re-check, R3).
 
     A read by bare name is judged, so ``cd …/reproduction-system && cat
     lodged-rules.yaml`` is caught, as ``cat reproduction-system/lodged-rules.yaml``
@@ -8558,6 +8604,9 @@ def shell_names(command: str) -> list[tuple[str, bool]]:
             sure = name_forms(word, around if place["certain"] else [])
             judge(sure + [form.rstrip("/") + "/" for form in sure], True)
             judge(name_forms(word, around), False)
+        for word in place["unsure_paths"]:
+            forms = name_forms(word, around)
+            judge(forms + [form.rstrip("/") + "/" for form in forms], False)
     return list(names.items())
 
 
@@ -8574,7 +8623,8 @@ def shell_directories(command: str) -> list[str]:
         cwd = place["cwd"]
         if cwd:
             found.append(cwd)
-        for token in place["paths"] if place["name"] in LISTING_COMMANDS else []:
+        listed = place["paths"] + place["unsure_paths"]
+        for token in listed if place["name"] in LISTING_COMMANDS else []:
             found.append(token)
             if cwd and not token.startswith(("/", "~", "-", "$")):
                 found.append(posixpath.normpath(cwd + "/" + token))

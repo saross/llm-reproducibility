@@ -206,10 +206,13 @@ configuration (for the shakedown:
   `.csv`), or when its word is a path argument (of `ls`, `cat`, `cd`, and
   the like, or a file argument of `grep`, `sed`, or `awk`) at a location the
   walk is sure of. Any other match, such as a pattern, an option's value,
-  literal text, or a path under an uncertain directory, is a warning for
-  human review (Shawn, 2026-10-30, refined by role after Astra's review).
-  The walk keeps a subshell's and a command substitution's directory and
-  variables to themselves. Blinded paths named in command output are
+  literal text, a path under an uncertain directory, or an argument whose
+  expansion the walk cannot resolve (`"${F:-x}"`, `"$(...)"`, a variable set
+  in a branch that may not run), is a warning for human review (Shawn,
+  2026-10-30, refined by role after Astra's review and re-check). The walk
+  keeps a subshell's and a command substitution's directory and variables
+  to themselves, and treats a `cd` or an assignment reached through `||`,
+  or after another command's `&&`, as possibly skipped. Blinded paths named in command output are
   warnings for human review; blinded names listed bare in output (an `ls`
   of a parent directory) are recorded in the audit, with no ruling (Shawn,
   2026-10-30). Not detected: a recursive read of a blinded directory's
