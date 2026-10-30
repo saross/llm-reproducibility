@@ -198,9 +198,18 @@ configuration (for the shakedown:
 
 - **Blinding is instruction plus detection, not prevention.** The harness
   cannot path-scope reads at spawn (amendment 2 §4). `audit-run` scans every
-  transcript (Read, Grep, and Glob paths, and the path-like tokens of Bash
-  commands; URLs are excluded) and reports contaminating accesses.
-  Mentions of blinded paths in command output are warnings for human review.
+  transcript (Read, Grep, and Glob paths, and every token of Bash commands,
+  bare names included, also placed under a `cd` earlier in the same command;
+  URLs are excluded) and reports contaminating accesses. Since blinding scan
+  1.1 (lane v1.7), a match is contaminating only when its word is evidently
+  a path (it holds a `/`, is an operand of `ls`, `cat`, `cd`, and the like,
+  or is a file name with an extension); any other matching word, such as a
+  search pattern, is a warning for human review. Blinded paths named in
+  command output are warnings for human review; blinded names listed bare
+  in output (an `ls` of a parent directory) are recorded in the audit, with
+  no ruling (Shawn, 2026-10-30). Not detected: a recursive read of a
+  blinded directory's parent (`grep -r x outputs/`) whose output names no
+  blinded path, and a path built by command substitution.
 - **The receipt gate's `schema_version` check is FAIR-specific**
   (`subagent-receipt-gate.py` compares any declared `schema_version` with the
   benchmark contract). The reproduction schemas therefore carry no
