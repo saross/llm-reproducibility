@@ -89,7 +89,8 @@ merged here as PR #1).
     gate.
     - [x] 2026-10-30 `docker-buildx` installed on zbook (Shawn); 771 pass,
       7 skip.
-    - [ ] **The blinding audit gap: PR #14 open** (session 789afcf9,
+    - [x] 2026-10-30 **The blinding audit gap: PR #14 merged** (`1b91eb5`,
+      with Shawn's approval, after Astra approved `d7ecf0d`) (session 789afcf9,
       branch `fix/blinding-bare-names`, `0d2b0cf` and `7876470`; lane v1.7,
       blinding scan 1.1). Shawn's tiering (2026-10-30): a Bash match is
       contaminating only when its word is evidently a path, otherwise a
@@ -133,11 +134,16 @@ merged here as PR #1).
         command's status reaches those states. Her harness, unmodified:
         thirteen tests, 1,152 parity cases, all fixture sets, and 160 state
         cases with 0 failures; 780 pass.
-      - [ ] **Astra's re-check at `d7ecf0d`**: the reply is
-        `astra-reply-pr14-pipelines.md` in session 789afcf9's scratchpad,
-        for Shawn to paste; file it, the earlier replies, and all her
-        reviews in agent mail once on amd-tower.
-    - [ ] **The review-only mode: PR #15 open** (session 789afcf9, branch
+      - [x] 2026-10-30 Astra's re-check at `d7ecf0d`: **approved** (14
+        focused tests, 1,152 parity cases, 25 earlier Bash fixtures, all
+        160 state cases).
+      - [ ] **File in agent mail once on amd-tower:** her five PR #14
+        reviews (pasted into session 789afcf9) and Claude's replies
+        (`astra-review-request-pr14.md`, `astra-reply-pr14-closure.md`,
+        `astra-reply-pr14-recheck.md`, `astra-reply-pr14-states.md`,
+        `astra-reply-pr14-pipelines.md` in that session's scratchpad).
+    - [x] 2026-10-30 **The review-only mode: PR #15 merged** (`37a3fe7`,
+      with Shawn's approval, after Astra approved `4e490b3`) (session 789afcf9, branch
       `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
       audit 1.2, `reproduction-review.workflow.js` v1.0). Shawn's choices
       (2026-10-30): the pilot reviews a labelled copy of attempt 04 (its
@@ -163,11 +169,20 @@ merged here as PR #1).
         flag's `review` content digest, so a changed verdict challenge
         kept its ruling on a same-run re-audit. Closed in `4e490b3` (the
         identity under `review_identity`); 791 pass.
-      - [ ] **Astra's re-check at `4e490b3`**: the reply is
-        `astra-reply-pr15-closure.md` in session 789afcf9's scratchpad,
-        for Shawn to paste. Then rebase on #14, or #14 on this, and test
-        the two together (her merge note).
-    - [ ] **Then the reviewer-only pilot** (after #15 merges): its own run
+      - [x] 2026-10-30 Astra's re-check at `4e490b3`: **approved** (18
+        focused tests, all closure probes).
+      - [x] 2026-10-30 **Combined and merged.** PR #14's branch merged into
+        #15's (`ec0bb3d`): the lane header (v1.8 notes v1.8 then v1.7) and
+        the manifest entry reconciled, a combined test added (a bare-name
+        read of a withheld record after a cd is an access; the exemption
+        and the staged copy clean). Her approved harnesses for both PRs
+        pass on the combined code. `main` merged in (`6cf63bd`) for
+        GitHub; main at `37a3fe7`: 806 pass, 7 skip; attempt 04 still
+        adjudicates to 13/18.
+      - [ ] **File in agent mail once on amd-tower:** her three PR #15
+        reviews and Claude's replies (`astra-review-request-review-only-mode.md`,
+        `astra-reply-pr15-closure.md` in session 789afcf9's scratchpad).
+    - [ ] **Next: the reviewer-only pilot** (#15 is merged): its own run
       configuration (`mode: review-only`), the labelled copy of attempt 04
       outside any path study reporting reads, a blinding list that blinds
       the original attempt 04, a pre-run review, the API gate, a launch
