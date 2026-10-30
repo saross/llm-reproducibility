@@ -183,6 +183,51 @@ configuration (for the shakedown:
     outcomes nor the gate's coverage reflect the rulings. After any later
     ruling, adjudicate again, since the check refuses a stale record.
 
+## Review-only re-run
+
+`reproduction-review.workflow.js` (gate 1.3.2, criterion 4) re-reviews an
+executed attempt with a fresh reviewer and no executor. The design, and
+Shawn's rulings on it, are in `wiki/planning/reproduction-gate-1-3-design.md`
+("The review-only mode as designed"). A review-only run takes its own run
+configuration, with `mode: review-only`; the plan and execute builders
+refuse that configuration, and `build-review-args` refuses any other.
+
+It re-reviews only an attempt still exactly as its executor's run left it:
+the attempt's run audit must have cleared its persisted executor result,
+clean, for the attempt as it stands. A changed comparison is refused,
+because corrections go into new attempts (Shawn, 2026-10-13). The steps
+follow the main runbook, with these differences:
+
+1. **Review args:**
+   `venv/bin/python scripts/reproduction-lane.py build-review-args --config $CFG --scratch-root $SCRATCH --out $SCRATCH/review-args.json`
+   binds each attempt's executor result (its run, workflow run, agent,
+   payload digest, and launch commit) and names a fresh review folder
+   under the scratch root.
+2. **API gate**, then run the workflow as in step 4. Launch from a fresh
+   session after any change to agent definitions, hooks, or workflow
+   scripts.
+3. In the workflow, the gate step runs `check-attempt` with the
+   **executor's** launch commit, since the sealed run records are checked
+   against it, and then `stage-review <attempt> --to <review folder>`.
+   That copies the reviewable state and the gate report, checks the copy's
+   digest against the attempt's, and prints it, so the harness records the
+   state the reviewer was handed. The reviewer reads only the copy. The
+   executor's report, the earlier review, the rulings, the audits, and the
+   adjudicated result are withheld.
+4. **Authoritative gate** as in step 10, with the executor's launch commit.
+5. **Audit** as in step 11. The run audit (1.2) carries the executor's
+   clearance from the attempt's earlier run audit, which moves to
+   `superseded/<its workflow run>/`. The reviewed state is this run's.
+6. **Human queue** and **rulings** as in steps 12 and 13. The new review's
+   concerns, method rows, and verdict flag are new issues and need new
+   rulings; gate issues whose fingerprints are unchanged keep theirs.
+7. **Persist results** as in step 14. Only the review is persisted. The
+   review it replaces, and the adjudicated result derived from that
+   review, move to `superseded/<their workflow run>/`. Admission binds the
+   executor from its persisted record and the reviewer from this run.
+8. **Adjudicate** as in step 15. The result names the review's run as
+   `review_run`.
+
 ## Where each invariant is enforced
 
 | Invariant | Mechanism |
