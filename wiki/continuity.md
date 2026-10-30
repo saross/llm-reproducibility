@@ -87,6 +87,17 @@ merged here as PR #1).
     since it guards the re-plan; (2) the review-only mode (branch + PR,
     Astra's review), then the reviewer-only pilot on attempt 04 at the API
     gate.
+    - [x] 2026-10-30 `docker-buildx` installed on zbook (Shawn); 771 pass,
+      7 skip.
+    - [ ] **The blinding audit gap: PR #14 open** (session 789afcf9,
+      branch `fix/blinding-bare-names`, `0d2b0cf` and `7876470`; lane v1.7,
+      blinding scan 1.1). Shawn's tiering (2026-10-30): a Bash match is
+      contaminating only when its word is evidently a path, otherwise a
+      warning; bare names in output are `noted`, with no ruling. **Awaiting
+      Astra's review**, which Shawn relays by hand while on zbook (request
+      text in that session's scratchpad, `astra-review-request-pr14.md`;
+      file a copy in `~/agent-mail/claude/outbox/codex/` once on
+      amd-tower). Merge after her review.
   - [ ] Working-notes candidates WN-ax, WN-ay (session log, 2026-10-18 →
     10-21) and WN-az, WN-ba (session log, 2026-10-21 → 10-23) await
     Shawn's verdict.
