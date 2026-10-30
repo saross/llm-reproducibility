@@ -4,7 +4,9 @@
 #14 and #15 merged (`37a3fe7`); the labelled copy is `2a3d577` and the
 configuration `5084dd0`. **Status:** not approved and not launched. Shawn
 approves at the API gate, from a fresh Claude Code session on amd-tower.
-Two decisions are open before launch (see "Open before launch").
+The two decisions found in preparation are settled (see "Settled before
+launch"); the launch waits on PR `fix/review-only-independence` (lane
+v1.9) merging, after Astra's review.
 
 **Why this run.** Gate 1.3.2 changed what the reviewer writes
 (`adversarial-reviewer` v1.4: target-scoped concerns and a method row per
@@ -27,7 +29,7 @@ its review, and its rulings.
 | Workflow | `reproduction-system/workflows/reproduction-review.workflow.js` v1.0 |
 | Paper | herskind-riede-2024, the labelled copy of attempt 04 |
 | Bound executor | `wf_4fd7a886-ada`, agent `a23bd74af4155b907`, payload `42455c5d…`, launch commit `6b18505` |
-| Agents and models | 1 mechanical gate step (`general-purpose`, `claude-haiku-5-5`, effort low); 1 governed `adversarial-reviewer` v1.4, `claude-opus-5-5`, effort high |
+| Agents and models | 1 mechanical gate step (`general-purpose`, `claude-haiku-5-5`, effort low); 1 governed `adversarial-reviewer` v1.4.1, `claude-opus-5-5`, effort high |
 | Mode | real-time workflow on the Max plan, priced API-equivalent; not batch |
 | Spawns | 2 (no planner, no executor; Docker only for the gate's image check) |
 | API requests | about 4 for the gate step and 30 to 45 for the reviewer |
@@ -65,33 +67,34 @@ runbook's rule: check at the top of the estimate, halt at 1.5 times it.
   pre-review records (the approval note dates from plan time, the gate
   report from the original run).
 
-## Open before launch
+## Settled before launch
 
-1. **The reviewer's own definition points at the earlier review's
-   evidence.** `.claude/agents/adversarial-reviewer.md` line 99 gives, as
-   its example of an evidence path, `comparisons/t17-cluster-objects-vs-table3.csv`
-   (added in `2ccda2e`, gate 1.3.2 criterion 1). That is a real file in
-   attempt 04 and the evidence the earlier review cited for its central
-   concern (T17's credit under ruling Q5). It is pushed to the reviewer in
-   its definition, outside any blinding, and names no conclusion, but it
-   draws a fresh reviewer's attention to exactly the target this pilot
-   would compare. The prompt scan cannot see it (it is not a path under a
-   blinded substring). Recommendation: a v1.4.1 that replaces the example
-   with outcome-neutral paths (`comparisons/comparison.json`,
-   `reproduction-plan.json`), with the manifest's version and sha256, before
-   launch. Without it, a T17 finding by the fresh reviewer cannot be read
-   as independent.
-2. **The re-gated report tells the reviewer every gate issue was ruled.**
-   The gate step re-runs `check-attempt` in the copy, whose rulings file
-   holds Shawn's rulings, and the report's `coverage_admitted` then reads
-   14 of 18 admitted with no unruled issues (the original reviewer saw 0 of
-   18, with 7 unruled). It names no target ruling and nothing of the
-   earlier review, but a fresh reviewer learns that a human admitted every
-   gate issue. This is a property of the mode (any review that replaces a
-   review of record meets ruled gate issues), not of this pilot; a later
-   change could stage a gate report computed without rulings. For this
-   run: proceed and record it as a known difference, or hold for that
-   change.
+1. **The reviewer's own definition pointed at the earlier review's
+   evidence.** `.claude/agents/adversarial-reviewer.md` gave, as its
+   example of an evidence path, `comparisons/t17-cluster-objects-vs-table3.csv`
+   (added in `2ccda2e`, gate 1.3.2 criterion 1): a real file in attempt 04
+   and the evidence the earlier review cited for its central concern (T17's
+   credit under ruling Q5), pushed to every reviewer outside any blinding.
+   The prompt scan could not see it. **Settled:** Shawn chose a v1.4.1 on
+   main (2026-10-30); `9527f1b` names `comparisons/comparison.json`
+   instead, and its version note names no outcome.
+2. **Information downstream of the replaced review.** The gate step
+   re-gates the copy, whose rulings file holds Shawn's rulings, so the
+   report's `coverage_admitted` read 14 of 18 admitted with nothing unruled
+   (the first reviewer saw 0 of 18, with 7 unruled); four of those rulings
+   discharge obligations on the earlier reviewer's findings. Every
+   production re-review meets the same, since F4 requires a fully ruled
+   attempt. And the carried rulings themselves rested on the replaced
+   review: besides the four discharges, three executor-side rulings cite
+   its findings (line 27's tolerated statement, T13, T05's PAPER_ERROR).
+   **Settled:** Shawn ruled (2026-10-31) that information moves one way,
+   from execution to review to rulings, and asked for both halves, with
+   every ruling lapsing. Lane v1.9 (PR `fix/review-only-independence`): the
+   staged gate report shows every issue unruled, as the first reviewer saw
+   it, and the audit refuses one that shows rulings; once the review-only
+   audit makes the new review the review of record, every issue the copy
+   holds is bound to it and is ruled again (design note, "Independence of a
+   re-review").
 
 ## Launch checklist (in a fresh session on amd-tower)
 
@@ -99,11 +102,12 @@ A fresh session loads the reviewer definition from main, and amd-tower holds
 attempt 04's image.
 
 1. `git fetch`, then confirm main is level with origin and contains
-   `5084dd0` (and the v1.4.1 commit, if item 1 above lands); the tracked
-   tree is clean.
-2. Confirm the definition on disk and the manifest:
-   `grep -c "agent definition v1.4" .claude/agents/adversarial-reviewer.md`
-   and `venv/bin/python scripts/check-manifest-consistency.py`.
+   `5084dd0`, `9527f1b` (reviewer v1.4.1), and the merge of PR
+   `fix/review-only-independence` (lane v1.9); the tracked tree is clean.
+2. Confirm the definition and the lane on disk, and the manifest:
+   `grep -c "agent definition v1.4.1" .claude/agents/adversarial-reviewer.md`
+   (expect 1), `grep -c "Version:\*\* 1.9" scripts/reproduction-lane.py`
+   (expect 1), and `venv/bin/python scripts/check-manifest-consistency.py`.
 3. Confirm the image: `docker image inspect llmr-herskind-riede-2024-attempt-04`
    succeeds. Without it the gate step fails and nothing is reviewed.
 4. Build the args (no API cost):
@@ -134,8 +138,13 @@ attempt directory:
    --run-dir <workflow run dir>`. It verifies the staged copy by re-hashing
    it.
 3. **Human queue** (`human-queue`), then **rulings** (`rule-flags`), drafted
-   with their target and verdict parts at ruling time. Check the transcript
-   before ruling any "possibly a blinded read" warning admissible.
+   with their target and verdict parts at ruling time. Every issue is
+   unruled after the audit (lane v1.9): about 15 carried from the earlier
+   run (the gate's 6, the transcript audit's 2, and about 7 of the
+   executor's) plus the new review's. Rule each against the new review;
+   restate an earlier decision only where it still holds, with a note
+   saying so. Check the transcript before ruling any "possibly a blinded
+   read" warning admissible.
 4. **Persist** (`persist-results`), then **adjudicate** `$COPY`.
 5. **Results** in `results-<date>.md` beside this brief, against the
    acceptance checks below.
@@ -146,18 +155,21 @@ attempt directory:
    `wf_4fd7a886-ada` unchanged (its cleared state `f549d2f5…`), moves the
    earlier run audit to `superseded/wf_4fd7a886-ada/`, and binds the
    reviewer to this run.
-2. **A fresh reviewed state.** The reviewed state comes from the gate
-   step's `stage-review` record; `audit-run` re-hashes the staged copy and
-   its gate report, and the reviewer's prompt named that copy.
-3. **A clean audit.** Receipts valid (`adversarial-reviewer v1.4`, or
-   v1.4.1), no contaminating access by either agent, no writes outside
-   scope.
+2. **A fresh reviewed state, nothing downstream of the old review.** The
+   reviewed state comes from the gate step's `stage-review` record;
+   `audit-run` re-hashes the staged copy and its gate report, finds the
+   report counting every issue unruled, and checks the reviewer's prompt
+   named that copy.
+3. **A clean audit.** Receipts valid (`adversarial-reviewer v1.4.1`), no
+   contaminating access by either agent, no writes outside scope.
 4. **The v1.4 review, live.** One method row per locked target (18), none
    missing, duplicated, or unknown; concerns with scope and targets; a
    verdict challenge. It persists without a schema or row failure.
-5. **No inherited clearance.** The new review's concerns, method rows, and
-   verdict flag reach the human queue unruled; the six gate issues, whose
-   fingerprints are unchanged, keep their rulings.
+5. **No inherited clearance or rulings.** Every issue reaches the human
+   queue unruled: the new review's concerns, method rows, and verdict flag,
+   and every issue carried from the earlier run (the gate's, the transcript
+   audit's, and the executor's), whose earlier rulings stay in the file as
+   history.
 6. **Persistence and adjudication in the copy.** Only the review is
    persisted; the earlier review and adjudicated result move to
    `superseded/wf_4fd7a886-ada/`; the new adjudicated result names this run
@@ -175,8 +187,7 @@ attempt directory:
 the earlier review, which stays withheld from the reviewer): does the v1.4
 reviewer raise T17's credit under Q5, and target-scope it; does it find the
 method departures the v1.3 reviewer found (T01, T03, T04, T12) and the
-declared T13; does its verdict challenge support SUCCESSFUL. Read item 1 of
-"Open before launch" with any T17 finding.
+declared T13; does its verdict challenge support SUCCESSFUL.
 
 ## Stop states
 
