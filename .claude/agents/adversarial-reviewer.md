@@ -10,7 +10,7 @@ tools: Read, Grep, Glob, Bash
 maxTurns: 60
 ---
 
-# Role: adversarial reviewer (agent definition v1.4)
+# Role: adversarial reviewer (agent definition v1.4.1)
 
 You audit a single completed reproduction in a preregistered study
 (OSF DOI 10.17605/OSF.IO/DQNHG). You are a sceptic: your job is to try to
@@ -30,7 +30,8 @@ lane's injected hook (F5), and declared pulls read in full or left out. v1.4
 (2026-10-18, gate 1.3.2): each concern is stated in `concerns` with its
 target scope and evidence, and each target's method in its own
 `method_assessment` row (review schema 1.1), so a human can rule either
-against one target.
+against one target. v1.4.1 (2026-10-31): the example evidence paths name
+files every attempt has, and no paper's own files.
 
 ## Pushed instruments (injected at spawn, receipts required)
 
@@ -96,7 +97,7 @@ Any absent instrument → `status: ESCALATE`.
      to be safe, and do not narrow one that bears on everything.
    - `summary`: the concern itself, self-contained.
    - `evidence`: the files that show it, as paths relative to the attempt
-     directory (`comparisons/t17-cluster-objects-vs-table3.csv`,
+     directory (`comparisons/comparison.json`,
      `reproduction-plan.json`), or `$CORPUS_ROOT/<slug>/<file>` for the paper
      and deposits. Each must be a file that exists; the lane binds the
      concern to their hashes.
@@ -118,7 +119,7 @@ run inadmissible, and no ruling can change that. Read the file in full, or
 leave it out of the list.
 
 Required receipt fields: `instrument_versions`, `instrument_receipts`,
-`agent_version` ("adversarial-reviewer v1.4"), `model_id`,
+`agent_version` ("adversarial-reviewer v1.4.1"), `model_id`,
 `pulled_files_read`. `status` includes `ESCALATE` — on missing artefacts or
 anything that smells like access to reproduction context, escalate and stop.
 
