@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-23
+updated: 2026-10-30
 status: active
 ---
 
@@ -32,7 +32,38 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NEXT SESSION (from the 2026-10-23 handoff, session a9c4834d). Shawn
+- **⏩ NEXT SESSION (from the 2026-10-30 handoff, session 789afcf9).** PR #14
+  (blinding scan 1.1, lane v1.7) and PR #15 (the review-only mode, lane
+  v1.8, run audit 1.2) are both on `main`, merged with Shawn's approval
+  after Astra approved them (`1b91eb5`, `37a3fe7`); `main` passes 806, 7
+  skip, and attempt 04 still adjudicates to 13/18. Shawn is still on zbook
+  for eResearch Australasia, so agent mail is unreachable (see the
+  2026-10-23 block below). Suggested order:
+  - [ ] **File the PR #14 and #15 review exchange in agent mail** from
+    amd-tower: `wiki/planning/reviews/2026-10-30-astra-pr14-pr15/README.md`
+    says where each file goes.
+  - [ ] **Astra's reply to the planner-pilot mail** (2026-10-23 block) is
+    still outstanding as far as this session knows; check on amd-tower.
+    It scopes the long-term fix.
+  - [ ] **The reviewer-only pilot** (item below, under the review-only
+    mode). Preparation can start on zbook: its run configuration
+    (`mode: review-only`), the labelled copy of attempt 04 at a path study
+    reporting does not read, and a blinding list that also blinds the
+    original attempt 04; then a pre-run review. The API gate and the
+    launch need a fresh session on amd-tower, which holds attempt 04's
+    image.
+  - [ ] **The remaining operational follow-ups**, each on a branch + PR
+    (the list in the 2026-10-18 block below): the launch word rule, the
+    args-builder guard, the cost and time watcher, the one-turn cost lag,
+    and Bash write detection for planners and reviewers.
+  - [ ] Working-notes candidates WN-ax to WN-bc await Shawn's verdict
+    (session log).
+  - **When ruling blinding warnings:** one that says "possibly a blinded
+    read" may be a real read the scan could not confirm; check in the
+    transcript what the command opened before ruling it admissible
+    (runbook step 13).
+
+- **⏩ Earlier (from the 2026-10-23 handoff, session a9c4834d). Shawn
   works from zbook for the week of eResearch Australasia.** The gate 1.3.2
   planner pilot is run, ruled, held, fixtured, and mailed to Astra; the
   record is
@@ -406,6 +437,12 @@ merged here as PR #1).
     hit at all (`file_accesses()` covers only Read, Grep, and Glob); and
     the harness scratchpad competes with the run's scratch directory (F5).
     Also screen for a second live session on the same run before launch.
+    [x] 2026-10-30 The blinding scan's bare names: PR #14, merged
+    (`1b91eb5`). Added 2026-10-30 from Astra's PR #15 review (F3): a
+    reviewer's Bash write into its staged copy is not seen either; the
+    re-hash at `audit-run` catches a change still present, not one undone
+    before it, so Bash write detection should cover reviewers as well as
+    planners.
   - [x] 2026-10-17 Repeated pre-launch checks at `6b18505`: 699 tests pass,
     Docker 29.2.1, 30 GB free, Zenodo 200, attempt-04 holds only the plan
     and approval, no attempt-04 image. Launched on Shawn's "go", which
@@ -2861,6 +2898,58 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-30 (session 789afcf9) — blinding scan 1.1 (PR #14) and the review-only mode (PR #15), reviewed and merged
+
+One long session on Opus 5.5, on zbook, no compaction. Shawn relayed seven
+review rounds by hand between this session and Astra, since agent mail was
+unreachable. The state is in the NEXT SESSION block; the factual record is
+in `wiki/reflections/session-log.md`, and the exchange itself in
+`wiki/planning/reviews/2026-10-30-astra-pr14-pr15/`.
+
+- **PR #14, blinding scan 1.1 (lane v1.7).**
+  - **Rulings (Shawn):** the tiering, and then roles over file
+    extensions.
+  - **Astra's four rounds:** closed in `1b93991`, `774bddf`, `f5dcb7b`
+    (a walk over every possible shell state), and `d7ecf0d`
+    (pipelines).
+  - **Labels:** "possibly a blinded read" warnings (`fac4805`).
+  - **Merged** as `1b91eb5`.
+- **PR #15, the review-only mode (lane v1.8).**
+  - **Choices (Shawn):** a labelled copy of attempt 04 for the pilot, and
+    a clean staged copy for the reviewer.
+  - **Astra's two rounds:** closed in `a3ac8dc` and `4e490b3`; a side
+    agent's note led to `097233c`.
+  - **Gate fix:** a gate 1.3.2 defect, re-gating an adjudicated attempt,
+    fixed in `c601fe3`.
+  - **Merged** as `37a3fe7`, after PR #14's branch was merged in and
+    reconciled (`ec0bb3d`).
+- **Records:**
+  - the PR #14 comment, posted with Shawn's approval;
+  - the review exchange, committed (`45d3626`);
+  - reflections (`bf11e9b`, `ccd4041`).
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-bb:** measured against real Bash, the blinding scan neither
+    falsely blocks nor misses a read in Astra's fixtures. At `d7ecf0d`,
+    over 25 targeted fixtures and 160 combinatorial state cases
+    (conditions, connectors, middle clauses, and values crossed), it gave
+    no access on a safe read and no silence on a blinded one. 28 of the
+    160 were warnings, exactly the cases branching on `test -d`, whose
+    status a static scan cannot know. 1,152 synthetic comparisons
+    preserved scan 1.0's severity. Anchors: the review exchange's
+    `astra-reviews-as-pasted.md` (messages 6 and 7), `d7ecf0d`.
+  - **WN-bc:** cross-model review found 15 defects in the lane's audit
+    code that the authoring model's own suite passed. The defects came in
+    7 hand-relayed rounds, 10 on PR #14 and 5 on PR #15, each reproduced
+    before it was fixed. One was a regression a fix had introduced. Astra
+    tested against real Bash on disposable fixtures, while the authoring
+    model's tests encoded its own reading of the shell. A further gate
+    defect (re-gating an adjudicated attempt) was found by the author's
+    own probe of the real records, not by review. Anchors: the review
+    exchange's `README.md` table and `astra-reviews-as-pasted.md`; for the
+    probe, `wiki/reflections/abductive-reasoning.md` (2026-10-30).
+  - WN-ax and WN-ay (2026-10-18 → 10-21) and WN-az and WN-ba (2026-10-21
+    → 10-23) are still held.
 
 ### 2026-10-21 → 10-23 (session a9c4834d) — gate 1.3.2 planner pilot analysed, held, fixtured, and mailed; zbook synced
 
