@@ -143,7 +143,10 @@ configuration (for the shakedown:
 13. **Rulings** (human): for each issue, record a decision with
     `reproduction-lane.py rule-flags --config $CFG --slug <slug> --approver "<name>" --rulings <file>`.
     A ruling binds to the issue's evidence fingerprint, so it lapses if the
-    evidence changes. Each issue states its scope: `targets` (the ones it
+    evidence changes. A blinding warning that says "possibly a blinded read"
+    may be a real read the scan could not confirm (a `cd` in a branch Bash
+    may skip, a fallback expansion such as `"${F:-x}"`): check in the
+    transcript what the command opened before ruling it admissible. Each issue states its scope: `targets` (the ones it
     names) or `paper` (all of them). Since gate 1.3.2 a ruling can also
     dispose of single targets within its issue, `"targets": {"T17":
     "excluded"}`; record a ruled classification, `"classification":
@@ -198,9 +201,33 @@ configuration (for the shakedown:
 
 - **Blinding is instruction plus detection, not prevention.** The harness
   cannot path-scope reads at spawn (amendment 2 §4). `audit-run` scans every
-  transcript (Read, Grep, and Glob paths, and the path-like tokens of Bash
-  commands; URLs are excluded) and reports contaminating accesses.
-  Mentions of blinded paths in command output are warnings for human review.
+  transcript (Read, Grep, and Glob paths, and every token of Bash commands,
+  bare names included, also placed under a `cd` earlier in the same command;
+  URLs are excluded) and reports contaminating accesses. Since blinding scan
+  1.1 (lane v1.7), a match in a command is contaminating when scan 1.0 would
+  have found it (a word holding a `/`, or ending in `.json`, `.md`, or
+  `.csv`), or when its word is a path argument (of `ls`, `cat`, `cd`, and
+  the like, or a file argument of `grep`, `sed`, or `awk`) at a location the
+  walk is sure of. Any other match, such as a pattern, an option's value,
+  literal text, a path under an uncertain directory, or an argument whose
+  expansion the walk cannot resolve (`"${F:-x}"`, `"$(...)"`, a variable set
+  in a branch that may not run), is a warning for human review (Shawn,
+  2026-10-30, refined by role after Astra's review and re-checks). The walk
+  follows every state the shell can be in (its directory, its variables,
+  and the last command's status): a command after `&&` or `||` runs only
+  in the states where it would, `cd` and assignments are assumed to
+  succeed, `true`, `:`, and `false` have known statuses, and any other
+  command may do either. A match is an access when the command reads a
+  blinded path in every state it runs in, and a warning ("possibly a
+  blinded read") when in only some. A subshell or command substitution
+  keeps its directory and variables to itself. Blinded paths named in command output are
+  warnings for human review; blinded names listed bare in output (an `ls`
+  of a parent directory) are recorded in the audit, with no ruling (Shawn,
+  2026-10-30). Not detected: a recursive read of a blinded directory's
+  parent (`grep -r x outputs/`) whose output names no blinded path; a path
+  built by command substitution; and a `cd` or a read inside a heredoc fed
+  to a shell (`bash <<EOF`), whose words are judged as text but whose
+  directory changes are not followed.
 - **The receipt gate's `schema_version` check is FAIR-specific**
   (`subagent-receipt-gate.py` compares any declared `schema_version` with the
   benchmark contract). The reproduction schemas therefore carry no
