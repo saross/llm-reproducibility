@@ -1,0 +1,42 @@
+{
+  "audit_version": "1.2",
+  "audited_at": "2026-10-17T06:38:48+00:00",
+  "attempt_dir": "studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04",
+  "final_run": "run-05",
+  "final_run_started_at": "2026-10-17T05:43:26+00:00",
+  "runs_called": [
+    "run-01",
+    "run-02",
+    "run-03",
+    "run-04",
+    "run-05"
+  ],
+  "contaminating": [],
+  "issues": [
+    {
+      "id": "host-run:published-values/measure_fig3_bars.py",
+      "kind": "flag",
+      "code": "host-run",
+      "subject": "published-values/measure_fig3_bars.py",
+      "targets": [],
+      "files": {
+        "published-values/measure_fig3_bars.py": "dd503683e90409dfbf0055936c7b4c545405fb636e62b0425de5a06a735b677c"
+      },
+      "fingerprint": "3941812a4237b78b48bafcb734bc659a4f7225abd6842791807896c6bc29a4f4",
+      "message": "FLAG: the executor ran published-values/measure_fig3_bars.py on the host before the final run (python3 -I /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/measure_fig): credit comes only from sealed outputs, but invariant 5 is an environment rule, so a human rules on it"
+    },
+    {
+      "id": "host-run:published-values/detect_fig4_boxes.py",
+      "kind": "flag",
+      "code": "host-run",
+      "subject": "published-values/detect_fig4_boxes.py",
+      "targets": [],
+      "files": {
+        "published-values/detect_fig4_boxes.py": "762fdff3610047f57016de8edfa306c3aeb86b7781f8fafe6835492ac172cddb"
+      },
+      "fingerprint": "53ecdeb95a7837fd15eeda16078b9c2ea41a2354d064914088eb47cdb2aeb069",
+      "message": "FLAG: the executor ran published-values/detect_fig4_boxes.py on the host before the final run (time python3 -I /home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/detect): credit comes only from sealed outputs, but invariant 5 is an environment rule, so a human rules on it"
+    }
+  ],
+  "transcript": "~/.claude/projects/-home-shawn-Code-llm-reproducibility/8e28871d-5f38-4e2a-96ef-a08f0f12af9e/subagents/workflows/wf_4fd7a886-ada/agent-a23bd74af4155b907.jsonl"
+}

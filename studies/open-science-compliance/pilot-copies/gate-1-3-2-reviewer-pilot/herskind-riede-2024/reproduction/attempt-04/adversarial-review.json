@@ -1,0 +1,259 @@
+{
+  "record_version": "1.0",
+  "run_id": "gate-1-3-1-pilot-rerun-2026-10",
+  "workflow_run": "wf_4fd7a886-ada",
+  "agent_id": "a2ca872e445fcd031",
+  "agent_type": "adversarial-reviewer",
+  "launch_commit": "6b1850554def6a563d82a5409dd821f56b4cb1d4",
+  "effort": "high",
+  "persisted_at": "2026-10-17T07:17:17+00:00",
+  "orchestrator_notes": [],
+  "admission": {
+    "eligible": true,
+    "assessed_at": "2026-10-17T07:17:17+00:00",
+    "reasons": [],
+    "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd",
+    "bound": {
+      "run_id": "gate-1-3-1-pilot-rerun-2026-10",
+      "workflow_run": "wf_4fd7a886-ada",
+      "roles": {
+        "executor": {
+          "agent_id": "a23bd74af4155b907",
+          "payload_sha256": "42455c5d923c51446f4d95420afe77c75f3117cbddca2ca4604fd5284ac07269"
+        },
+        "reviewer": {
+          "agent_id": "a2ca872e445fcd031",
+          "payload_sha256": "e7c1716029bb24cd4556d41eaa5110fb95db40456ed047e8d314e15d8ba931de"
+        }
+      }
+    }
+  },
+  "payload": {
+    "status": "OK",
+    "paper_slug": "herskind-riede-2024",
+    "overall": "QUALIFIED",
+    "escalate_reason": null,
+    "artefacts_reviewed": [
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/reproduction-plan.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/plan-approval.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/Dockerfile",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/install-pins.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/run.sh",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/run-analysis.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/verification-aids.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/environment.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/log.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/authors-code-manifest.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/gate-report.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/comparison-report.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/comparison.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/compare.py",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/ (t01, t02, t03-large-boxes, t03-boxes-vs-lookup rows, t04, t05, t06, t07, t09-t18, t16, t17, t18 detail CSVs)",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/ (README.md and file hashes)",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/deposit/ (S2.R in full; S1, S3, README hashes; S3 sheets parsed)",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/ (stdout.log, captured aids, Bigrams/Trigrams/Quadrigrams.csv)",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/lane-records/ (index.jsonl, build-01/build.json, run-01/pre.json, run-05 run/receipt/post/events/renviron)",
+      "/home/shawn/Code/llm-reproducibility/reproduction-system/runtime/hook.R (launch commit 6b18505)",
+      "/home/shawn/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf",
+      "/home/shawn/corpora/llm-reproducibility/herskind-riede-2024/meta.json"
+    ],
+    "dimensions": {
+      "provenance": {
+        "verdict": "PASS",
+        "findings": [
+          "Hashes all match. The plan's sha256 6837cf60…553d equals plan-approval.json. The four deposit files match the md5s Zenodo publishes and the sha256s in the log. The paper PDF matches 5c60cc3d…fad0. run-05's receipt.json hashes match its seven sealed record files. The current run-analysis.R, verification-aids.R, run.sh, install-pins.R, and Dockerfile match the hashes recorded in run-05 post.json.",
+          "The published-values files were frozen before any run. Their sha256s in lane-records/run-01/pre.json (taken 05:37:27Z, before the first container) equal those in run-05/post.json and on disk now, so no transcription was edited after results were seen.",
+          "The authors' outputs are identical across runs 01-05: Bigrams/Trigrams/Quadrigrams.csv, table1/table2 captures, fig3-reproduced.csv, and the PNGs carry the same sha256 in every run's outputs record in gate-report.json. Choosing run-05 as the credited run therefore could not cherry-pick an authors' result.",
+          "Container isolation is confirmed from run.json argv: --network none, --user 1000:1000, and mounts of only the work copy and the read-only lane files. No host library is mounted. The run_file LOAD is /project/deposit/Herskind&Riede_S2.R (33,834 bytes), and the decoded events.log shows 133 STMT and 133 EVAL events. The only non-ok EVAL is statement 8 (line 27, font_import), status tolerated. There are no HOOKERR events, and RUNCTX shows no global functions and no extra search-path entries.",
+          "The lane hook was read in full rather than assumed neutral. reproduction-system/runtime/hook.R at launch commit 6b18505 hashes to 653914a6…33fc, which equals lane_files.hook.R in all five run.json records. Its tracers on source, sys.source, parse, and loadNamespace only emit events to /proc/1/fd/2 and write md5 temp files. It keeps its state in a base-parented environment, never touches .Random.seed, and writes nothing to stdout. Its run_file evaluates each top-level statement in globalenv and prints visible values as Rscript does. The differences (keep.source=TRUE, deferred warnings) are cosmetic for this script, which uses no parent.frame, .Last.value, or srcref logic. I judge it computation-neutral here.",
+          "Obligation in-memory-patching:install-pins.R is discharged. The script runs only inside docker build. Its only <<- assigns its own attempt_log, and it uses no body<-, formals<-, trace, assignInNamespace, or unlockBinding. No LOAD of install-pins.R appears in run-05, so it cannot touch any function of the authors' code.",
+          "Obligation docker-copy:Dockerfile is discharged. The only COPY is install-pins.R into /opt/llmr. The run executes the mounted /project tree (LOAD file /project/run-analysis.R; run_file /project/deposit/…S2.R), and the image's copy is never executed at run time. run-analysis.R copies only the build products package-inventory.csv and pin-attempts.csv out of /opt/llmr, as environment records.",
+          "Obligation run-time-texts (107 unmatched TEXTs) is discharged. Every listed text has the form '<motif> == 1 & …', which is exactly the filter_condition built by the authors' createResultTable (S2.R lines 367-368: paste(strsplit(skipgram,' ')…, '== 1', collapse=' & ')) and evaluated through parse(text=) inside dplyr::filter, so a promise caller is expected. The identities match Fig. 3 bars, for example 'B10 == 1 & F38 == 1' and 'C1 == 1 & C4 == 1 & C5 == 1 & C12 == 1'. They are the authors' own code paths, not injected code.",
+          "Obligation wrapper-semantics is discharged. run-analysis.R does only these things: checks S2.R's sha256, sets the default device to cairo png (needed because pdf() lacks 'Gill Sans MT'; ggsave opens its own device), sets the working directory to deposit/, calls run_file with tolerate=27L, and afterwards reads globals and ggplot_build data into captured/. It changes no parameter, filter, or step. verification-aids.R runs in a separate Rscript process after the authors' run, so nothing it defines can reach the authors' computation. compare.py, measure_fig3_bars.py, and detect_fig4_boxes.py are host-side comparison and transcription tooling that never touches the authors' run.",
+          "The tolerated statement (line 27, font_import(pattern='GIL')) only registers fonts. No later statement reads its return value, and the outputs that depend on fonts are appearance only, so crediting targets from a run in which it fired is consistent with the 2026-10-05 Q6 ruling.",
+          "Minor provenance note: the report and log cite 'the evidence pack' for version-1 S1 checksums (md5 307f2813…, 442,501 bytes) without a path. I traced these values to the non-blinded corpus-store meta.json, which records the Zenodo-published md5 of version 1. Version-1 data were not used for any value. This is not contamination, but the citation should name its file."
+        ]
+      },
+      "quantitative_claims": {
+        "verdict": "PASS",
+        "findings": [
+          "T05 (Table 1) transcription is correct against p. 4. The 8 mismatching cells are real. Bigrams at 8/7/4/3/2/1 are published as 6/8/32/59/154/1224 and reproduced as 5/9/31/60/153/1225 in stdout.log lines 50-69. Trigrams at 2/1 are 222/4094 against 221/4095. The header totals 230/1543/4422/8466 match.",
+          "I independently confirmed the PAPER_ERROR's tier-2 support. I parsed the deposited S3.xlsx bigrams sheet: 165 rows with distribution {44:2, 28:1, 22:1, 16:1, 15:2, 14:1, 13:2, 12:6, 10:5, 9:5, 8:5, 7:9, 6:14, 5:20, 4:31, 3:60}. That equals the reproduction and contradicts Table 1 at 8, 7, 4, and 3. The published-minus-reproduced pattern removes 3 bigram occurrences and 1 trigram occurrence, a coherent data-state difference rather than a typo.",
+          "One caveat on the PAPER_ERROR evidence: the four frequency-1 and frequency-2 cells rest on tier 3 (the authors' code run unmodified on the authors' data), which is the reproduction itself. The instrument admits this tier, but for those four cells it is not independent corroboration.",
+          "T06 values match: all 18 Table 2 values round (half up) to the published 2-dp figures, and the stdout summary() prints agree (for example Ertebølle max 4.0985 → 4.10; Maglemose 3rd quartile 0.9721 → 0.97).",
+          "T08 checks out: my parse of S3 and Bigrams.csv agrees on row counts (165/106/20) and on the frequency distributions. My recomputation of I5-I13 PMI, ln(3/(6×4/482)) = 4.098502572370765, matches the in-memory value and S3's 15-digit 4.09850257237077.",
+          "T12 checks out: in Bigrams.csv only A1-C1 and C1-G1 are at 44, and A1-G1 is uniquely at 28, so the third rank does not depend on how ties are ordered.",
+          "T02 spot checks agree: G1-G2 0.9526, A1-ANT 0.3098, and A24-C1 -0.1764 in Bigrams.csv equal the transcribed labels, and the Fig. 3b rows I checked against the rendered p. 5 agree (I5 I13 4.0985 … E1 F14 1.9584). I could not inspect all 128 labels at native resolution under the no-write constraint.",
+          "Headline-count inflation, presentation only: the total of 3,321 values (99.6% matched) includes checks that are true by construction. T05 counts 63 'frequency row present' checks, and T07 counts 10 Table 3 'figure' cells that are the lookup key itself. T16 is scored on 21 elements against the plan's declared 5 (a gate warning). All are plan-sanctioned or more stringent, and no target outcome depends on them.",
+          "T01 bar tolerance is generous: compare.py accepts at most 1 object of difference per segment, while the report gives the resolution as 3.2 px per object, so a 1-object difference should be resolvable. The published pixel measurements are themselves inconsistent (for axe, segments sum to 103 but the measured total is 102; for figurine, 10 against 11). T01 is uncredited anyway (MINOR_DISCREPANCY), so this does not affect coverage."
+        ]
+      },
+      "scope_completeness": {
+        "verdict": "PASS",
+        "findings": [
+          "All 18 locked targets T01-T18 appear in comparison.json and comparison-report.md, each with an outcome. The four uncredited targets (T01, T03, T04, T05) stay in the denominator: coverage 14/18 = 0.7778, consistent with gate-report.json coverage.",
+          "Display items against the paper: Fig. 1 (photographs) is excluded with a sound reason. Figs 2-5, Tables 1-3, and S3 are all targets. The named values (483 objects, 15 motifs and k=13, 44 and ~9%, A1-C1/C1-G1/A1-G1, the six frequent motifs, the 0/1/9 exclusivity counts, max 5, the C4/C5/C12/C13/D7 cluster, ten objects, antler axes) all match text on pp. 2-7.",
+          "Remaining exclusions (the literature chronology, the qualitative east/west reading, the radiocarbon date, and the 'nearly half' of Płonka) were raised by the planner and accepted in the approval note.",
+          "No selective reproduction was found. The hard, unscripted items (Fig. 4's 290 GIMP boxes, Fig. 5's pies and positions, the Fig. 2 map) were attempted with labelled aids rather than dropped. The Fig. 5 motif-extent patches were pre-declared CANNOT_COMPARE and counted against coverage.",
+          "The paper's 'conclusion-bearing' qualitative claim that C12 and C13 are more eastern and C4, C5, and D7 more western rests on the untested Fig. 5 extent patches, so that part of the paper's argument is unverified. This is correctly reflected as T04 partial."
+        ]
+      },
+      "confirmation_bias": {
+        "verdict": "CONCERN",
+        "findings": [
+          "The verdict is stated beyond what is admitted. comparison.json records verdict SUCCESSFUL without qualification, while comparison-report.md calls it 'provisional', and gate-report.json shows coverage_admitted 0/18 pending 7 unruled issues. The report also says the verdict would stand if the PAPER_ERROR ruling went the other way, which pre-judges a human decision.",
+          "T16 is scored on a favourable reading. The paper (p. 4) speaks of 'a cluster of the motifs exclusive to the Late Mesolithic Ertebølle cultural complex: C4, C5, C12, C13, and D7'. aid-T16-cluster-motifs.csv shows C5 on 1 Kongemose object and C12 on 1 Maglemose and 1 Kongemose object, so motif-level exclusivity fails. EXACT_MATCH rests on testing only pair-level exclusivity. The plan's method does prescribe pair-level testing, and the notes disclose the individual-motif facts, but a sceptical reader could score the stated claim as not reproduced. Three of the 10 'exclusive' pairs (C4-D7, C12-D7, C13-D7) rest on a single object.",
+          "T17 is credited through a generous reading of ruling Q5. The ≥2-of-5 cluster-motif selection rule is inferred from Table 3 and then checked against Table 3, which is partly circular. Q5 credits an inferred formula only where its inputs come from executing the authors' code, and here the inputs are S1 lookups. The approved plan pre-authorised the credit, but the Q5 wording does not clearly support it, so this needs a human ruling.",
+          "T03's two box mismatches fail the plan's tolerance ('Culture-exclusive box placement exact against the lookup'): C5-F13 is boxed Ertebølle but its S1 object is Kongemose, and B1-B2 is exclusive but unboxed. The plan reserved MINOR_DISCREPANCY for differences caused only by GIMP styling, and these two are content differences. MINOR is an executor judgement, disclosed and escalated, and the target is uncredited either way.",
+          "Taken alone, the core judgement is sound. The authors' code reproduces every value it computes, the authors' own S3 corroborates the reproduction over Table 1, and none of the departures above change the paper's conclusions."
+        ]
+      },
+      "methodological_soundness": {
+        "verdict": "CONCERN",
+        "findings": [
+          "Method adherence was checked word for word against the plan for every target. No departure from the plan was found for T02, T04 (pies), T05, T06, T07, T08, T09, T10, T11, T14, T15, and T18.",
+          "T13 departure (declared, method_as_planned false): token_freqs is local to ngramfunction() and cannot be captured, which I confirmed from S2.R lines 97-205. The aid recomputes colSums(dfm(tokens(corpus))) on the authors' final full-data corpus (reassigned at line 303) and cross-checks against the authors' global freqs. The decision came after the published value was seen (paper read 05:19; values transcribed 05:20-05:28; aids written 05:34-05:37) but before any comparison. It is low-risk because the recomputation involves no free choice. A human ruling is pending.",
+          "T12 departure (undeclared; method_as_planned is recorded as true): the plan says 'From the authors' bigrams table (S2 Part 3) sorted by observed frequency'. compare.py instead reads Bigrams.csv, the Part 8 fwrite export subset to observed_freq > 2. The result is unaffected (the top values are ≥ 28, with no tie at 28), but the record misstates adherence.",
+          "T01 departures (undeclared): the plan compares the bar panel 'visually'. Execution compares it numerically against pixel-measured published segments with an executor-chosen threshold of ≤ 1 object (compare.py line 318), which was written after the runs. The wrapper was extended between runs to export the ggplot layer data that the plan names.",
+          "T03 departures (undeclared): the box check covers all 1,176 axis pairs, not just the plotted cells, which is more stringent. A tolerance failure (non-exact box placement) is classified MINOR_DISCREPANCY although the tolerance does not provide for it. The matrix capture was changed to 17 digits after a comparison on run-04 had been seen, which was conservative: it turned 2 cells from apparent exact matches into WITHIN_PRECISION.",
+          "T04 departure (undeclared, benign): the 'visual' comparison of positions was operationalised as Spearman correlations (0.997 and 1.000) of published pixel positions against S1 longitude and latitude.",
+          "T16 departure: 21 elements were scored against the plan's n_values of 5, flagged by the gate. The method is otherwise as planned.",
+          "Iteration: compare.py's docstring names run-04, so comparisons were run on earlier runs before run-05 was credited. Between runs only the capture code and the aids changed (Matrix::colSums, coordinate parsing, layer-data export, 17-digit matrix), and the authors' outputs were byte-identical in every run. No change to what is computed is evident, but the record should state that comparisons were inspected before the final run.",
+          "Environment: rocker/r-ver:4.3.2 is a mutable tag. Only the local image id f0b4e058dcfa is recorded, repo_digests is empty, and apt is floating. The seven README pins built first time from CRAN tarballs (pin-attempts.csv, 0 fallbacks). Unspecified dependencies came from the 2024-04-03 Posit snapshot, which matches first online appearance. R 4.3.2 rather than the paper's 4.2.2 was approved.",
+          "Reference version is correct: the version of record was used, and Zenodo 10801706 was used under AP-12. The version-1 hypothesis for Table 1 is labelled untested and is not used for scoring."
+        ]
+      }
+    },
+    "spot_checks": [
+      {
+        "check": "Plan, deposit, paper, and build-log hashes",
+        "method": "sha256sum and md5sum on reproduction-plan.json, the four deposit files, build.log, and vor.pdf, compared with plan-approval.json, log.md, the plan materials, and the spawn prompt",
+        "result": "All match (plan 6837cf60…553d; S1 md5 0bcde6d1…; S2 487a00a0…; paper 5c60cc3d…fad0; build.log 4438e4dc…)"
+      },
+      {
+        "check": "Sealed run-05 records and current scripts",
+        "method": "Recomputed sha256 of run-05 record files against receipt.json; current wrapper, aids, published-values, and compare.py against run-05/post.json and gate-report.json",
+        "result": "All identical; published-values hashes also equal run-01 pre.json (taken before the first run)"
+      },
+      {
+        "check": "Lane hook binding",
+        "method": "git show 6b18505:reproduction-system/runtime/hook.R | sha256sum, compared with lane_files.hook.R in run-01 to run-05 run.json",
+        "result": "653914a6…33fc in all five runs; hook read in full and judged computation-neutral for this script"
+      },
+      {
+        "check": "Evaluator events in run-05",
+        "method": "Decoded events.log with Python (-I): counted events, listed LOAD, RUNCTX, HOOKERR, and non-ok EVAL",
+        "result": "133 STMT and 133 EVAL; only statement 8 (line 27, font_import) tolerated; 0 HOOKERR; RUNCTX shows no global functions and no extra search-path entries"
+      },
+      {
+        "check": "Table 1 PAPER_ERROR tier-2 support",
+        "method": "Parsed deposit S3.xlsx with openpyxl; tabulated observed_freq per sheet; compared with run-05 Bigrams.csv and stdout.log lines 50-69",
+        "result": "S3 bigrams 8:5, 7:9, 4:31, 3:60 equal the reproduction and differ from published 6/8/32/59; trigram and quadrigram freq≥3 distributions match Table 1"
+      },
+      {
+        "check": "PMI recomputation",
+        "method": "ln(observed/(f1*f2/482)) for I5-I13 from Bigrams.csv fields",
+        "result": "4.098502572370765 = in-memory value; S3 4.09850257237077 (15-digit rounding, as reported)"
+      },
+      {
+        "check": "T12 tie risk at rank 3",
+        "method": "Listed Bigrams.csv rows with observed_freq ≥ 22",
+        "result": "C1-G1 44, A1-C1 44, A1-G1 28, A1-A24 22; no tie at 28"
+      },
+      {
+        "check": "Table 2 transcription and reproduction",
+        "method": "Compared t06-table2.csv with the paper's Table 2 (p. 6) and the stdout.log summary() prints",
+        "result": "All 18 values agree at 2 dp"
+      },
+      {
+        "check": "Table 3 and named values transcription",
+        "method": "Compared t07-table3.csv and t09-t18-named-values.csv with paper pp. 2-7",
+        "result": "Transcriptions correct; T14's text lists 8 bigrams while stating 9, as reported; C5-C12 is the ninth Ertebølle-only bar in reproduced Fig. 3b"
+      },
+      {
+        "check": "T16 motif-level exclusivity",
+        "method": "Read aid-T16-cluster-motifs.csv",
+        "result": "C5 has 1 Kongemose object; C12 has 1 Maglemose and 1 Kongemose; only the pairs are Ertebølle-exclusive (3 pairs rest on a single object)"
+      },
+      {
+        "check": "Run-time TEXT obligation",
+        "method": "Compared the 107 texts in gate-report.json with S2.R createResultTable (lines 362-376)",
+        "result": "All have the authors' '<motif> == 1 & …' filter form; generated by the authors' code, not by a wrapper"
+      }
+    ],
+    "verdict_challenge": {
+      "executor_verdict": "SUCCESSFUL",
+      "reviewer_supports_verdict": true,
+      "rationale": "I support SUCCESSFUL with qualification. Every value the authors' unmodified script produces was reproduced exactly or within S3's storage precision: 128 Fig. 3 bars, 18 Table 2 values, 2,329 S3 cells, and the Fig. 4 matrix and axis order. The authors' own deposited S3 corroborates the reproduction rather than Table 1, so T05 is defensibly a paper (or data-version) error, not a reproduction failure. The uncredited targets are unscripted presentation layers (map basemap, GIMP boxes, Fig. 5 extent patches) and the escalated Table 1 cells, and no conclusion is contradicted. The verdict is still not final. It depends on human rulings on the T05 PAPER_ERROR, the T13 deviation, T17's credit under Q5, and the gate's 7 unruled issues (admitted coverage is currently 0/18). T16 holds only on a pair-level reading of 'exclusive', and a sceptic could argue PARTIAL because Fig. 5's extent patches, which carry the paper's east/west interpretation, cannot be reproduced. comparison.json should label the verdict provisional."
+    },
+    "recommendations": [
+      "Mark comparison.json's verdict as provisional, matching the report, and remove the report's statement that the verdict would stand under any PAPER_ERROR ruling; leave that to the human ruling.",
+      "Correct T12's method_as_planned to false, with the deviation 'Bigrams.csv (Part 8 export, observed_freq > 2) used instead of the Part 3 bigrams table; outcome unaffected'. Also declare the T01 numeric ≤1-object threshold, the T03 classification of a tolerance failure as MINOR, and T04's Spearman operationalisation as departures from the plan's wording.",
+      "Ask the registrant to rule on T17: Q5 credits an inferred formula only where its inputs come from executing the authors' code, and here the inputs are S1 lookups and the rule was inferred from the same Table 3 it is checked against.",
+      "Ask the registrant to rule on whether T16's 'motifs exclusive to … Ertebølle' is to be read at motif level (C5 and C12 then fail) or pair level (passes). Record that three of the ten exclusive pairs rest on a single object.",
+      "For T05, state explicitly that the frequency-1 and frequency-2 cells rest on tier 3 (the reproduction itself), and give the corpus-store meta.json path for the version-1 checksums instead of 'the evidence pack'.",
+      "Record in log.md that comparisons were run against run-04 (compare.py docstring) before run-05 was credited, and note that the authors' outputs were byte-identical in every run.",
+      "Pin the base image by digest (repo_digests is empty) in future builds; only the local image id f0b4e058dcfa is recorded."
+    ],
+    "receipts": {
+      "instrument_versions": {
+        "pipeline-invariants": "1.1",
+        "adversarial-review-framework": "1.1"
+      },
+      "instrument_receipts": {
+        "pipeline-invariants": "c70d484af7e75ec4",
+        "adversarial-review-framework": "0f83c3181c5dbe00"
+      },
+      "agent_version": "adversarial-reviewer v1.3",
+      "model_id": "claude-opus-5-5",
+      "pulled_files_read": [
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/reproduction-plan.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/comparison-report.md",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/log.md",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/environment.md",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/Dockerfile",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/run.sh",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/plan-approval.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/run-analysis.R",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/verification-aids.R",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/install-pins.R",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/authors-code-manifest.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/deposit/Herskind&Riede_S2.R",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/comparison.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/compare.py",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t05-table1.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t06-table2.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t09-t18-named-values.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t16-cluster-pairs.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t17-cluster-objects-vs-table3.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t18-artefact-types.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t03-large-boxes.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t04-fig5.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t01-fig2-bars.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/README.md",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/lane-records/index.jsonl",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/lane-records/build-01/build.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/lane-records/run-01/pre.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/lane-records/run-05/run.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/lane-records/run-05/receipt.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/lane-records/run-05/lane-renviron.txt",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/lane-records/run-05/post.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/aid-T09-object-count.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/aid-T10-max-motifs.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/aid-T13-unigram-top.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/aid-T16-cluster-motifs.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/aid-T01-map-extent.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/aid-T01-map-unplaced-by-chronology.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/aid-T01-map-chronology-counts.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/runtime-notes.txt",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/pin-attempts.csv",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/outputs/run-05/files/captured/session-info.txt",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/runtime/hook.R",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/verdicts-and-precision.md",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/coverage-rules.md",
+        "/home/shawn/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf",
+        "/home/shawn/corpora/llm-reproducibility/herskind-riede-2024/meta.json"
+      ]
+    }
+  }
+}

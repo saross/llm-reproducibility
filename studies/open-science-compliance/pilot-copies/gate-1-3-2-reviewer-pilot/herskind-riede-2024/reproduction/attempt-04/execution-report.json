@@ -1,0 +1,194 @@
+{
+  "record_version": "1.0",
+  "run_id": "gate-1-3-1-pilot-rerun-2026-10",
+  "workflow_run": "wf_4fd7a886-ada",
+  "agent_id": "a23bd74af4155b907",
+  "agent_type": "reproduction-executor",
+  "launch_commit": "6b1850554def6a563d82a5409dd821f56b4cb1d4",
+  "effort": "high",
+  "persisted_at": "2026-10-17T07:17:17+00:00",
+  "orchestrator_notes": [],
+  "admission": {
+    "eligible": true,
+    "assessed_at": "2026-10-17T07:17:17+00:00",
+    "reasons": [],
+    "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd",
+    "bound": {
+      "run_id": "gate-1-3-1-pilot-rerun-2026-10",
+      "workflow_run": "wf_4fd7a886-ada",
+      "roles": {
+        "executor": {
+          "agent_id": "a23bd74af4155b907",
+          "payload_sha256": "42455c5d923c51446f4d95420afe77c75f3117cbddca2ca4604fd5284ac07269"
+        },
+        "reviewer": {
+          "agent_id": "a2ca872e445fcd031",
+          "payload_sha256": "e7c1716029bb24cd4556d41eaa5110fb95db40456ed047e8d314e15d8ba931de"
+        }
+      }
+    }
+  },
+  "payload": {
+    "status": "ESCALATE",
+    "paper_slug": "herskind-riede-2024",
+    "attempt_dir": "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04",
+    "verdict": "SUCCESSFUL",
+    "escalate_reason": "Suspected paper error (T05, Table 1): 8 of 130 cells differ from the reproduction by one type each, and the authors' own deposited S3 (evidence tier 2) and their code run unmodified (tier 3) both support the reproduced values. It needs human confirmation before it enters study data. The artefact set is complete and check-attempt passes. The verdict is provisional on that ruling.",
+    "coverage": {
+      "targets_enumerated": 18,
+      "targets_reproduced": 14
+    },
+    "escalations": [
+      {
+        "kind": "PAPER_ERROR",
+        "target_id": "T05",
+        "detail": "Table 1 differs from the authors' deposited S3 (tier 2) and from the authors' code run unmodified on their data (tier 3) in 8 of 130 cells, each by one type. Bigram frequency classes 8, 7, 4, 3, 2, 1: published 6, 8, 32, 59, 154, 1224; reproduced 5, 9, 31, 60, 153, 1225 (S3 gives 5, 9, 31, 60 for the classes it covers). Trigram classes 2, 1: published 222, 4094; reproduced 221, 4095. Header totals and conclusions are unchanged. A likely cause, untested per AP-12: Table 1 was made from the earlier deposit's S1 (Zenodo 10623550, cited in the methods), whose S1 differs in md5 and size."
+      },
+      {
+        "kind": "OTHER",
+        "target_id": "T03",
+        "detail": "Scored MINOR_DISCREPANCY: 2 of 1176 culture-exclusive box cells in the GIMP-annotated Fig. 4 disagree with the read-only S1 lookup. C5-F13 is boxed Ertebølle, but its single bearing object is Kongemose; B1-B2 is exclusive to Maglemose but has no box. Both are single-object pairs not plotted in the heatmap. A human may instead rule these PAPER_ERROR (tier 2, deposited S1). The matrix (163 exact, 2 within S3's 15-digit fwrite precision) and the axis order are otherwise exact."
+      },
+      {
+        "kind": "CANNOT_COMPARE",
+        "target_id": "T04",
+        "detail": "Fig. 5's motif-extent patches have no code or stated method, as the plan pre-declared. The ten pies match S1 exactly (10/10), and their positions agree with S1 coordinates (Spearman 0.997 and 1.000). The target is partially verified and counts against coverage."
+      }
+    ],
+    "data_availability": {
+      "level": "L1",
+      "datasets": [
+        {
+          "dataset": "S1 analysis dataset (Herskind&Riede_S1.xlsx; 483 South Scandinavian ornamented objects digitised from Płonka 2003)",
+          "route": "Data availability statement -> Zenodo record 10801706 (DOI 10.5281/zenodo.10801706), the AP-12 version of record",
+          "steps": "One unauthenticated HTTPS GET of https://zenodo.org/api/records/10801706/files/Herskind&Riede_S1.xlsx/content on 2026-10-17T05:18:48Z; md5 checked against Zenodo's published value; no registration or permission",
+          "outcome": "Retrieved; md5 0bcde6d178b5a8f3da80a023a64ff510 matches Zenodo's published checksum; 483 numbered object rows. Płonka (2003) is upstream provenance, required by no target.",
+          "checksum": "sha256:d76b9d6328465658aa1582c5c8de0912f9167ff1f8c737bd7998d91fd5692030"
+        }
+      ]
+    },
+    "docker": {
+      "image_tag": "llmr-herskind-riede-2024-attempt-04",
+      "base_image": "rocker/r-ver:4.3.2",
+      "build_attempts": 1
+    },
+    "environment_spec_level": 2,
+    "modifications": [
+      {
+        "file": "run-analysis.R",
+        "change": "Sets the working directory to deposit/, where the unmodified S2.R reads Herskind&Riede_S1.xlsx and writes its outputs. The authors' files run in place in the lane's work copy and are not copied.",
+        "rationale": "S2.R reads its input and writes its outputs by relative path; this is a path mechanic.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "run-analysis.R",
+        "change": "Runs S2.R statement by statement through the lane's evaluator, getOption('lane.hook')$run_file('Herskind&Riede_S2.R', tolerate = 27L, encoding = 'UTF-8'). The declared tolerance covers only line 27, font_import(pattern = 'GIL', prompt = FALSE). It fired in every run ('arguments imply differing number of rows: 0, 1'). The other 132 statements completed ok.",
+        "rationale": "Pre-declared in the approved plan. The statement registers fonts and computes nothing that enters a result (RULED 2026-10-05, Q6). The Gill Sans MT font is proprietary and absent.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "run-analysis.R",
+        "change": "Sets the default graphics device to a cairo PNG device (options(device = ...)) for the script's on-screen prints of ggplot objects (lines 70, 411, 432, 607-612, 690). These go to Rplot001-010.png.",
+        "rationale": "In the authors' RStudio session these prints went to the on-screen device. Under Rscript the default pdf() device has no 'Gill Sans MT' family and would stop at the first print. ggsave() opens its own device, so the paper's figures are unaffected.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "run-analysis.R",
+        "change": "After S2.R ends, writes the authors' objects under captured/ without recomputation: the Table 1 frequency tables and lengths, the Table 2 summaries, the Fig. 3 plot data and drawn labels, the Fig. 2 built layer data, matrix m at 17 digits, and an RDS of objects for the aids. Session info and the package inventory are copied there too.",
+        "rationale": "Output capture. Matrix m was first written with write.csv at 15 digits (run-04). Run-05 writes it at 17 digits, so the 15-digit comparison with S3 is not blurred by the export.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "Dockerfile; install-pins.R",
+        "change": "Builds rocker/r-ver:4.3.2 with a UTF-8 locale and system libraries. Installs the seven README pins from CRAN archive tarballs (all at their pins, 0 fallbacks) and their unspecified dependencies from the Posit Package Manager snapshot of 2024-04-03 (first online appearance), overriding the image's own 2024-02-28 date. The inventory is asserted. The plan named remotes::install_version; the build used its own CRAN-archive script, per dockerfile-patterns.md.",
+        "rationale": "Invariant 2: supplied pins take precedence, and unspecified packages are anchored at first online appearance. The authors supplied no container, so the base image's date is not theirs.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "verification-aids.R",
+        "change": "Labelled verification aids (ruling R1) in a separate R process, never in the authors' code. Two fixes to the aid itself during the runs: Matrix::colSums for a dfm (run-01), and reading S1's text coordinate columns as numbers with '-' as missing (run-02).",
+        "rationale": "Read-only S1 lookups and documented quanteda/readxl/ggplot2 calls for targets that no authors' code produces. The fixes are mechanical type and dispatch corrections.",
+        "changes_what_is_computed": false
+      },
+      {
+        "file": "comparisons/comparison.json (T13)",
+        "change": "Declared method deviation (method_as_planned false). The plan's source, the authors' 'captured token_freqs', is local to ngramfunction() and cannot be captured. The same quantity was computed with the identical quanteda calls on the authors' corpus and cross-checked against the authors' global freqs object (S2 Part 4). Both give the same top six.",
+        "rationale": "The planned object is not reachable without editing the authors' code. The decision was made while writing the wrapper, before any comparison, and is flagged for a human ruling.",
+        "changes_what_is_computed": false
+      }
+    ],
+    "artefacts_written": [
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/Dockerfile",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/install-pins.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/run.sh",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/run-analysis.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/verification-aids.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/environment.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/log.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/authors-code-manifest.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/deposit/Herskind&Riede_S1.xlsx",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/deposit/Herskind&Riede_S2.R",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/deposit/Herskind&Riede_S3.xlsx",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/deposit/README.txt",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/README.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/fig2-bars-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/fig3-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/fig4-axis-and-large-boxes.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/fig4-boxes-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/fig5-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/named-values-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/table1-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/table1-totals-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/table2-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/table3-published.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/measure_fig3_bars.py",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/published-values/detect_fig4_boxes.py",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/compare.py",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/comparison.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/comparison-report.md",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/summary.json",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t01-fig2-bars.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t02-fig3-bars.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t03-matrix-vs-s3.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t03-boxes-vs-lookup.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t03-large-boxes.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t04-fig5.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t05-table1.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t06-table2.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t07-table3.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t08-s3-cells.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t09-t18-named-values.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t16-cluster-pairs.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t17-cluster-objects-vs-table3.csv",
+      "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/comparisons/t18-artefact-types.csv"
+    ],
+    "receipts": {
+      "instrument_versions": {
+        "verdicts-and-precision": "1.1",
+        "coverage-rules": "1.1",
+        "pipeline-invariants": "1.1"
+      },
+      "instrument_receipts": {
+        "verdicts-and-precision": "46eb4ad0bfcb3b92",
+        "coverage-rules": "414de27c0d871a1d",
+        "pipeline-invariants": "c70d484af7e75ec4"
+      },
+      "agent_version": "reproduction-executor v1.7",
+      "model_id": "claude-opus-5-5",
+      "pulled_files_read": [
+        "/home/shawn/Code/llm-reproducibility/.claude/skills/reproduction-assessor/references/dockerfile-patterns.md",
+        "/home/shawn/Code/llm-reproducibility/.claude/skills/reproduction-assessor/references/wrapper-script-patterns.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/templates/README.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/templates/comparison-report-template.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/templates/environment-template.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/templates/log-template.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/prompts/01-preparation.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/prompts/02-execution-and-verification.md",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/schemas/comparison-record.json",
+        "/home/shawn/Code/llm-reproducibility/reproduction-system/schemas/authors-code-manifest.json",
+        "/home/shawn/Code/llm-reproducibility/studies/open-science-compliance/protocol/instruments/data-availability-taxonomy.md"
+      ]
+    },
+    "notes": "I verified the approval first: the plan's sha256 6837cf60…553d equals both the spawn hash and the approval record's plan_sha256, and the decision is 'approve'.\n\nAll four files of Zenodo record 10801706 matched Zenodo's published md5s at retrieval, and all four provenance anchors are verified against the committed evidence pack. I transcribed the published values into published-values/ between 05:20 and 05:28 UTC, before the image build at 05:29 and the first run at 05:37; nothing was transcribed late.\n\nThe image was built once through the lane (build-01): all seven README pins were honoured with 0 fallbacks, and unspecified packages came from the 2024-04-03 snapshot. There were five lane runs. Run-01 failed in my verification aid, not in the authors' code. Runs 02–04 were superseded by aid or capture fixes. Run-05 is the final credited run. The authors' S2.R ran byte-identical: 133 statements, 132 ok, 1 declared tolerance (line 27, font_import), which fired.\n\nOutcomes:\n- EXACT_MATCH: T02 Fig. 3 (256/256, plus 128/128 compositions), T06 Table 2 (18/18), T07 Table 3 (50/50), T08 S3 (2329/2329, identical row order), and the named values T09, T10, T12–T18.\n- WITHIN_PRECISION: T11.\n- MINOR_DISCREPANCY: T01 (map aid has no basemap; bars within ±1 at figure resolution, order exact) and T03 (2 of 1176 GIMP box cells disagree with S1; matrix exact or within S3 precision).\n- CANNOT_COMPARE: T04 (extent patches; pies 10/10).\n- PAPER_ERROR: T05 (8/130 Table 1 cells; the authors' S3 supports the reproduction).\n\nCoverage is 14/18 (0.7778). On T14, the text's list of Ertebølle bigrams omits C5-C12, but the stated count of nine matches, so it is scored per R4 with no paper error.\n\ncheck-attempt with --launch-commit passes with no errors. Admitted coverage stays 0 until a human rules on 7 issues:\n- tolerated-statement line 27\n- method-deviation T13\n- in-memory-patching in install-pins.R (a <<- that appends to its own build log)\n- the docker-copy in the Dockerfile (it copies only install-pins.R; the run uses the mounted tree)\n- run-time texts in S2.R (the authors' own createResultTable builds and parses filter strings such as 'A1 == 1 & A24 == 1')\n- wrapper semantics\n- method adherence\n\nThere is also a warning that T16 compared 21 values against the plan's 5; these are cross-checks (pair PMIs and pair exclusivity). The verdict is SUCCESSFUL, provisional on human confirmation of the T05 PAPER_ERROR. Nothing was run on the host or on sapphire, and nothing was committed."
+  }
+}

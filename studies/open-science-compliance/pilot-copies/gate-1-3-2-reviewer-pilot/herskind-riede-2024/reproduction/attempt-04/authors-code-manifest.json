@@ -1,0 +1,111 @@
+{
+  "manifest_version": "1.1",
+  "paper_slug": "herskind-riede-2024",
+  "originals": [
+    {
+      "id": "Herskind&Riede_S2.R",
+      "sha256": "487a00a09db92b484dac136f13a5745a3a2ac699c3a01cfccf528d4d550a8720",
+      "source": "https://zenodo.org/api/records/10801706/files/Herskind&Riede_S2.R/content (DOI 10.5281/zenodo.10801706)",
+      "version": "Zenodo record 10801706 (published 2024-03-10), the AP-12 version of record",
+      "retrieved_at": "2026-10-17T05:18:49Z",
+      "local_copy": "deposit/Herskind&Riede_S2.R",
+      "licence": "CC-BY-4.0",
+      "anchor": {
+        "kind": "evidence-pack",
+        "record_id": "zenodo:10.5281/zenodo.10801706",
+        "file": "Herskind&Riede_S2.R"
+      }
+    },
+    {
+      "id": "Herskind&Riede_S1.xlsx",
+      "sha256": "d76b9d6328465658aa1582c5c8de0912f9167ff1f8c737bd7998d91fd5692030",
+      "source": "https://zenodo.org/api/records/10801706/files/Herskind&Riede_S1.xlsx/content (DOI 10.5281/zenodo.10801706)",
+      "version": "Zenodo record 10801706 (published 2024-03-10), the AP-12 version of record",
+      "retrieved_at": "2026-10-17T05:18:48Z",
+      "local_copy": "deposit/Herskind&Riede_S1.xlsx",
+      "licence": "CC-BY-4.0",
+      "anchor": {
+        "kind": "evidence-pack",
+        "record_id": "zenodo:10.5281/zenodo.10801706",
+        "file": "Herskind&Riede_S1.xlsx"
+      }
+    },
+    {
+      "id": "Herskind&Riede_S3.xlsx",
+      "sha256": "1199acac5d1edb916dc4528d5e994295e206e798cb132e91c3be59cc9e328eed",
+      "source": "https://zenodo.org/api/records/10801706/files/Herskind&Riede_S3.xlsx/content (DOI 10.5281/zenodo.10801706)",
+      "version": "Zenodo record 10801706 (published 2024-03-10), the AP-12 version of record",
+      "retrieved_at": "2026-10-17T05:18:51Z",
+      "local_copy": "deposit/Herskind&Riede_S3.xlsx",
+      "licence": "CC-BY-4.0",
+      "anchor": {
+        "kind": "evidence-pack",
+        "record_id": "zenodo:10.5281/zenodo.10801706",
+        "file": "Herskind&Riede_S3.xlsx"
+      }
+    },
+    {
+      "id": "README.txt",
+      "sha256": "cdaae0824c92137375537cc962c7016a6ce71eecdd2bb90dba7e604755786679",
+      "source": "https://zenodo.org/api/records/10801706/files/README.txt/content (DOI 10.5281/zenodo.10801706)",
+      "version": "Zenodo record 10801706 (published 2024-03-10), the AP-12 version of record",
+      "retrieved_at": "2026-10-17T05:18:52Z",
+      "local_copy": "deposit/README.txt",
+      "licence": "CC-BY-4.0",
+      "anchor": {
+        "kind": "evidence-pack",
+        "record_id": "zenodo:10.5281/zenodo.10801706",
+        "file": "README.txt"
+      }
+    }
+  ],
+  "executed": [
+    {
+      "path": "deposit/Herskind&Riede_S2.R",
+      "original": "Herskind&Riede_S2.R"
+    }
+  ],
+  "wrappers": [
+    {
+      "path": "run.sh",
+      "role": "wrapper",
+      "purpose": "Lane entry point: runs run-analysis.R, then verification-aids.R, as two separate R processes."
+    },
+    {
+      "path": "run-analysis.R",
+      "role": "wrapper",
+      "purpose": "Runs deposit/Herskind&Riede_S2.R byte-identical through the lane's evaluator (run_file, tolerate = 27L, encoding UTF-8) with the working directory set to deposit/ and a cairo PNG default graphics device; afterwards writes the authors' objects (Table 1 and 2 values, Fig. 2 and Fig. 3 plot data, matrix m, objects for the aids) under captured/ without recomputation."
+    },
+    {
+      "path": "verification-aids.R",
+      "role": "comparison",
+      "purpose": "Labelled verification aids under ruling R1: read-only lookups in S1 and documented quanteda/readxl/ggplot2 calls on the authors' saved objects, for targets with no authors' code (T01 map, T03 boxes, T04, T07, T09, T10, T13, T14, T16, T17, T18)."
+    },
+    {
+      "path": "install-pins.R",
+      "role": "environment",
+      "purpose": "Build-time only: installs the seven README pins from CRAN tarballs and their unspecified dependencies from the Posit Package Manager snapshot of 2024-04-03, with the capped version search and an asserted inventory."
+    },
+    {
+      "path": "Dockerfile",
+      "role": "environment",
+      "purpose": "Image definition: rocker/r-ver:4.3.2, UTF-8 locale, system libraries, install-pins.R."
+    },
+    {
+      "path": "comparisons/compare.py",
+      "role": "comparison",
+      "purpose": "Host-side comparison after the final run: reads only the sealed outputs of run-05, the transcriptions in published-values/, and the deposited S3.xlsx; compares values and writes the per-target detail files and summary.json under comparisons/. Runs no authors' code and recomputes no analysis."
+    },
+    {
+      "path": "published-values/measure_fig3_bars.py",
+      "role": "tooling",
+      "purpose": "Transcription aid run on the host before any run: measures bar totals and chronology segments of the published Fig. 3 (and the Fig. 2 bar panel) from pixel colours. Reads only the published figure."
+    },
+    {
+      "path": "published-values/detect_fig4_boxes.py",
+      "role": "tooling",
+      "purpose": "Transcription aid run on the host before any run: detects the small culture-exclusive boxes on the published Fig. 4 from pixel colours. Reads only the published figure."
+    }
+  ],
+  "notes": "All four files of Zenodo record 10801706 were downloaded on 2026-10-17 and matched Zenodo's published md5 checksums at retrieval. S1.xlsx is the analysis input and S3.xlsx the published reference for T08; README.txt is the environment statement. Only S2.R is code; it is executed in place (deposit/) and never edited."
+}

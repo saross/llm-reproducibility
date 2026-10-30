@@ -1,0 +1,117 @@
+       ksngrams observed_freq token1 token2 token1_freq token2_freq
+a1 b10   a1 b10            15     a1    b10         136          50
+a1 c1     a1 c1            44     a1     c1         136         125
+a1 e1     a1 e1             8     a1     e1         136          17
+a1 f5     a1 f5            12     a1     f5         136          36
+a1 f7     a1 f7             2     a1     f7         136           2
+a1 f10   a1 f10             1     a1    f10         136           1
+       expected_freq        PMI
+a1 b10    14.1078838 0.06131642
+a1 c1     35.2697095 0.22116512
+a1 e1      4.7966805 0.51151743
+a1 f5     10.1576763 0.16667694
+a1 f7      0.5643154 1.26528923
+a1 f10     0.2821577 1.26528923
+             ksngrams observed_freq token1 token2 token3 token1_freq
+a1 b10 c1   a1 b10 c1             7     a1    b10     c1         136
+a1 b10 e1   a1 b10 e1             3     a1    b10     e1         136
+a1 b10 f5   a1 b10 f5             4     a1    b10     f5         136
+a1 b10 f7   a1 b10 f7             1     a1    b10     f7         136
+a1 b10 f10 a1 b10 f10             1     a1    b10    f10         136
+a1 b10 f12 a1 b10 f12             2     a1    b10    f12         136
+           token2_freq token3_freq expected_freq       PMI
+a1 b10 c1           50         125    3.65868356 0.6488067
+a1 b10 e1           50          17    0.49758096 1.7966093
+a1 b10 f5           50          36    1.05370087 1.3339858
+a1 b10 f7           50           2    0.05853894 2.8380632
+a1 b10 f10          50           1    0.02926947 3.5312103
+a1 b10 f12          50          22    0.64392831 1.1333151
+                   ksngrams observed_freq token1 token2 token3 token4
+a1 b10 c1 e1   a1 b10 c1 e1             3     a1    b10     c1     e1
+a1 b10 c1 f5   a1 b10 c1 f5             1     a1    b10     c1     f5
+a1 b10 c1 f7   a1 b10 c1 f7             1     a1    b10     c1     f7
+a1 b10 c1 f10 a1 b10 c1 f10             1     a1    b10     c1    f10
+a1 b10 c1 f12 a1 b10 c1 f12             1     a1    b10     c1    f12
+a1 b10 c1 f14 a1 b10 c1 f14             2     a1    b10     c1    f14
+              token1_freq token2_freq token3_freq token4_freq expected_freq
+a1 b10 c1 e1          136          50         125          17    0.12904071
+a1 b10 c1 f5          136          50         125          36    0.27326267
+a1 b10 c1 f7          136          50         125           2    0.01518126
+a1 b10 c1 f10         136          50         125           1    0.00759063
+a1 b10 c1 f12         136          50         125          22    0.16699386
+a1 b10 c1 f14         136          50         125          16    0.12145008
+                   PMI
+a1 b10 c1 e1  3.146240
+a1 b10 c1 f5  1.297322
+a1 b10 c1 f7  4.187694
+a1 b10 c1 f10 4.880841
+a1 b10 c1 f12 1.789798
+a1 b10 c1 f14 2.801399
+freqs
+  1   2   3   4   5   6   7   8   9  10  11  12  13  14  16  17  18  19  21  22 
+123  39  20   5   4   7   2   3   2   1   2   1   1   1   2   1   1   1   1   2 
+ 23  26  28  34  36  49  50  69  97 125 136 
+  1   1   1   1   1   1   1   1   1   1   1 
+bigramfreqs
+   1    2    3    4    5    6    7    8    9   10   12   13   14   15   16   22 
+1225  153   60   31   20   14    9    5    5    5    6    2    1    2    1    1 
+  28   44 
+   1    2 
+trigramfreqs
+   1    2    3    4    5    6    7    8   19 
+4095  221   56   27    9    8    4    1    1 
+quadrigramfreqs
+   1    2    3    4    5 
+8335  111   16    3    1 
+[1] 230
+[1] 1543
+[1] 4422
+[1] 8466
+        ksngrams observed_freq token1 token2 token1_freq token2_freq
+a6 f12    a6 f12             1     a6    f12           1           9
+a6 f14    a6 f14             1     a6    f14           1           4
+f12 f14  f12 f14             1    f12    f14           9           4
+a7 a24    a7 a24             1     a7    a24           1          55
+a7 b10    a7 b10             1     a7    b10           1          38
+a24 b10  a24 b10            12    a24    b10          55          38
+        expected_freq      PMI
+a6 f12    0.018672199 3.980720
+a6 f14    0.008298755 4.791650
+f12 f14   0.074688797 2.594425
+a7 a24    0.114107884 2.170611
+a7 b10    0.078838174 2.540358
+a24 b10   4.336099585 1.017931
+       ksngrams observed_freq token1 token2 token1_freq token2_freq
+a1 b10   a1 b10             4     a1    b10          35           9
+a1 c1     a1 c1            18     a1     c1          35          30
+a1 e1     a1 e1             4     a1     e1          35           9
+a1 f5     a1 f5             6     a1     f5          35          19
+a1 f7     a1 f7             2     a1     f7          35           2
+a1 f10   a1 f10             1     a1    f10          35           1
+       expected_freq      PMI
+a1 b10    0.65352697 1.811666
+a1 c1     2.17842324 2.111770
+a1 e1     0.65352697 1.811666
+a1 f5     1.37966805 1.469917
+a1 f7     0.14522822 2.622596
+a1 f10    0.07261411 2.622596
+             ksngrams observed_freq token1 token2 token1_freq token2_freq
+b13 c2         b13 c2             1    b13     c2           2           2
+b13 f5         b13 f5             1    b13     f5           2           8
+b13 f53       b13 f53             1    b13    f53           2           2
+b13 h1         b13 h1             1    b13     h1           2          18
+b13 relief b13 relief             1    b13 relief           2           6
+c2 f5           c2 f5             1     c2     f5           2           8
+           expected_freq      PMI
+b13 c2       0.008298755 4.791650
+b13 f5       0.033195021 3.405355
+b13 f53      0.008298755 4.791650
+b13 h1       0.074688797 2.594425
+b13 relief   0.024896266 3.693037
+c2 f5        0.033195021 3.405355
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-1.0214  0.2286  0.5583  0.7041  0.9721  3.1177 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-1.0214  0.2510  0.6020  0.7446  1.0983  2.8457 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-1.0214  0.2510  0.6899  0.9031  1.2951  4.0985 

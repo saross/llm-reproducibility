@@ -1,0 +1,158 @@
+{
+  "run_audit_version": "1.1",
+  "audited_at": "2026-10-17T06:38:48+00:00",
+  "run_id": "gate-1-3-1-pilot-rerun-2026-10",
+  "workflow_run": "wf_4fd7a886-ada",
+  "attempt_dir": "studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04",
+  "launch_commit": "6b1850554def6a563d82a5409dd821f56b4cb1d4",
+  "plan_sha256": "6837cf60785a9b7a1d99ee048b9a5cfc78a00324af15741930aff884b800553d",
+  "reviewed_state_sha256": "f549d2f5121199bb0f39fb71a5aa307d1981ad8b986b587e2f99a3c99b75a1eb",
+  "reviewed_states": [
+    "f549d2f5121199bb0f39fb71a5aa307d1981ad8b986b587e2f99a3c99b75a1eb"
+  ],
+  "artefact_state_sha256": "f549d2f5121199bb0f39fb71a5aa307d1981ad8b986b587e2f99a3c99b75a1eb",
+  "roles": {
+    "executor": {
+      "agent_id": "a23bd74af4155b907",
+      "agent_type": "reproduction-executor",
+      "clean": true,
+      "problems": [],
+      "warnings": [
+        {
+          "tool": "Bash",
+          "path": "verification-strategies.md",
+          "rule": "blinded path named in command output (review)",
+          "command": "ls reproduction-system/templates/ reproduction-system/schemas/ reproduction-system/prompts/ .claude/skills/reproduction-assessor/references/ && wc -l reproduction-system/templates/* reproduction-system/schemas/comparison-record.json reproduction-system/schemas/authors-code-manifest.json reproduction"
+        },
+        {
+          "tool": "Bash",
+          "path": "crema-et-al-2024.json",
+          "rule": "blinded path named in command output (review)",
+          "command": "venv/bin/python scripts/reproduction-lane.py --help; venv/bin/python scripts/reproduction-lane.py build-image --help; venv/bin/python scripts/reproduction-lane.py run-container --help; ls corpus/evidence-packs/ | head -50; ls corpus/evidence-packs/harvest-* 2>/dev/null | grep -i herskind"
+        },
+        {
+          "tool": "Bash",
+          "path": "wiki/planning/reproduction-gate-1-3-design.md",
+          "rule": "blinded path named in command output (review)",
+          "command": "sed -n 1,80p scripts/reproduction-lane.py; sed -n 195,240p scripts/reproduction-lane.py; sed -n 6123,6390p scripts/reproduction-lane.py"
+        }
+      ],
+      "launch_message": "go",
+      "payload_sha256": "42455c5d923c51446f4d95420afe77c75f3117cbddca2ca4604fd5284ac07269"
+    },
+    "reviewer": {
+      "agent_id": "a2ca872e445fcd031",
+      "agent_type": "adversarial-reviewer",
+      "clean": true,
+      "problems": [],
+      "warnings": [],
+      "launch_message": "go",
+      "payload_sha256": "e7c1716029bb24cd4556d41eaa5110fb95db40456ed047e8d314e15d8ba931de"
+    }
+  },
+  "missing_roles": [],
+  "issues": [
+    {
+      "id": "escalation:executor:PAPER_ERROR:T05",
+      "kind": "flag",
+      "code": "escalation",
+      "subject": "executor:PAPER_ERROR:T05",
+      "targets": [
+        "T05"
+      ],
+      "files": {
+        "escalation": "d6fba26f10828a8fac418ba3bc04179e3746503c19ac9da7d2b668f9d1b7aaa3"
+      },
+      "fingerprint": "e83ff29608885ace492fe72ba29e155866e80da2987fa6a721b93359d2b3cd78",
+      "message": "FLAG: the executor escalated PAPER_ERROR on T05: Table 1 differs from the authors' deposited S3 (tier 2) and from the authors' code run unmodified on their data (tier 3) in 8 of 130 cells, each by one type. Bigram frequency classes 8, 7, 4, 3, 2, 1: published 6, 8, 32, 59, 154, 1224; reproduced 5, 9, 31, 60, 153, 1225 (S3 gives 5, 9, 31, 60 for the classes it covers). Trigram classes 2, 1: published 222, 4094; reproduced 221, 4095. Header totals (a human confirms or rejects it)"
+    },
+    {
+      "id": "escalation:executor:OTHER:T03",
+      "kind": "flag",
+      "code": "escalation",
+      "subject": "executor:OTHER:T03",
+      "targets": [
+        "T03"
+      ],
+      "files": {
+        "escalation": "e34924d1bf70aca667a35be6aa15e2cbd342b795546e58dd1308b26a29551bf0"
+      },
+      "fingerprint": "a17681b6513b1f4585e64e5fdd0754c8e2e4c5f9b829ad24fd0a4825044e97b7",
+      "message": "FLAG: the executor escalated OTHER on T03: Scored MINOR_DISCREPANCY: 2 of 1176 culture-exclusive box cells in the GIMP-annotated Fig. 4 disagree with the read-only S1 lookup. C5-F13 is boxed Ertebølle, but its single bearing object is Kongemose; B1-B2 is exclusive to Maglemose but has no box. Both are single-object pairs not plotted in the heatmap. A human may instead rule these PAPER_ERROR (tier 2, deposited S1). The matrix (163 exact, 2  (a human confirms or rejects it)"
+    },
+    {
+      "id": "escalation:executor:CANNOT_COMPARE:T04",
+      "kind": "flag",
+      "code": "escalation",
+      "subject": "executor:CANNOT_COMPARE:T04",
+      "targets": [
+        "T04"
+      ],
+      "files": {
+        "escalation": "a8f2c84935cd824048c314952f647e09e399d1ac8c719d07a8d8d3296e7db785"
+      },
+      "fingerprint": "7c867fb199a50e818666403a050e7d0b5ed87d3c681b8f53609be526b88bcd38",
+      "message": "FLAG: the executor escalated CANNOT_COMPARE on T04: Fig. 5's motif-extent patches have no code or stated method, as the plan pre-declared. The ten pies match S1 exactly (10/10), and their positions agree with S1 coordinates (Spearman 0.997 and 1.000). The target is partially verified and counts against coverage. (a human confirms or rejects it)"
+    },
+    {
+      "id": "blinding-warning:executor:verification-strategies.md",
+      "kind": "flag",
+      "code": "blinding-warning",
+      "subject": "executor:verification-strategies.md",
+      "targets": [],
+      "files": {
+        "warning": "17c9a790979dc5b7f24fb99d6669054fb510815dc5baa3787336e3a0c2018478"
+      },
+      "fingerprint": "6303121eb618a29c0b6c55dc16853acac45bd97c2dc096003c444da4ca2bf7e8",
+      "message": "FLAG: blinded path named in command output (review): ls reproduction-system/templates/ reproduction-system/schemas/ reproduction-system/prompts/ .claude/skills/reproduction-assessor/references/ && wc -l reproduction-system/templates/* reproduction-syste"
+    },
+    {
+      "id": "blinding-warning:executor:crema-et-al-2024.json",
+      "kind": "flag",
+      "code": "blinding-warning",
+      "subject": "executor:crema-et-al-2024.json",
+      "targets": [],
+      "files": {
+        "warning": "7706a9e98393697c4934337159b5264eeb40520d42aa6c3ab46a4ceef274af9e"
+      },
+      "fingerprint": "57502ce5a2570f384ede92b0eb56105c6a8ab910323cea32a8b01fd57e362e43",
+      "message": "FLAG: blinded path named in command output (review): venv/bin/python scripts/reproduction-lane.py --help; venv/bin/python scripts/reproduction-lane.py build-image --help; venv/bin/python scripts/reproduction-lane.py run-container --help; ls corpus/evide"
+    },
+    {
+      "id": "blinding-warning:executor:wiki/planning/reproduction-gate-1-3-design.md",
+      "kind": "flag",
+      "code": "blinding-warning",
+      "subject": "executor:wiki/planning/reproduction-gate-1-3-design.md",
+      "targets": [],
+      "files": {
+        "warning": "b8807abf40b2418520ff2b01c9e69e8d5d2020179cb5103d99982a86893dbfd2"
+      },
+      "fingerprint": "94a10ea68af5b34c4274773abed25207422c9ba12c60b243c5f5a81ac7be8bb4",
+      "message": "FLAG: blinded path named in command output (review): sed -n 1,80p scripts/reproduction-lane.py; sed -n 195,240p scripts/reproduction-lane.py; sed -n 6123,6390p scripts/reproduction-lane.py"
+    },
+    {
+      "id": "review:qualified",
+      "kind": "flag",
+      "code": "review",
+      "subject": "qualified",
+      "targets": [],
+      "files": {
+        "review": "4f97b802e558ec6a14ca68012dd1ecd62dcdcf006a896dfc4af596ce5870f29c"
+      },
+      "fingerprint": "565a668ebdfa87a444808cccb8f637485b2b8c1b6c5924a03ce4aa8364fd7705",
+      "message": "FLAG: the adversarial review is QUALIFIED (concerns: confirmation_bias, methodological_soundness; supports the verdict: True): a human resolves each concern before the result enters study data"
+    },
+    {
+      "id": "launch-message:cdbca2a1e5e4",
+      "kind": "flag",
+      "code": "launch-message",
+      "subject": "cdbca2a1e5e4",
+      "targets": [],
+      "files": {
+        "text": "cdbca2a1e5e496bb4115ba35d19bfac361e6e4ba638e74c6a0552cd8c80c7795"
+      },
+      "fingerprint": "b421a404bd3139805b84569b193200f8fc4aa7c876011dea336e6501d7e15786",
+      "message": "FLAG: the workflow was launched with 'go', not the runbook's fixed phrase, and the harness relayed it to every agent ahead of the workflow's instructions: a human rules whether it could steer or unblind the run"
+    }
+  ]
+}

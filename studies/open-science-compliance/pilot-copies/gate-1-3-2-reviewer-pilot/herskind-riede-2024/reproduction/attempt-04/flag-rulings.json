@@ -1,0 +1,203 @@
+{
+  "rulings_version": "1.0",
+  "slug": "herskind-riede-2024",
+  "rulings": [
+    {
+      "issue_id": "tolerated-statement:Herskind&Riede_S2.R:27@run-05",
+      "fingerprint": "7aea3eef9b50312d30a868f804c562748909b3f495aeda2c57efd586d153db8a",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Statement 8 (S2.R line 27) is font_import(pattern = \"GIL\", prompt = FALSE), which only registers fonts. The authors' own comment on that line says the error does not affect font output, and no later statement reads its value (reviewer, provenance). Nothing credited rests on it. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "method-deviation:T13",
+      "fingerprint": "9918306076c10ca93b0eda67e6ccd56f7ef66f8b27cbca9026a30aafce7cc2c5",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Forced: token_freqs is local to the authors' ngramfunction() and cannot be captured without altering their code. The aid uses the same quanteda calls (colSums(dfm(tokens(corpus)))) on the authors' corpus and is cross-checked against the authors' global freqs; both give the same six motifs. The reviewer notes the decision was made after the paper had been read (values transcribed 05:20-05:28, aids written 05:34-05:37): recorded, not disqualifying. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "in-memory-patching:install-pins.R",
+      "fingerprint": "69a79de81ebeaf279907d865875376bcd60b21d45c57d141b2a5e36b3fa41169",
+      "kind": "obligation",
+      "decision": "discharged",
+      "note": "Discharged by the reviewer: install-pins.R runs only in docker build, its only <<- assigns its own attempt_log, it uses no body<-, formals<-, trace, assignInNamespace, or unlockBinding, and run-05 shows no LOAD of it. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "docker-copy:Dockerfile",
+      "fingerprint": "fb52adac54523b344a35ae0a792e3bbfc5cace850bde25270e03b3538f2d95d1",
+      "kind": "obligation",
+      "decision": "discharged",
+      "note": "Discharged by the reviewer: the only COPY puts install-pins.R in /opt/llmr; the run executes the mounted /project tree (run_file on /project/deposit/Herskind&Riede_S2.R), never the image's copy. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "run-time-texts:deposit/Herskind&Riede_S2.R|promise",
+      "fingerprint": "445d86c5522e06db0d9633d72bfa4690804f1d1790054c5f40f4bb9fe002ed7b",
+      "kind": "obligation",
+      "decision": "discharged",
+      "note": "Discharged by the reviewer: the 107 texts are the filter conditions the authors' createResultTable builds (S2.R lines 367-368) and evaluates inside dplyr::filter; they match the Fig. 3 bar identities. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "wrapper-semantics:wrappers",
+      "fingerprint": "448dc45b31ae486977df0e6069dd5f2db861687cc2948fd6c7dec3df6885d76e",
+      "kind": "obligation",
+      "decision": "discharged",
+      "note": "Discharged by the reviewer: run-analysis.R checks S2.R's sha256, sets the png device and working directory, calls run_file with tolerate = 27, and captures globals afterwards; it changes no parameter, filter, or step. verification-aids.R runs in a separate process. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "method-adherence:targets",
+      "fingerprint": "4f3d79b84771c381415d1853c4be02a3b74c5bc0b6b8f38b36a034fff3f3a357",
+      "kind": "obligation",
+      "decision": "discharged",
+      "note": "Discharged: the reviewer compared every target's method with the plan's wording. Departures: T13 (declared, ruled separately) and four undeclared, recorded as method_as_planned true: T01 (numeric pixel comparison with an executor-chosen one-object threshold, where the plan says visual), T03 (all 1,176 pairs checked; a tolerance failure classified MINOR), T04 (positions by Spearman correlation), T12 (the Bigrams.csv export instead of the Part 3 table). None changes an outcome: T01 and T03 are uncredited, T04 is partial, T12 is unaffected (no tie at 28). Pilot finding: the executor's own method declarations caught one departure of five; only the reviewer found the rest. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "host-run:published-values/measure_fig3_bars.py",
+      "fingerprint": "3941812a4237b78b48bafcb734bc659a4f7225abd6842791807896c6bc29a4f4",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "A transcription aid, not authors' code: it measures the published Fig. 3 from an image extracted from the paper and reads no reproduction output. Hashed in lane-records/run-01/pre.json before the first container run. Invariant 5 governs paper code. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "host-run:published-values/detect_fig4_boxes.py",
+      "fingerprint": "53ecdeb95a7837fd15eeda16078b9c2ea41a2354d064914088eb47cdb2aeb069",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "A transcription aid, not authors' code: it detects the boxes on the published Fig. 4 from an image extracted from the paper and reads no reproduction output. Hashed in lane-records/run-01/pre.json before the first container run. Invariant 5 governs paper code. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "escalation:executor:PAPER_ERROR:T05",
+      "fingerprint": "e83ff29608885ace492fe72ba29e155866e80da2987fa6a721b93359d2b3cd78",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Confirmed PAPER_ERROR. Table 1 differs from the reproduction in 8 of 130 cells, each by one. The authors' deposited S3 (tier 2) supports the reproduced values for bigram classes 8, 7, 4, and 3; the other four cells (bigram classes 2 and 1, trigram classes 2 and 1) rest on tier 3, the authors' code run unmodified, which is the reproduction itself and not independent corroboration (reviewer). Attempt-03 found the same 8 cells independently. The version-1 data hypothesis is untested. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "escalation:executor:OTHER:T03",
+      "fingerprint": "a17681b6513b1f4585e64e5fdd0754c8e2e4c5f9b829ad24fd0a4825044e97b7",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Admissible, recorded as PAPER_ERROR rather than the executor's MINOR_DISCREPANCY: the two mismatches (C5-F13 boxed Ertebolle though its single object is Kongemose in S1; B1-B2 exclusive to Maglemose but unboxed) are differences of content against the authors' deposited S1 (tier 2), and the plan reserved MINOR for GIMP styling. Attempt-03 classified the same two cells PAPER_ERROR. T03 is uncredited either way; comparison.json is unchanged (strict binding). Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "escalation:executor:CANNOT_COMPARE:T04",
+      "fingerprint": "7c867fb199a50e818666403a050e7d0b5ed87d3c681b8f53609be526b88bcd38",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Confirmed CANNOT_COMPARE for the Fig. 5 motif-extent patches, as the approved plan pre-declared. The pies match S1 (10/10) and their positions agree with S1 coordinates. Partial; counts against coverage. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "blinding-warning:executor:verification-strategies.md",
+      "fingerprint": "6303121eb618a29c0b6c55dc16853acac45bd97c2dc096003c444da4ca2bf7e8",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Admissible: the blinded name appeared only in command output (a directory listing of the reproduction-assessor references); the transcript audit found no read of the path (0 contaminating accesses). Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "blinding-warning:executor:crema-et-al-2024.json",
+      "fingerprint": "57502ce5a2570f384ede92b0eb56105c6a8ab910323cea32a8b01fd57e362e43",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Admissible: the blinded name appeared only in command output (a directory listing of corpus/evidence-packs); the transcript audit found no read of the path (0 contaminating accesses). Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "blinding-warning:executor:wiki/planning/reproduction-gate-1-3-design.md",
+      "fingerprint": "94a10ea68af5b34c4274773abed25207422c9ba12c60b243c5f5a81ac7be8bb4",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Admissible: the blinded name appeared only in command output (a code comment printed from scripts/reproduction-lane.py); the transcript audit found no read of the path (0 contaminating accesses). Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "review:qualified",
+      "fingerprint": "565a668ebdfa87a444808cccb8f637485b2b8c1b6c5924a03ce4aa8364fd7705",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Admissible. Concerns resolved: (1) T16 keeps the approved plan's pair-level reading, since rescoring after results would be post hoc; at motif level C5 (one Kongemose object) and C12 (one Maglemose, one Kongemose) are not exclusive, and three of the ten pairs rest on a single object. (2) The undeclared method departures (T01, T03, T04, T12), the unqualified SUCCESSFUL in comparison.json, comparisons run on run-04 before run-05 was credited, and the unpinned base image are recorded; none can be corrected in this attempt without a new review. (3) T17 is NOT creditable under amendment 3 s7(d) (ruling Q5): its rule (at least two of the five cluster motifs) was inferred from Table 3 and applied to S1, not to outputs of the authors' code; the approved plan paraphrased Q5 without that condition. Study coverage is therefore 13/18. The lane's admitted coverage reads 14/18 because this issue names no targets and a ruling cannot remove one target alone (follow-up PR: target-scoped review issues). The verdict SUCCESSFUL stands: every value the authors' code produces was reproduced. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "launch-message:cdbca2a1e5e4",
+      "fingerprint": "b421a404bd3139805b84569b193200f8fc4aa7c876011dea336e6501d7e15786",
+      "kind": "flag",
+      "decision": "admissible",
+      "note": "Admissible: 'go' is approval words only and carries no results, expectations, or instructions; the executor's transcript shows exactly 'go' relayed. Launched under the pre-run review's H6. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-17T07:17:13+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "review:qualified",
+      "fingerprint": "565a668ebdfa87a444808cccb8f637485b2b8c1b6c5924a03ce4aa8364fd7705",
+      "kind": "flag",
+      "decision": "admissible",
+      "targets": {
+        "T17": "excluded"
+      },
+      "verdict": "SUCCESSFUL",
+      "note": "Restated 2026-10-18 with target-scoped parts (gate 1.3.2). The original ruling of 2026-10-17 reads: Admissible. Concerns resolved: (1) T16 keeps the approved plan's pair-level reading, since rescoring after results would be post hoc; at motif level C5 (one Kongemose object) and C12 (one Maglemose, one Kongemose) are not exclusive, and three of the ten pairs rest on a single object. (2) The undeclared method departures (T01, T03, T04, T12), the unqualified SUCCESSFUL in comparison.json, comparisons run on run-04 before run-05 was credited, and the unpinned base image are recorded; none can be corrected in this attempt without a new review. (3) T17 is NOT creditable under amendment 3 s7(d) (ruling Q5): its rule (at least two of the five cluster motifs) was inferred from Table 3 and applied to S1, not to outputs of the authors' code; the approved plan paraphrased Q5 without that condition. Study coverage is therefore 13/18. The lane's admitted coverage reads 14/18 because this issue names no targets and a ruling cannot remove one target alone (follow-up PR: target-scoped review issues). The verdict SUCCESSFUL stands: every value the authors' code produces was reproduced. Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-18T06:14:25+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    },
+    {
+      "issue_id": "escalation:executor:OTHER:T03",
+      "fingerprint": "a17681b6513b1f4585e64e5fdd0754c8e2e4c5f9b829ad24fd0a4825044e97b7",
+      "kind": "flag",
+      "decision": "admissible",
+      "classification": {
+        "T03": "PAPER_ERROR"
+      },
+      "note": "Restated 2026-10-18 with target-scoped parts (gate 1.3.2). The original ruling of 2026-10-17 reads: Admissible, recorded as PAPER_ERROR rather than the executor's MINOR_DISCREPANCY: the two mismatches (C5-F13 boxed Ertebolle though its single object is Kongemose in S1; B1-B2 exclusive to Maglemose but unboxed) are differences of content against the authors' deposited S1 (tier 2), and the plan reserved MINOR for GIMP styling. Attempt-03 classified the same two cells PAPER_ERROR. T03 is uncredited either way; comparison.json is unchanged (strict binding). Shawn 2026-10-17.",
+      "approver": "Shawn Ross",
+      "ruled_at": "2026-10-18T06:14:25+00:00",
+      "gate_report_sha256": "d4dd3e0dc87788216c5c42a6579010ae13560934322da187ced6f318ba1e2ffd"
+    }
+  ]
+}
