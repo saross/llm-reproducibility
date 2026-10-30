@@ -2003,9 +2003,8 @@ reversible preparation (reconcile, test together) while waiting.
 certainty flags mishandled; one of my fixes introduced a regression she then
 found. I moved to a model of the semantics (a set of possible shell states
 through `&&`, `||`, pipelines, and subshells) only after the third round,
-and the fourth found a pipeline gap in that model. claude-obs-level
-self-critique of entry 28's pattern, recurring nine days later in a
-different domain.
+and the fourth found a pipeline gap in that model. It is session-reflection
+entry 28's pattern, nine days later in a different domain.
 
 **Lesson.** When a reviewer's second finding is another instance of the
 first's class, the class needs a model, not a case. Here the model was
