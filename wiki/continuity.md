@@ -113,7 +113,11 @@ merged here as PR #1).
         `"${F:-x}"`), all closed in `774bddf`, regression test `b2c9586`.
         Her unmodified harness passes at `774bddf` (nine tests, 1,152
         parity cases, original and residual Bash fixtures); 778 pass.
-      - [ ] **Astra's second re-check at `b2c9586`**: the reply is
+      - [x] 2026-10-30 **Possible reads labelled** (`fac4805`, after a
+        side agent's note): a warning on a path argument the scan could
+        not resolve says "possibly a blinded read" and to check the
+        transcript before ruling; the runbook's rulings step says so.
+      - [ ] **Astra's second re-check at `fac4805`**: the reply is
         `astra-reply-pr14-recheck.md` in session 789afcf9's scratchpad,
         for Shawn to paste; file it, the first closure reply, and both her
         reviews in agent mail once on amd-tower.
@@ -129,6 +133,16 @@ merged here as PR #1).
       hand (`astra-review-request-review-only-mode.md` in that session's
       scratchpad; file a copy in agent mail once on amd-tower). Whichever
       of #14 and #15 merges second needs a rebase (lane header, manifest).
+      - [x] 2026-10-30 Astra's review at `d02e75b` (pasted by Shawn):
+        changes requested, four findings (the executor's cleared state
+        relabelled by a later review; a fresh reviewer inheriting earlier
+        rulings; the staged copy never re-checked; an ineligible executor
+        record making an unrecoverable run), all closed in `a3ac8dc` and
+        `ac0d99c`; 789 pass. Recorded in the design note.
+      - [ ] **Astra's re-check at `ac0d99c`**: the reply is
+        `astra-reply-pr15-closure.md` in session 789afcf9's scratchpad,
+        for Shawn to paste. Then rebase on #14, or #14 on this, and test
+        the two together (her merge note).
     - [ ] **Then the reviewer-only pilot** (after #15 merges): its own run
       configuration (`mode: review-only`), the labelled copy of attempt 04
       outside any path study reporting reads, a blinding list that blinds
