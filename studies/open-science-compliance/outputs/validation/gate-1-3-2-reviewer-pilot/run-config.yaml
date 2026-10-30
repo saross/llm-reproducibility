@@ -1,0 +1,178 @@
+# Gate 1.3.2 reviewer-only pilot — reproduction-lane run configuration
+#
+# Single source of run inputs for scripts/reproduction-lane.py
+# (build-review-args, audit-run, human-queue, rule-flags, persist-results).
+# The workflow script never reads this file; the builder turns it into
+# hashed, commit-pinned args.
+#
+# Framing: criterion 4's live check for gate 1.3.2
+# (wiki/planning/reproduction-gate-1-3-design.md, criterion 4 and "The
+# review-only mode as designed"). Gate 1.3.2 changed what the reviewer
+# writes (adversarial-reviewer v1.4: target-scoped concerns, a method row
+# per locked target), and §2.2 asks one real run of such a change. This run
+# also pilots the review-only mode (lane v1.8, reproduction-review.workflow.js
+# v1.0): one mechanical gate step and ONE governed reviewer spawn on an
+# executed attempt; no planner, no executor.
+#
+# What it reviews: a labelled, byte-identical copy of herskind-riede-2024
+# attempt 04 (copied at ad0d50f; see the README beside it), so the original
+# attempt's review, rulings, and adjudicated result stay untouched (Shawn,
+# 2026-10-30). The copy sits outside the study's outputs tree, which is all
+# study reporting reads. The binding: the executor result its run audit
+# cleared, from workflow run wf_4fd7a886-ada (agent a23bd74af4155b907,
+# launch commit 6b18505), carried by build-review-args, never re-run.
+#
+# Launch from a fresh Claude Code session on amd-tower, which holds attempt
+# 04's image (llmr-herskind-riede-2024-attempt-04): the gate step's
+# check-attempt needs it, and the review workflow script is new since the
+# last paid run (docs/agent-guidance.md, "Paid agentic runs").
+
+run_id: gate-1-3-2-reviewer-pilot-2026-11
+config_version: "1.0"
+mode: review-only     # build-review-args only; the plan and execute builders refuse it
+attempt: 4            # the copy is attempt-04 under output_root, as the original
+effort: high          # as attempt 04's own review, so the two reviews compare
+output_root: studies/open-science-compliance/pilot-copies/gate-1-3-2-reviewer-pilot
+
+# Registrant rulings (Shawn, 2026-10-03), verbatim from the gate 1.3.1 pilot
+# re-run's configuration: the rulings attempt 04 was executed and first
+# reviewed under. The review prompt carries them.
+rulings:
+  - >-
+    R1 No author code: a target whose published result has no supplied code
+    may be tested with clearly labelled verification aids. Aids are
+    read-only lookups in the deposited data, and calls to documented
+    functions of the package the authors used. They make no new
+    statistical choices, and they live in a separate comparison script,
+    never in the authors' code. A difference caused only by an unpublished
+    convention (for example histogram bin edges) is MINOR_DISCREPANCY.
+  - >-
+    R2 Unavailable inputs: a target whose inputs cannot be obtained stays
+    in the locked denominator as expected-untestable and counts against
+    coverage. Never drop it to narrow scope.
+  - >-
+    R3 Granularity: one target per display item. A multi-panel figure is
+    one target, and its panels are described within it. Named values in
+    the text are separate targets.
+  - >-
+    R4 Internal inconsistency: where the paper's text and its own tables or
+    figures disagree, score against the stated value. Apply the PAPER_ERROR
+    protocol if the reproduction disagrees, and escalate.
+
+agents:
+  planner: reproduction-planner
+  executor: reproduction-executor
+  reviewer: adversarial-reviewer
+
+schemas:
+  plan: reproduction-system/schemas/reproduction-plan-output.json
+  execution: reproduction-system/schemas/reproduction-execution-output.json
+  review: reproduction-system/schemas/adversarial-review-output.json
+  comparison_record: reproduction-system/schemas/comparison-record.json
+
+# Blinding: the planner pilot's list, adapted to a run whose gate step must
+# work in an attempt-04 directory.
+#
+# - The original attempt 04 is blinded by its location in the study tree
+#   (outputs/herskind-riede-2024/, which also covers attempts 01 to 05 and the
+#   paper's extraction), NOT by the bare substring reproduction/attempt-04 the
+#   planner pilot used: that would also match the copy, and audit-run scans
+#   the mechanical gate agent too, whose check-attempt and stage-review run in
+#   the copy (a contaminating access would void the run).
+# - The copy's withheld records (the earlier review, the executor's report,
+#   the rulings, the audits, the adjudicated result, superseded/) are added
+#   by the lane in review-only mode (withheld_records), as substrings that
+#   match the original attempt 04's records as well. The copy's reviewable
+#   files stay readable: they are byte-identical to the staged copy the
+#   reviewer is handed, so reading them conveys nothing.
+# - Two reviewable records in the copy name the original location
+#   (plan-approval.json's plan_file; lane-records/build-01/build.json's build
+#   context). A Bash command printing either gives a "named in command
+#   output" warning to rule on; the run notes tell the reviewer to resolve
+#   such paths against its review copy rather than follow them.
+# - tests/ is blinded whole (three suites restate attempt 04's records and
+#   rulings); the planner pilot blinded only tests/test_rulings.py. The lane
+#   script is not blinded (the gate agent runs it); it names no outcome.
+# Agents are told never to touch any path containing one of these
+# substrings; audit-run scans every transcript afterwards (instruction plus
+# detection, amendment 2 §4).
+blinding:
+  forbidden_substrings:
+    - outputs/herskind-riede-2024/     # the original paper tree: attempts 01 to 05, the original attempt 04 among them
+    - reproduction/attempt-01          # the pilot's artefacts (regression baseline)
+    - reproduction/attempt-02          # the shakedown's agentic run
+    - reproduction/attempt-03          # the gate 1.3 pilot re-run
+    - reproduction/attempt-05          # the gate 1.3.2 planner pilot's attempt
+    - gate-1-3-pilot-rerun             # the gate 1.3 run's scratch tree and validation records
+    - gate-1-3-1-pilot-rerun           # attempt 04's own run: scratch tree and validation records
+    - gate-1-3-2-planner-pilot         # the planner pilot's scratch tree and validation records
+    - gate-1-3-2-reviewer-pilot/README.md   # the copy's label
+    - llmr-runs/exec-                  # the gate 1.3 run's execute args and workflow result
+    - llmr-runs/plan-args.json         # the gate 1.3 run's plan args
+    - lodged-rules.yaml                # its header names an earlier conclusion
+    - reproduction-system/workflows/README.md   # the runbook names attempt 04's rulings
+    - tests/                           # fixtures restate attempt 04's records and rulings
+    - extraction.json                  # pilot extractions incl. FAIR assessments
+    - /assessment/                     # credibility assessments
+    - outputs/validation/              # benchmark records, ledger, these runs (this one's too)
+    - open-science-compliance/reports/ # pilot findings report
+    - outputs/variability-test
+    - reproduction-system-review       # v1.0 review of the pilot
+    - pilot-reproduction-summary
+    - references/examples/             # skill worked examples (pilot outcomes)
+    - verification-strategies.md       # states the pilot's value-level outcomes
+    - wiki/
+    - .claude/projects/                # session transcripts
+    - cc-archives
+    - personal-assistant/
+    - agent-mail/                      # includes Astra's reviews and evidence
+    - llmr-probes                      # the ledger's local probes
+  # Harness push-channel spill files live under .claude/projects/; reading
+  # them IS instrument delivery (reconcile-run v1.4 precedent).
+  exempt_regex: '/tool-results/hook-[0-9a-f-]+-\d+-additionalContext\.txt$'
+  # Each paper's agents must also stay out of the other papers' output trees.
+  cross_paper_slugs:
+    - herskind-riede-2024
+    - dye-et-al-2023
+    - key-et-al-2024
+    - marwick-2025
+    - crema-et-al-2024
+
+# API-equivalent prices, USD per million tokens (the Max plan bills by
+# subscription; these are for the cost gate), as the gate 1.3.1
+# configuration. claude-haiku-5-5 (the in-workflow gate step) has two cards,
+# chosen per request by its prompt length. Source:
+# platform.claude.com/docs/en/about-claude/pricing, read 2026-10-13.
+pricing_usd_per_mtok:
+  claude-opus-5-5: {input: 4.00, output: 20.00, cache_write_5m: 5.00, cache_write_1h: 8.00, cache_read: 0.20}
+  claude-haiku-5-5:
+    tiers:
+      - {max_prompt_tokens: 100000, input: 0.10, output: 0.50, cache_write_5m: 0.125, cache_write_1h: 0.20, cache_read: 0.01}
+      - {input: 0.50, output: 2.50, cache_write_5m: 0.625, cache_write_1h: 1.00, cache_read: 0.05}
+
+papers:
+  - slug: herskind-riede-2024
+    paper_pdf: ~/corpora/llm-reproducibility/herskind-riede-2024/vor.pdf
+    supplements: []
+    deposits:
+      - identifier: https://doi.org/10.5281/zenodo.10801706
+        description: >-
+          Zenodo record, version 2 (2024-03-10): S1.xlsx (data), S2.R (code),
+          S3.xlsx (precomputed tables), README.txt. Reproduce THIS version.
+    # Attempt 04's run notes verbatim (its reviewer read them), then one
+    # sentence for the review-only re-run: where the copy's records point.
+    run_notes: >-
+      Version selection (adjudication rule AP-12, Shawn 2026-10-02/03):
+      reproduce with the code and data as of the paper. The paper's methods
+      cite version 1 (10.5281/zenodo.10623550) and its data-availability
+      statement cites version 2; the publisher's supplementary files are
+      byte-identical to version 2, so version 2 is the version of record.
+      Do not use version 1 or the concept DOI. Compute: run everything on
+      this machine through run-container. Do not send any run to sapphire,
+      whatever the plan guide or preparation prompt says about long runs;
+      sapphire is held for a memory fault (Shawn, 2026-10-10).
+      Review-only re-run: some records in the review copy (plan-approval.json
+      and the build record under lane-records/) name the attempt's original
+      location, which is blinded; resolve any path such a record names
+      against the review copy, which holds the same files, and never open
+      the original.
