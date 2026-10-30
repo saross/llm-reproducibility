@@ -1,7 +1,22 @@
 #!/usr/bin/env python3
 """Deterministic orchestration helpers for the agentic reproduction lane.
 
-**Version:** 1.8
+**Version:** 1.9
+
+v1.9 (2026-10-31) keeps a review-only review independent of the review it
+replaces (Shawn, 2026-10-31). Information moves one way, from execution to
+review to rulings, so a re-review is handed what a first review is handed
+and nothing downstream of any review. On the input side, ``stage-review``
+gives the reviewer a gate report whose admitted coverage is computed with
+no rulings (``unruled_coverage``), as the execute workflow's gate shows it,
+and the run audit refuses a staged report that shows rulings. On the output
+side, once a review-only audit replaces the review of record, every issue
+the attempt holds (the gate's, the transcript audit's, and the executor's)
+is bound to the new review's identity (``review_bound``), as the review's
+own issues already were: rulings follow the review, and a ruling's note
+cannot show whether it rested on the replaced one, so each is ruled again
+on the new review, the earlier rulings kept as history. Execute-mode
+attempts are unchanged.
 
 v1.8 (2026-10-30) is gate 1.3.2, criterion 4's review-only mode (the
 design's "The review-only mode as designed"): a run configuration with
@@ -1653,14 +1668,13 @@ def cmd_approve(args: argparse.Namespace) -> int:
 def attempt_issues(target_dir: Path, report: dict) -> dict[str, dict]:
     """An attempt's rulable issues, by id: the gate report's, then the
     transcript audit's (spec §12: a host run before the final run), then the
-    run audit's (F8: escalations, review concerns, and blinding warnings)."""
-    issues = {i["id"]: i for i in report.get("issues") or []}
-    for name in (AUDIT_FILE, RUN_AUDIT_FILE):
-        try:
-            audit = json.loads((target_dir / name).read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            audit = {}
-        for issue in audit.get("issues") or []:
+    run audit's (F8: escalations, review concerns, and blinding warnings).
+    After a review-only run, all are bound to the review of record
+    (``review_bound``)."""
+    run_audit = read_record(target_dir, RUN_AUDIT_FILE)
+    issues = {i["id"]: i for i in review_bound(report.get("issues"), run_audit)}
+    for audit in (read_record(target_dir, AUDIT_FILE), run_audit):
+        for issue in review_bound((audit or {}).get("issues"), run_audit):
             issues.setdefault(issue["id"], issue)
     return issues
 
@@ -1788,7 +1802,9 @@ def cmd_rule_flags(args: argparse.Namespace) -> int:
 
     Each ruling binds to the issue's id and its current evidence
     fingerprint, read from the authoritative gate report, so it lapses when
-    the evidence changes. The rulings file is JSON: a list (or ``{"rulings":
+    the evidence changes. After a review-only run, every issue carries the
+    new review's identity (``review_bound``), so a ruling binds to the
+    review it was made with. The rulings file is JSON: a list (or ``{"rulings":
     [...]}``) of ``{"issue": "<id>", "decision": "...", "note": "..."}``.
     Flags take ``admissible``, ``fail-and-uplift``, or ``excluded``;
     obligations take ``discharged``, ``fail-and-uplift``, or ``excluded``.
@@ -6526,6 +6542,45 @@ def admitted_coverage(verdict: str, issues: list[dict], rulings: list[dict],
             "unruled_issues": unruled}
 
 
+def unruled_coverage(target_dir: Path, report: dict) -> dict | None:
+    """``coverage_admitted`` as a gate report shows it before any ruling.
+
+    A review-only reviewer is handed what a first reviewer is handed, and
+    nothing downstream of any review (Shawn, 2026-10-31). The execute
+    workflow's gate runs before any ruling exists, so its reviewer sees
+    every issue unruled. A review-only run re-gates an attempt whose issues
+    are all ruled (its executor record must be persisted eligible), so the
+    report's admitted coverage would tell a fresh reviewer which issues a
+    human admitted with the replaced review in hand, review obligations
+    among them. This recomputes it from the report
+    and the attempt's records with no rulings, as ``check_attempt`` does.
+
+    Returns:
+        The rulings-free ``coverage_admitted``, or None when the report has
+        none (a comparison the gate could not read).
+    """
+    if report.get("coverage_admitted") is None:
+        return None
+    locked = locked_targets(target_dir) or []
+    reproduced_ids = [tid for tid, record in target_records(target_dir).items()
+                      if tid in locked and reproduced_record(record)]
+    plan = (read_record(target_dir, PLAN_FILE) or {}).get("plan")
+    structural = structural_exclusions(read_record(target_dir, CODE_MANIFEST_FILE) or {},
+                                       (report.get("code_integrity") or {}).get("account"),
+                                       locked, plan)
+    return admitted_coverage(str(report.get("verdict")), list(report.get("issues") or []), [],
+                             locked, reproduced_ids, structural)
+
+
+def shows_rulings(report: dict) -> bool:
+    """Whether a gate report's admitted coverage counts any issue as ruled."""
+    admitted = report.get("coverage_admitted")
+    if admitted is None:
+        return False
+    return set(admitted.get("unruled_issues") or []) \
+        != {i.get("id") for i in report.get("issues") or [] if isinstance(i, dict)}
+
+
 # Astra's delta review of gate 1.3.1, D-Astra-3: a run audit clears one
 # workflow's results, for the attempt as its reviewer was handed it.
 # Version 1.1 records the workflow run, each role's agent and accepted
@@ -6688,7 +6743,10 @@ def run_audit_reasons(target_dir: Path, report: dict, rulings: list[dict],
     if run_audit.get("plan_sha256") and approval.get("plan_sha256") \
             and run_audit["plan_sha256"] != approval["plan_sha256"]:
         reasons.append("the run audit was made under a different approved plan")
-    unruled = [i["id"] for i in run_audit.get("issues") or [] if ruling_for(i, rulings) is None]
+    # Bound to the review of record (v1.9): after a review-only run the
+    # executor's issues are ruled again too; the review's own already are.
+    unruled = [i["id"] for i in review_bound(run_audit.get("issues"), run_audit)
+               if ruling_for(i, rulings) is None]
     if unruled:
         reasons.append(f"{len(unruled)} unruled run-audit issue(s): {', '.join(unruled[:5])}"
                        + (" …" if len(unruled) > 5 else ""))
@@ -6703,6 +6761,63 @@ def role_identity(run_audit: dict, role: str) -> dict:
         return {key: run_audit.get(key) for key in IDENTITY_KEYS}
     entry = (run_audit.get("roles") or {}).get(role) or {}
     return {key: entry.get(key) for key in IDENTITY_KEYS}
+
+
+def review_identity(reviewer: dict) -> str:
+    """The identity a review-only review's issues are bound to: the
+    reviewer's run, workflow run, and agent (Astra's review of PR #15, F2)."""
+    return json_digest({"run_id": reviewer.get("run_id"),
+                        "workflow_run": reviewer.get("workflow_run"),
+                        "agent_id": reviewer.get("agent_id")})
+
+
+def replacing_review(run_audit: dict | None) -> str | None:
+    """The identity of the review a review-only run audit made the review
+    of record, or None for an execute-mode audit (or none at all).
+
+    An audit is review-only when it carries the executor from an earlier
+    run or records a staged copy, as ``run_audit_reasons`` reads it.
+    """
+    audit = run_audit or {}
+    roles = audit.get("roles") or {}
+    if not ((roles.get("executor") or {}).get("carried_from") or "staging" in audit):
+        return None
+    return review_identity(roles.get("reviewer") or {})
+
+
+def review_bound(issues: list | None, run_audit: dict | None) -> list[dict]:
+    """Issues as rulings bind to them, given the attempt's run audit.
+
+    Rulings follow the review in the lane's order: a human rules on an
+    audited run with its review in hand. A review obligation is discharged
+    on the review's findings by definition, and rulings on the executor's
+    own issues have cited the review's findings too; a ruling's note is
+    free text, so the lane cannot tell which rested on the review. Once a
+    review-only run replaces the review of record, every issue is therefore
+    bound to the new review's identity, as that review's own issues already
+    are (F2): no earlier ruling applies, each issue is ruled again on the
+    new review, and the earlier rulings stay in the rulings file as history
+    (Shawn, 2026-10-31). Binding is idempotent, so the new review's own
+    issues keep their fingerprints, and a re-audit of the same run keeps
+    the rulings made on it. An execute-mode run audit binds nothing, so its
+    rulings stand as before.
+
+    Args:
+        issues: Issue records, from any of the attempt's records.
+        run_audit: The attempt's run audit, or None.
+    """
+    records = [i for i in issues or [] if isinstance(i, dict)]
+    identity = replacing_review(run_audit)
+    if identity is None:
+        return records
+    bound = []
+    for issue in records:
+        files = {**(issue.get("files") or {}), "review_identity": identity}
+        rebound = Issue(str(issue.get("message") or ""), kind=str(issue.get("kind")),
+                        code=str(issue.get("code")), subject=str(issue.get("subject")),
+                        targets=issue.get("targets") or (), files=files)
+        bound.append({**issue, "files": files, "fingerprint": rebound.fingerprint()})
+    return bound
 
 
 def role_audit(record: dict) -> dict:
@@ -7352,12 +7467,16 @@ def stage_review(target_dir: Path, review_dir: Path) -> dict:
     Every file in the reviewed state is copied, and the gate report the
     reviewer must read; the other post-review records (the earlier review,
     the executor's report, rulings, audits, and the adjudicated result) are
-    withheld. The copy's state must digest equal to the attempt's.
+    withheld. The copy's state must digest equal to the attempt's. The
+    copied gate report's admitted coverage is computed with no rulings
+    (``unruled_coverage``), as a first reviewer meets it, since the rulings
+    the attempt holds follow the review being replaced (v1.9).
 
     Returns:
         The state copied (``artefact_state_sha256``, as check-attempt
         prints it, so that the harness records the reviewed state), the
-        copy's path, the files copied, and those withheld.
+        copy's path, the files copied, those withheld, and the digests of
+        the reviewer's gate report and of the attempt's it was made from.
 
     Raises:
         LaneError: when the attempt has symlink problems or no gate report,
@@ -7388,10 +7507,19 @@ def stage_review(target_dir: Path, review_dir: Path) -> dict:
     if artefact_state(review_dir) != state:
         raise LaneError("the review copy's state differs from the attempt's: the attempt "
                         "changed while it was copied; stage again into a fresh folder")
+    # The gate report sits outside the reviewed state, so rewriting the
+    # copy's leaves the state as checked above.
+    try:
+        report = json.loads((review_dir / GATE_FILE).read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise LaneError(f"{GATE_FILE} does not parse, so it cannot be staged: {exc}") from exc
+    report["coverage_admitted"] = unruled_coverage(target_dir, report)
+    write_json(review_dir / GATE_FILE, report)
     return {"attempt_dir": display_path(target_dir), "review_dir": str(review_dir),
             "artefact_state_sha256": state, "files_copied": len(copied),
             "withheld": sorted(withheld),
-            "gate_report_sha256": sha256_file(review_dir / GATE_FILE)}
+            "gate_report_sha256": sha256_file(review_dir / GATE_FILE),
+            "gate_report_source_sha256": sha256_file(target_dir / GATE_FILE)}
 
 
 def staging_records(run_dir: Path, config: dict) -> dict[str, list[dict]]:
@@ -7431,7 +7559,8 @@ def staging_records(run_dir: Path, config: dict) -> dict[str, list[dict]]:
     return found
 
 
-STAGING_KEYS = ("review_dir", "artefact_state_sha256", "gate_report_sha256")
+STAGING_KEYS = ("review_dir", "artefact_state_sha256", "gate_report_sha256",
+                "gate_report_source_sha256")
 STAGED_COPY_GONE = "the staged copy is gone, so it cannot be shown unchanged"
 
 
@@ -7468,6 +7597,12 @@ def verify_staging(records: list[dict], reviewer_prompt: str) -> dict:
         gate = copy_dir / GATE_FILE
         if not gate.is_file() or sha256_file(gate) != record["gate_report_sha256"]:
             problems.append("the staged gate report changed after it was staged")
+        elif shows_rulings(read_record(copy_dir, GATE_FILE) or {}):
+            # v1.9: the reviewer is handed every issue unruled, as a first
+            # reviewer is; a staged report counting any as ruled told it what
+            # a human admitted after the review it replaces.
+            problems.append("the staged gate report counts issues as ruled: the reviewer "
+                            "was handed rulings that follow the review it replaces")
     return {**record, "verified": not problems, "problems": problems,
             "verified_at": now_utc()}
 
@@ -7502,7 +7637,11 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
             content digests: the verdict flag's ``review`` digest of the
             dimensions and verdict challenge must still change its
             fingerprint (her re-check, which found the identity written over
-            it).
+            it). Every other issue the attempt holds, the executor's
+            included, is bound to the same identity wherever the attempt's
+            issues are read (``review_bound``), so a ruling made on the
+            replaced review lapses with it; the records here keep their own
+            fingerprints.
         staging: In review-only mode, the verified staging record
             (``verify_staging``); its state is the reviewed state.
     """
@@ -7528,8 +7667,9 @@ def attempt_run_audit(config: dict, run_dir_name: str, target_dir: Path,
     issues: list[Issue] = []
     identity = None
     if carried is not None and "reviewer" in audits:
-        identity = json_digest({"run_id": config["run_id"], "workflow_run": run_dir_name,
-                                "agent_id": audits["reviewer"].get("agent_id")})
+        # The same identity binds every other issue once this audit is
+        # written (``review_bound``), so it is computed in one place.
+        identity = review_identity(audits["reviewer"])
     for role, payload in sorted(payloads.items()):
         found = review_issues(role, payload, audits[role].get("warnings") or [], target_dir,
                               locked)
@@ -7619,7 +7759,11 @@ def admission(target_dir: Path, bound: dict | None = None) -> dict:
             if unknown:
                 reasons.append(f"{issue['id']} names targets not in the locked plan: {unknown}")
     rulings = load_rulings(target_dir)
-    unruled = [i["id"] for i in report.get("issues") or [] if ruling_for(i, rulings) is None]
+    # Issues as bound to the review of record (v1.9): after a review-only
+    # run, a ruling made on the replaced review no longer applies.
+    run_audit = read_record(target_dir, RUN_AUDIT_FILE)
+    unruled = [i["id"] for i in review_bound(report.get("issues"), run_audit)
+               if ruling_for(i, rulings) is None]
     if unruled:
         reasons.append(f"{len(unruled)} unruled issue(s): {', '.join(unruled[:5])}"
                        + (" …" if len(unruled) > 5 else ""))
@@ -7628,7 +7772,7 @@ def admission(target_dir: Path, bound: dict | None = None) -> dict:
         if audit.get("contaminating"):
             reasons.append(f"the transcript audit found {len(audit['contaminating'])} "
                            f"contaminating finding(s)")
-        audit_unruled = [i["id"] for i in audit.get("issues") or []
+        audit_unruled = [i["id"] for i in review_bound(audit.get("issues"), run_audit)
                          if ruling_for(i, rulings) is None]
         if audit_unruled:
             reasons.append(f"{len(audit_unruled)} unruled transcript-audit issue(s): "
@@ -7871,7 +8015,10 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
                           and reproduced_record(t)]
         structural = structural_exclusions(manifest, integrity.get("account"), locked,
                                            plan_record["plan"])
-        admitted = admitted_coverage("fail" if errors else "pass", issues,
+        # Issues bound to the review of record, as admission reads them
+        # (v1.9), so this report and admission agree after a review-only run.
+        bound = review_bound(issues, read_record(target_dir, RUN_AUDIT_FILE))
+        admitted = admitted_coverage("fail" if errors else "pass", bound,
                                      load_rulings(target_dir), locked, reproduced_ids,
                                      structural)
     return {"gate_version": GATE_VERSION, "checked_at": now_utc(),
