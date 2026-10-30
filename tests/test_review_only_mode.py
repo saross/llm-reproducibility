@@ -77,7 +77,7 @@ def reviewer_record(agent_id: str, review_copy: str = "") -> dict:
                            "effort": "high"}}
 
 
-STAGING_KEYS = ("review_dir", "artefact_state_sha256", "gate_report_sha256")
+STAGING_KEYS = lane.STAGING_KEYS
 
 
 def new_review(locked: list[str], summary: str = "T02's comparison rests on one cell") -> dict:
@@ -454,6 +454,26 @@ class ReviewOnlyTests(unittest.TestCase):
         self.assertIn("no successful stage-review record", lane.verify_staging([], "")["problems"])
         self.assertTrue(lane.verify_staging([other, dict(other)],
                                             f"Review copy: {other['review_dir']}")["verified"])
+
+    def test_a_re_audit_keeps_its_verification_once_the_copy_is_gone(self):
+        """A side agent's note on F3: deleting the scratch copy after the first
+        audit must not undo the result; a re-audit of the same run keeps that
+        run's verification of the same record. Another run, a changed record,
+        or a copy present but changed do not."""
+        staged = self.stage("wf_review-1")
+        first = self.audit("wf_review-1", new_review(self.locked), staged=staged)
+        self.assertTrue(first["staging"]["verified"])
+        shutil.rmtree(staged["review_dir"])
+        again = self.audit("wf_review-1", new_review(self.locked), staged=staged)
+        self.assertTrue(again["staging"]["verified"])
+        self.assertEqual(again["staging"]["verified_at"], first["staging"]["verified_at"])
+        self.assertFalse(any("staged copy" in r
+                             for r in lane.run_audit_reasons(self.dir, {}, [], None)))
+        moved = {**staged, "gate_report_sha256": "0" * 64}
+        self.assertFalse(self.audit("wf_review-1", new_review(self.locked),
+                                    staged=moved)["staging"]["verified"])
+        other = self.audit("wf_review-2", new_review(self.locked), "rev-2", staged=staged)
+        self.assertEqual(other["staging"]["problems"], [lane.STAGED_COPY_GONE])
 
     def test_staging_is_read_only_from_a_successful_stage_review(self):
         """F3: a failed stage-review never falls back to a check-attempt digest."""

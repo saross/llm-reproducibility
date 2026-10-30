@@ -7403,10 +7403,13 @@ def staging_records(run_dir: Path, config: dict) -> dict[str, list[dict]]:
                 record = json.loads(call["output"])
             except json.JSONDecodeError:
                 continue
-            keys = ("review_dir", "artefact_state_sha256", "gate_report_sha256")
-            if paper and isinstance(record, dict) and all(record.get(k) for k in keys):
-                found.setdefault(paper.group(1), []).append({k: record[k] for k in keys})
+            if paper and isinstance(record, dict) and all(record.get(k) for k in STAGING_KEYS):
+                found.setdefault(paper.group(1), []).append({k: record[k] for k in STAGING_KEYS})
     return found
+
+
+STAGING_KEYS = ("review_dir", "artefact_state_sha256", "gate_report_sha256")
+STAGED_COPY_GONE = "the staged copy is gone, so it cannot be shown unchanged"
 
 
 def verify_staging(records: list[dict], reviewer_prompt: str) -> dict:
@@ -7435,7 +7438,7 @@ def verify_staging(records: list[dict], reviewer_prompt: str) -> dict:
         problems.append("the reviewer's prompt does not name the staged copy")
     copy_dir = Path(record.get("review_dir") or "")
     if record and not copy_dir.is_dir():
-        problems.append("the staged copy is gone, so it cannot be shown unchanged")
+        problems.append(STAGED_COPY_GONE)
     elif record:
         if artefact_state(copy_dir) != record["artefact_state_sha256"]:
             problems.append("the staged copy changed after it was staged")
@@ -9435,7 +9438,11 @@ def write_attempt_run_audit(config: dict, run_dir_name: str, attempt_path: Path,
     becomes history under its own workflow run before this one replaces it;
     a re-audit of the same run replaces its own audit. The reviewed state is
     then the run's verified staging record (``staged``, from
-    ``staging_records``), never a check-attempt digest.
+    ``staging_records``), never a check-attempt digest. A re-audit of the
+    same run that finds the staged copy gone keeps the first audit's
+    verification of that same record, which was made after the review had
+    finished: deleting the copy later must not undo an admitted attempt (a
+    side agent's note). A copy still there but changed fails as before.
 
     Returns:
         The run audit written.
@@ -9444,6 +9451,12 @@ def write_attempt_run_audit(config: dict, run_dir_name: str, attempt_path: Path,
     if config["mode"] == "review-only":
         reviewer = roles.get("reviewer", ({}, None))[0]
         staging = verify_staging(staged or [], str(reviewer.get("prompt_head") or ""))
+        earlier = (read_record(attempt_path, RUN_AUDIT_FILE) or {})
+        kept = earlier.get("staging") or {}
+        if (earlier.get("workflow_run") == run_dir_name and kept.get("verified")
+                and staging["problems"] == [STAGED_COPY_GONE]
+                and all(kept.get(key) == staging.get(key) for key in STAGING_KEYS)):
+            staging = {**kept, "kept_at": now_utc()}
         reviewed = [staging["artefact_state_sha256"]] if staging.get(
             "artefact_state_sha256") else []
         entry, payload, problems = carried_executor(attempt_path, run_dir_name)

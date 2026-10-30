@@ -224,6 +224,9 @@ follow the main runbook, with these differences:
    state is the successful staging record's, never a `check-attempt`
    digest, and the audit re-hashes the staged copy and its gate report and
    checks the reviewer was handed that copy; admission needs it verified.
+   A later re-audit of the same run that finds the copy gone keeps that
+   first verification, so the scratch folder may be cleared once this audit
+   has passed; a copy still there but changed fails.
 6. **Human queue** and **rulings** as in steps 12 and 13. The new review's
    concerns, method rows, and verdict flag are new issues and need new
    rulings, even where their content repeats an earlier review's, since
