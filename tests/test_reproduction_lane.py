@@ -1948,6 +1948,10 @@ class AuditTests(unittest.TestCase):
                          [])
         self.assertEqual(evident("cd /repo; (D=reproduction); cat $D/attempt-04/x"), [])
         self.assertEqual(evident("cd /r/reproduction | true; cat attempt-04/plan.json"), [])
+        # A subshell closed on a line of its own still restores the outer directory.
+        self.assertEqual(evident("cd /r; (cd reproduction\n)\ncat attempt-04/plan.json"), [])
+        self.assertEqual(evident("cd /r/reproduction; (cd /tmp\n)\ncat attempt-04/plan.json"),
+                         ["/r/reproduction/attempt-04/plan.json"])
 
     def test_an_uncertain_location_is_a_warning(self):
         """Where the walk cannot be sure of the directory, a placed match is
