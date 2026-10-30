@@ -98,6 +98,17 @@ merged here as PR #1).
       text in that session's scratchpad, `astra-review-request-pr14.md`;
       file a copy in `~/agent-mail/claude/outbox/codex/` once on
       amd-tower). Merge after her review.
+      - [x] 2026-10-30 Astra's review at `7876470` (pasted by Shawn):
+        changes requested, four findings (the harness-file exemption's
+        directory form; subshell scopes, both directions; clustered value
+        options; file-name suffixes over roles), all closed at `b23ef4f`
+        (`1b93991`, `31892ad`). Shawn ruled roles replace the
+        "file name with an extension" leg. Her probes, run from a copy at
+        `1b93991`, give the intended results; parity holds (1,152 cases).
+        PR comment posted with Shawn's approval (issuecomment-6514208269).
+      - [ ] **Astra's re-check at `b23ef4f`**: the reply is
+        `astra-reply-pr14-closure.md` in session 789afcf9's scratchpad,
+        for Shawn to paste; file both in agent mail once on amd-tower.
     - [ ] **The review-only mode: PR #15 open** (session 789afcf9, branch
       `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
       audit 1.2, `reproduction-review.workflow.js` v1.0). Shawn's choices
