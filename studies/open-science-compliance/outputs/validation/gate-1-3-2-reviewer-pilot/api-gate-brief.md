@@ -133,10 +133,14 @@ attempt 04's image.
 In this order, with `CFG` the configuration above and `COPY` the copy's
 attempt directory:
 
-1. **Authoritative gate:** `check-attempt $COPY --plan $COPY/reproduction-plan.json --image llmr-herskind-riede-2024-attempt-04 --launch-commit 6b1850554def6a563d82a5409dd821f56b4cb1d4`.
-2. **Audit, before clearing the scratch folder:** `audit-run --config $CFG
+1. **Audit, before clearing the scratch folder:** `audit-run --config $CFG
    --run-dir <workflow run dir>`. It verifies the staged copy by re-hashing
-   it.
+   it, and makes the new review the review of record.
+2. **Authoritative gate, after the audit:** `check-attempt $COPY --plan $COPY/reproduction-plan.json --image llmr-herskind-riede-2024-attempt-04 --launch-commit 6b1850554def6a563d82a5409dd821f56b4cb1d4`.
+   Its report should show `review_binding` set and every issue unruled
+   (0 admitted). Run before the audit, it would read the replaced review's
+   rulings, and `adjudicate` would refuse it (lane v1.9, runbook
+   "Review-only re-run" step 5).
 3. **Human queue** (`human-queue`), then **rulings** (`rule-flags`), drafted
    with their target and verdict parts at ruling time. Every issue is
    unruled after the audit (lane v1.9): about 15 carried from the earlier

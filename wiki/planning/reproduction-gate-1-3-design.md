@@ -431,6 +431,28 @@ needs every issue ruled, so every re-review meets a fully ruled attempt.
   the new rulings. Execute-mode attempts are unchanged; attempt 04 still
   adjudicates to 13/18. **This reverses PR #15's "the executor's issues and
   gate issues whose fingerprints are unchanged keep theirs."**
+- **The order of gate and audit (2026-11-01, found at the 4c1fd032
+  handoff).** The gate's admitted coverage reads issues through the same
+  binding, which exists only once the audit has made the new review the
+  review of record. The review-only runbook first ran the authoritative
+  gate before `audit-run`, as the execute runbook does (steps 10 and 11),
+  so the report read the replaced review's rulings: on attempt 04's
+  labelled copy, 14 admitted and nothing unruled, where admission then
+  saw all six gate issues unruled. `adjudicate` copies that figure into
+  its history as the gate's admitted coverage, so study data would have
+  recorded the replaced review's rulings as the pre-ruling figure. Credit
+  was never affected, since admission and `adjudicate` derive unruled
+  issues afresh. Shawn chose (2026-11-01) to reorder and guard: the
+  review-only runbook audits first; `check-attempt` records the binding it
+  read (`review_binding`, null when the run audit binds none, as for
+  every execute-mode attempt and every report made before v1.9); and
+  `adjudicate` refuses a report checked under another review of record,
+  which also catches a report left from an earlier review-only run.
+  `stage-review` clears the binding in the reviewer's copy, as a first
+  reviewer's report has none. The claim that the gate and admission agree
+  had been tested with the gate run after the audit, an order the runbook
+  never used (claude-obs 105); the end-to-end test now follows the
+  runbook's steps.
 - **Also from the pilot's preparation:** `adversarial-reviewer` v1.4.1
   (`9527f1b`, on main). The definition's example evidence path,
   `comparisons/t17-cluster-objects-vs-table3.csv`, named the file the

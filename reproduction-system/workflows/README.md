@@ -1,6 +1,6 @@
 # Agentic reproduction lane — workflows and runbook
 
-**Version:** 1.4 (2026-10-31, the review-only re-run, independent of the review it replaces; 1.3 2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
+**Version:** 1.4 (2026-11-01, the review-only re-run, independent of the review it replaces, with its audit before the authoritative gate; 1.3 2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
 **Status:** built for the Phase 2 shakedown (`wiki/planning/agentic-modernisation-plan.md`
 §5, Phase 2 option (a), approved 2026-10-02). It sits alongside the
 session-per-phase human lane (`reproduction-system/prompts/`), which remains
@@ -225,17 +225,28 @@ follow the main runbook, with these differences:
    first reviewer does, and never learns what a human admitted with the
    replaced review in hand. The attempt's own gate report keeps the ruled
    figure for the operator.
-4. **Authoritative gate** as in step 10, with the executor's launch commit.
-5. **Audit** as in step 11, **before clearing the scratch folder**. The run
-   audit (1.2) carries the executor's clearance from the attempt's earlier
-   run audit, which moves to `superseded/<its workflow run>/`. The reviewed
-   state is the successful staging record's, never a `check-attempt`
-   digest, and the audit re-hashes the staged copy and its gate report and
-   checks the reviewer was handed that copy; admission needs it verified.
-   It also fails a staged gate report that counts any issue as ruled.
-   A later re-audit of the same run that finds the copy gone keeps that
-   first verification, so the scratch folder may be cleared once this audit
-   has passed; a copy still there but changed fails.
+4. **Audit** as in step 11, **before clearing the scratch folder**, and
+   **before the authoritative gate** (the reverse of steps 10 and 11). The
+   run audit (1.2) carries the executor's clearance from the attempt's
+   earlier run audit, which moves to `superseded/<its workflow run>/`. The
+   reviewed state is the successful staging record's, never a
+   `check-attempt` digest, and the audit re-hashes the staged copy and its
+   gate report and checks the reviewer was handed that copy; admission
+   needs it verified. It also fails a staged gate report that counts any
+   issue as ruled. A later re-audit of the same run that finds the copy
+   gone keeps that first verification, so the scratch folder may be
+   cleared once this audit has passed; a copy still there but changed
+   fails.
+5. **Authoritative gate** as in step 10, with the executor's launch
+   commit, **after the audit**. This audit makes the new review the review
+   of record, and the gate's admitted coverage reads the rulings through
+   that review (lane v1.9, step 6). Checked before the audit, the gate
+   would apply the replaced review's rulings: on attempt 04's labelled
+   copy, 14 targets admitted and nothing unruled, where admission then sees
+   every issue unruled. `adjudicate` keeps the gate's figure as history, so
+   the report records the review it read (`review_binding`), and
+   `adjudicate` refuses one checked under another review of record: re-run
+   this step, then adjudicate. Credit never rests on the figure.
 6. **Human queue** and **rulings** as in steps 12 and 13. **Every issue
    needs a new ruling** (Shawn, 2026-10-31). Rulings follow the review:
    obligations are discharged on its findings, and rulings on the
