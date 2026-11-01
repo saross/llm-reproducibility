@@ -51,9 +51,21 @@ merged here as PR #1).
     test named for it) holds only if the gate runs after the audit.
     Proposed: in review-only mode, re-run `check-attempt` after
     `audit-run`, or reorder the steps; test it in the runbook's order.
+    - [x] 2026-11-01 Closed (session e765dd2a, amd-tower), Shawn's choice
+      of reorder and guard: `6d417e2` (`check-attempt` records
+      `review_binding`, `adjudicate` refuses a report checked under
+      another review of record, `stage-review` clears it) and `3da75d3`
+      (runbook audits before the gate; review workflow v1.1; design note;
+      pilot brief). The end-to-end test follows the runbook's order; four
+      mutations each fail a named test; 33 and 820 pass on amd-tower.
+      Shown on a copy first: gate before audit, 14 admitted and 0
+      unruled; after, 0 and 6 of 6.
   - [ ] **Open the PR** once Shawn approves the exact text in
     `wiki/planning/reviews/2026-10-31-review-independence/pr-draft.md`
     (amended for the seam); read it back and record its number there.
+    - [x] 2026-11-01 Both drafts amended for the seam and the scan
+      (`9a0d016`); branch head `003a8e0`. Awaiting Shawn's approval of
+      the PR text.
   - [ ] **Astra's review**: send `astra-review-request.md` from the same
     folder through agent mail, with the PR number and the seam noted. It
     reverses the PR #15 carry-over of executor and gate rulings that she
@@ -70,9 +82,34 @@ merged here as PR #1).
     and executor's definitions for attempt-specific examples, as the
     reviewer's had. **Shawn, 2026-11-01: yes, a standing pre-launch step
     for every blinded run, made as a runbook edit in the v1.9 PR.**
+    - [x] 2026-11-01 Runbook step 3 edited on the branch (`003a8e0`).
+      Checked the three lane definitions and their six pushed instrument
+      files against attempt 04's markers and the pilot's blinding list:
+      the reviewer's are clean (v1.4.1). **Found:** the planner's
+      definition lists, as pulled references to read,
+      `verification-strategies.md` and
+      `references/examples/pilot-reproduction-summary.md`
+      (`.claude/agents/reproduction-planner.md` lines 79-80), and both
+      pilots' run configurations blind exactly those ("states the
+      pilot's value-level outcomes", "pilot outcomes"). Not in this PR;
+      it bears on the planner re-plan, not the reviewer pilot. Noted, no
+      action: the executor's frozen `verdicts-and-precision.md` line 52
+      names Herskind as the deterministic exact-match example.
+    - [ ] **Shawn to decide:** how the planner's definition should treat
+      pulled references that a run's blinding list forbids, before the
+      re-plan (a definition change, so a fresh session for the paid run).
   - [ ] From the block below: file the PR #14 and #15 exchange in agent
     mail; check for Astra's planner-pilot reply; the operational
     follow-ups.
+    - [x] 2026-11-01 Filed: Claude's seven messages copied verbatim to
+      `~/agent-mail/claude/outbox/codex/` as
+      `20261101T121916.238912Z-claude-filed-*` to `...121922...`, each
+      under one filing line (record copy, no action needed). Astra's own
+      reviews are hers to file.
+    - [x] 2026-11-01 Checked: **no reply from Astra** to the 2026-10-21
+      planner-pilot mail (nothing names it in `In-Reply-To`; her newest
+      llm-reproducibility message is dated 2026-10-20). Still
+      outstanding.
   - [ ] Working-notes candidates WN-ax to WN-bc await Shawn's verdict
     (session log).
     - [x] 2026-11-01 WN-bd accepted by Shawn: Observation 60.
@@ -90,6 +127,7 @@ merged here as PR #1).
   - [ ] **File the PR #14 and #15 review exchange in agent mail** from
     amd-tower: `wiki/planning/reviews/2026-10-30-astra-pr14-pr15/README.md`
     says where each file goes.
+    - [x] 2026-11-01 Filed (session e765dd2a; NEXT SESSION block).
   - [ ] **Astra's reply to the planner-pilot mail** (2026-10-23 block) is
     still outstanding as far as this session knows; check on amd-tower.
     It scopes the long-term fix.
@@ -224,6 +262,7 @@ merged here as PR #1).
         `wiki/planning/reviews/2026-10-30-astra-pr14-pr15/` (Astra's seven
         messages verbatim, Claude's requests and replies, and an index with
         filing instructions).
+        - [x] 2026-11-01 Filed (session e765dd2a; NEXT SESSION block).
     - [x] 2026-10-30 **The review-only mode: PR #15 merged** (`37a3fe7`,
       with Shawn's approval, after Astra approved `4e490b3`) (session 789afcf9, branch
       `feat/review-only-mode`, `c601fe3` and `d02e75b`; lane v1.8, run
@@ -263,6 +302,7 @@ merged here as PR #1).
         adjudicates to 13/18.
       - [ ] **File in agent mail once on amd-tower:** with PR #14's, from
         `wiki/planning/reviews/2026-10-30-astra-pr14-pr15/`.
+        - [x] 2026-11-01 Filed (session e765dd2a; NEXT SESSION block).
     - [ ] **Next: the reviewer-only pilot** (#15 is merged): its own run
       configuration (`mode: review-only`), the labelled copy of attempt 04
       outside any path study reporting reads, a blinding list that blinds
