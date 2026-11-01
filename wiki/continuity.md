@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-10-30
+updated: 2026-11-01
 status: active
 ---
 
@@ -32,7 +32,53 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NEXT SESSION (from the 2026-10-30 handoff, session 789afcf9).** PR #14
+- **⏩ NEXT SESSION (from the 2026-11-01 handoff, session 4c1fd032).**
+  Shawn is home: continue on **amd-tower**, where agent mail reaches Astra
+  and attempt 04's image is. On `main`: reviewer v1.4.1 (`9527f1b`) and the
+  prepared reviewer-only pilot (labelled copy `2a3d577`, run configuration
+  `5084dd0`, API gate brief `dca2cde`). On branch
+  `fix/review-only-independence`, pushed, **PR not opened**: lane v1.9, the
+  re-review's independence (`08d013b`, docs `a540e3c`, pilot brief
+  `3f62eee`; 781 pass, 7 skip). Design: the design note's "Independence of
+  a re-review". Suggested order:
+  - [ ] **Close the ordering seam on the branch first** (found writing
+    session-reflection entry 30). The review-only runbook runs the
+    authoritative gate (step 4) before `audit-run` (step 5), so that gate
+    report's `coverage_admitted` is computed while the old run audit
+    stands and still applies the replaced review's rulings, and
+    `adjudicate` copies it into its history. Credit is unaffected, but the
+    branch's claim that the two agree (`check_attempt`'s comment, and the
+    test named for it) holds only if the gate runs after the audit.
+    Proposed: in review-only mode, re-run `check-attempt` after
+    `audit-run`, or reorder the steps; test it in the runbook's order.
+  - [ ] **Open the PR** once Shawn approves the exact text in
+    `wiki/planning/reviews/2026-10-31-review-independence/pr-draft.md`
+    (amended for the seam); read it back and record its number there.
+  - [ ] **Astra's review**: send `astra-review-request.md` from the same
+    folder through agent mail, with the PR number and the seam noted. It
+    reverses the PR #15 carry-over of executor and gate rulings that she
+    approved. Merge only on Shawn's word after her approval.
+  - [ ] **Then the pilot**, from a fresh session after the merge (the lane
+    and the reviewer definition changed): the launch checklist in
+    `validation/gate-1-3-2-reviewer-pilot/api-gate-brief.md` (the branch's
+    version until merged), a pre-run review, and the API gate ($3.50 to
+    $5.50). Afterwards expect to re-rule about 15 carried issues plus the
+    new review's.
+  - [ ] **Extend the runbook's pre-launch scan** (step 3) to grep agent
+    definitions and pushed instruments for the blinded attempt's markers,
+    not only the rendered prompts (claude-obs 104); and check the planner's
+    and executor's definitions for attempt-specific examples, as the
+    reviewer's had.
+  - [ ] From the block below: file the PR #14 and #15 exchange in agent
+    mail; check for Astra's planner-pilot reply; the operational
+    follow-ups.
+  - [ ] Working-notes candidates WN-ax to WN-bd await Shawn's verdict
+    (session log).
+  - **Open question, not yet asked:** is re-ruling every carried issue
+    worth its cost in routine production re-reviews, or only when a review
+    is replaced for cause?
+
+- **⏩ Earlier (from the 2026-10-30 handoff, session 789afcf9).** PR #14
   (blinding scan 1.1, lane v1.7) and PR #15 (the review-only mode, lane
   v1.8, run audit 1.2) are both on `main`, merged with Shawn's approval
   after Astra approved them (`1b91eb5`, `37a3fe7`); `main` passes 806, 7
@@ -52,6 +98,9 @@ merged here as PR #1).
     original attempt 04; then a pre-run review. The API gate and the
     launch need a fresh session on amd-tower, which holds attempt 04's
     image.
+    - [x] 2026-10-31 Prepared on zbook (session 4c1fd032): copy, run
+      configuration, blinding, and brief, rehearsed with no API spend. The
+      launch now waits on lane v1.9 (the block above).
   - [ ] **The remaining operational follow-ups**, each on a branch + PR
     (the list in the 2026-10-18 block below): the launch word rule, the
     args-builder guard, the cost and time watcher, the one-turn cost lag,
@@ -218,6 +267,8 @@ merged here as PR #1).
       the original attempt 04, a pre-run review, the API gate, a launch
       from a fresh session (a workflow script was added), on a machine
       holding attempt 04's image (amd-tower).
+      - [x] 2026-10-31 Prepared (session 4c1fd032); the launch waits on lane
+        v1.9 (NEXT SESSION block).
   - [ ] Working-notes candidates WN-ax, WN-ay (session log, 2026-10-18 →
     10-21) and WN-az, WN-ba (session log, 2026-10-21 → 10-23) await
     Shawn's verdict.
@@ -2898,6 +2949,45 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-10-30 → 11-01 (session 4c1fd032) — reviewer-only pilot prepared; reviewer v1.4.1; lane v1.9, the re-review's independence, on a branch
+
+One session on Opus 5.5, on zbook, no compaction; amd-tower and agent mail
+were unreachable until Shawn came home on 2026-11-01. No API calls and no
+subagents. The state is in the NEXT SESSION block; the factual record is in
+`wiki/reflections/session-log.md`.
+
+- **Pilot prepared** on `main`, no spend: the labelled copy (`2a3d577`), the
+  run configuration (`5084dd0`), and the API gate brief (`dca2cde`). The
+  original attempt 04 is blinded by its study-tree path, because the
+  gate agent works in the copy and is scanned too.
+- **Found in preparation, ruled by Shawn:**
+  - the reviewer's definition named the earlier review's T17 evidence file
+    as its example: v1.4.1 on `main` (`9527f1b`);
+  - the re-gated report showed a fresh reviewer the rulings, and every
+    production re-review would meet it (F4). Shawn set the principle
+    (information moves one way: execution, review, rulings) and asked for
+    both halves;
+  - after a side agent's note, Shawn chose that all rulings lapse with the
+    review they were made with, not only obligations.
+- **Lane v1.9** on `fix/review-only-independence` (`08d013b`, `a540e3c`,
+  `3f62eee`), pushed; the PR text and Astra's request are drafts in
+  `wiki/planning/reviews/2026-10-31-review-independence/` (`b703ffc`).
+- **Records:** reflections and claude-obs 102 to 104 (`59eaf3a`).
+- **Flagged for `/weekly-review`** (`notes/_inbox.md`): an agent's
+  definition as a blinding leak; one-way information flow in re-review
+  pipelines.
+- **Working-notes candidate (held for Shawn's verdict):**
+  - **WN-bd:** human rulings on executor-side issues drew on the
+    adversarial review. On herskind attempt 04, besides the five obligation
+    rulings, which discharge on the reviewer's findings, 3 of the 12
+    rulings on executor-side flags (11 issues) cite the review's findings:
+    the tolerated statement at `S2.R` line 27, T13's method departure, and
+    T05's PAPER_ERROR. A ruling's dependence on the review cannot be read
+    from its issue's kind. Anchors:
+    `studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/flag-rulings.json`;
+    the design note's "Independence of a re-review".
+  - WN-ax to WN-bc are still held.
 
 ### 2026-10-30 (session 789afcf9) — blinding scan 1.1 (PR #14) and the review-only mode (PR #15), reviewed and merged
 
