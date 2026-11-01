@@ -15,8 +15,13 @@ the attempt holds (the gate's, the transcript audit's, and the executor's)
 is bound to the new review's identity (``review_bound``), as the review's
 own issues already were: rulings follow the review, and a ruling's note
 cannot show whether it rested on the replaced one, so each is ruled again
-on the new review, the earlier rulings kept as history. Execute-mode
-attempts are unchanged.
+on the new review, the earlier rulings kept as history. The gate report's
+admitted coverage reads the same binding, so the review-only runbook runs
+``audit-run`` before the authoritative gate (2026-11-01): checked first,
+the gate would apply the replaced review's rulings, and ``adjudicate``
+would keep that figure as history. The report records the binding it read
+(``review_binding``), and ``adjudicate`` refuses a report made under
+another review of record. Execute-mode attempts are unchanged.
 
 v1.8 (2026-10-30) is gate 1.3.2, criterion 4's review-only mode (the
 design's "The review-only mode as designed"): a run configuration with
@@ -7469,8 +7474,9 @@ def stage_review(target_dir: Path, review_dir: Path) -> dict:
     the executor's report, rulings, audits, and the adjudicated result) are
     withheld. The copy's state must digest equal to the attempt's. The
     copied gate report's admitted coverage is computed with no rulings
-    (``unruled_coverage``), as a first reviewer meets it, since the rulings
-    the attempt holds follow the review being replaced (v1.9).
+    (``unruled_coverage``), and its ``review_binding`` cleared, as a first
+    reviewer meets it, since the rulings the attempt holds follow the
+    review being replaced (v1.9).
 
     Returns:
         The state copied (``artefact_state_sha256``, as check-attempt
@@ -7514,6 +7520,10 @@ def stage_review(target_dir: Path, review_dir: Path) -> dict:
     except json.JSONDecodeError as exc:
         raise LaneError(f"{GATE_FILE} does not parse, so it cannot be staged: {exc}") from exc
     report["coverage_admitted"] = unruled_coverage(target_dir, report)
+    # A first reviewer's report is bound to no review. The binding is an
+    # identity digest with no review content, so the audit does not refuse
+    # it; it is cleared so that the copy is exactly a first reviewer's.
+    report["review_binding"] = None
     write_json(review_dir / GATE_FILE, report)
     return {"attempt_dir": display_path(target_dir), "review_dir": str(review_dir),
             "artefact_state_sha256": state, "files_copied": len(copied),
@@ -7991,6 +8001,11 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
     # (coverage_creditable, part 1's interim measure, was dropped at the
     # workflow switch.)
     admitted = None
+    # The review the rulings are read against (v1.9): after a review-only
+    # audit, the new review's identity; None when the run audit binds none.
+    # Read once, so the binding recorded is the binding applied.
+    run_audit = read_record(target_dir, RUN_AUDIT_FILE)
+    binding = replacing_review(run_audit)
     obligations_all = list(integrity["review_obligations"])
     issues = issue_records(flags + obligations_all)
     manifest_file = code_manifest or target_dir / CODE_MANIFEST_FILE
@@ -8016,8 +8031,11 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
         structural = structural_exclusions(manifest, integrity.get("account"), locked,
                                            plan_record["plan"])
         # Issues bound to the review of record, as admission reads them
-        # (v1.9), so this report and admission agree after a review-only run.
-        bound = review_bound(issues, read_record(target_dir, RUN_AUDIT_FILE))
+        # (v1.9). The two agree only when this gate runs after the run audit
+        # that binds them, so the review-only runbook audits first; the
+        # report records the binding it read (``review_binding``), and
+        # adjudicate refuses a report made under another review of record.
+        bound = review_bound(issues, run_audit)
         admitted = admitted_coverage("fail" if errors else "pass", bound,
                                      load_rulings(target_dir), locked, reproduced_ids,
                                      structural)
@@ -8027,7 +8045,7 @@ def check_attempt(target_dir: Path, plan_path: Path, comparison_schema: dict,
             "verdict": "fail" if errors else "pass", "errors": errors,
             "warnings": warnings, "flags": flags,
             "review_obligations": obligations_all, "coverage": coverage,
-            "coverage_admitted": admitted,
+            "coverage_admitted": admitted, "review_binding": binding,
             "issues": issues, "launch_commit": launch_commit,
             "eligible_for_current_gate": integrity["eligible_for_current_gate"],
             "code_integrity": {k: integrity[k] for k in (
@@ -8400,7 +8418,10 @@ def adjudicate(target_dir: Path) -> dict:
     - the sha256 of every record it was derived from.
 
     It is final only when admission passes for the persisted results, the
-    plan, gate report, and comparison agree, every ruling's target-scoped
+    plan, gate report, and comparison agree, the gate report read its
+    rulings against the review of record (``review_binding``, v1.9: a
+    report checked before a review-only audit replaced the review applied
+    the replaced review's rulings), every ruling's target-scoped
     parts are valid, and no target has conflicting ruled classifications or
     the verdict conflicting rulings. Otherwise it raises (Shawn,
     2026-10-18: written only when final). The time and the attempt's path
@@ -8430,6 +8451,17 @@ def adjudicate(target_dir: Path) -> dict:
         reasons.append("the gate report was not made under this plan")
     if comparison.get("plan_sha256") != plan_digest:
         reasons.append("the comparison was not made under this plan")
+    # v1.9: the gate's admitted coverage, kept below as history, reads the
+    # rulings through the review of record's binding. A report checked
+    # before a review-only audit made the new review the review of record
+    # (the gate before the audit), or under an earlier review-only run,
+    # applied another review's rulings. Credit is unaffected, since it is
+    # derived afresh here; the history is not. A report from before v1.9
+    # has no binding, as an execute-mode run audit binds none.
+    if report.get("review_binding") != replacing_review(read_record(target_dir, RUN_AUDIT_FILE)):
+        reasons.append("the gate report was checked under another review of record (before "
+                       "the run audit that made this review the review of record): re-run "
+                       "check-attempt, then adjudicate")
     # The results being adjudicated are the persisted ones; admission is
     # assessed afresh for exactly them (D-Astra-3's binding). Each role is
     # bound to the run that produced it, and the run audit to the review's

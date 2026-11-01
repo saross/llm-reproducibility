@@ -31,7 +31,11 @@ real records (the real attempt is never written):
    record, every ruling made with the replaced review in hand lapses (the
    gate's, the transcript audit's, and the executor's issues alike), a
    re-audit of the same run keeps the new rulings, and the original attempt
-   is unchanged.
+   is unchanged. The gate's admitted coverage reads the same binding, so
+   the review-only runbook audits before the authoritative gate: in that
+   order the gate agrees with admission and the adjudicated history keeps
+   the pre-ruling figure, and adjudicate refuses a gate report checked
+   under another review of record (2026-11-01).
 
 Run: ``venv/bin/python -m pytest tests/test_review_only_mode.py -q``
 """
@@ -199,6 +203,31 @@ class ReviewOnlyTests(unittest.TestCase):
         """Admission reasons other than unruled issues."""
         return [r for r in reasons if "unruled" not in r]
 
+    def authoritative_gate(self) -> dict:
+        """Run check-attempt on the copy with the executor's launch commit and
+        write its report into the copy, as the runbook's authoritative gate
+        does. Skips when that commit is not in this clone's history."""
+        commit = json.loads((self.dir / lane.EXECUTION_FILE).read_text(
+            encoding="utf-8"))["launch_commit"]
+        known = subprocess.run(["git", "-C", str(REPO_ROOT), "cat-file", "-e", commit],
+                               capture_output=True, timeout=30)
+        if known.returncode != 0:
+            self.skipTest("the original run's launch commit is not in this clone's history")
+        report = lane.check_attempt(
+            self.dir, self.dir / lane.PLAN_FILE,
+            lane.full_schema(lane.expand(lane.DEFAULT_COMPARISON_SCHEMA)),
+            code_manifest_schema=lane.full_schema(lane.expand(lane.DEFAULT_CODE_MANIFEST_SCHEMA)),
+            launch_commit=commit)
+        lane.write_json(self.dir / lane.GATE_FILE, report)
+        return report
+
+    def unruled_gate_issues(self, report: dict) -> set[str]:
+        """The gate report's issues admission counts as unruled now."""
+        rulings = lane.load_rulings(self.dir)
+        bound = lane.review_bound(report["issues"],
+                                  lane.read_record(self.dir, lane.RUN_AUDIT_FILE))
+        return {i["id"] for i in bound if lane.ruling_for(i, rulings) is None}
+
     # -- 1. the executor binding ---------------------------------------------
 
     def test_the_cleared_executor_is_carried(self):
@@ -324,8 +353,22 @@ class ReviewOnlyTests(unittest.TestCase):
     # -- 3 and 4. the run audit, persistence, and adjudication -----------------
 
     def test_a_review_only_run_is_audited_persisted_and_adjudicated(self):
+        """The review-only runbook end to end, in its order: audit (step 4),
+        the authoritative gate (step 5), queue and rulings, persistence, and
+        adjudication. Run after the audit, the gate reads the new review's
+        binding, so its admitted coverage agrees with admission (every
+        issue unruled) and the adjudicated history keeps that pre-ruling
+        figure (claude-obs 105: the claim is tested in the order it is run)."""
         payload = new_review(self.locked)
         doc = self.audit("wf_review-1", payload)
+        report = self.authoritative_gate()
+        gate_ids = {i["id"] for i in report["issues"]}
+        self.assertEqual(report["review_binding"],
+                         lane.replacing_review(lane.read_record(self.dir, lane.RUN_AUDIT_FILE)))
+        self.assertIsNotNone(report["review_binding"])
+        self.assertEqual(set(report["coverage_admitted"]["unruled_issues"]), gate_ids)
+        self.assertEqual(self.unruled_gate_issues(report), gate_ids)
+        self.assertEqual(report["coverage_admitted"]["targets_admitted"], 0)
         self.assertEqual(doc["run_audit_version"], "1.2")
         self.assertEqual(doc["missing_roles"], [])
         self.assertEqual(doc["roles"]["executor"]["workflow_run"], ORIGINAL_RUN)
@@ -361,6 +404,10 @@ class ReviewOnlyTests(unittest.TestCase):
         self.assertEqual(result["review_run"],
                          {"run_id": "review-only-test", "workflow_run": "wf_review-1"})
         self.assertEqual(result["coverage"]["targets_enumerated"], 18)
+        # The history is the gate's pre-ruling figure under the new review.
+        history = result["history"]["gate_coverage_admitted"]
+        self.assertEqual((history["targets_admitted"], set(history["unruled_issues"])),
+                         (0, gate_ids))
 
     def test_history_is_never_overwritten(self):
         path = self.dir / "record.json"
@@ -612,15 +659,21 @@ class ReviewOnlyTests(unittest.TestCase):
         report, the operator's record, keeps the ruled one."""
         first = json.loads((ATTEMPT_04 / lane.GATE_FILE).read_text(encoding="utf-8"))
         self.assertEqual(first["coverage_admitted"]["targets_admitted"], 0)
+        self.assertIsNone(first.get("review_binding"))
         ruled = self.ruled_report()
         self.assertTrue(lane.shows_rulings(ruled))
         self.assertEqual(ruled["coverage_admitted"]["unruled_issues"], [])
+        # As a re-gate after an earlier review-only run records it.
+        ruled["review_binding"] = "b" * 64
+        (self.dir / lane.GATE_FILE).write_text(json.dumps(ruled), encoding="utf-8")
         result = lane.stage_review(self.dir, self.root / "review")
         staged = json.loads((self.root / "review" / lane.GATE_FILE).read_text(encoding="utf-8"))
         self.assertEqual(staged["coverage_admitted"], first["coverage_admitted"])
+        self.assertIsNone(staged["review_binding"])
         self.assertFalse(lane.shows_rulings(staged))
-        self.assertEqual({k: v for k, v in staged.items() if k != "coverage_admitted"},
-                         {k: v for k, v in ruled.items() if k != "coverage_admitted"})
+        derived = ("coverage_admitted", "review_binding")
+        self.assertEqual({k: v for k, v in staged.items() if k not in derived},
+                         {k: v for k, v in ruled.items() if k not in derived})
         self.assertEqual(result["gate_report_source_sha256"],
                          lane.sha256_file(self.dir / lane.GATE_FILE))
         self.assertEqual(result["gate_report_sha256"],
@@ -720,32 +773,42 @@ class ReviewOnlyTests(unittest.TestCase):
         for issue in own:
             self.assertEqual(read[issue["id"]]["fingerprint"], issue["fingerprint"])
 
-    def test_the_gate_report_agrees_with_admission_after_a_review_only_audit(self):
-        """check-attempt's admitted coverage reads the issues as admission
-        does: ruled before the review-only audit, unruled after."""
-        commit = json.loads((self.dir / lane.EXECUTION_FILE).read_text(
-            encoding="utf-8"))["launch_commit"]
-        known = subprocess.run(["git", "-C", str(REPO_ROOT), "cat-file", "-e", commit],
-                               capture_output=True, timeout=30)
-        if known.returncode != 0:
-            self.skipTest("the original run's launch commit is not in this clone's history")
-
-        def gate() -> dict:
-            return lane.check_attempt(
-                self.dir, self.dir / lane.PLAN_FILE,
-                lane.full_schema(lane.expand(lane.DEFAULT_COMPARISON_SCHEMA)),
-                code_manifest_schema=lane.full_schema(
-                    lane.expand(lane.DEFAULT_CODE_MANIFEST_SCHEMA)),
-                launch_commit=commit)
-        before = gate()
-        self.assertEqual((before["verdict"], before["coverage_admitted"]["unruled_issues"]),
-                         ("pass", []))
-        self.audit("wf_review-1", new_review(self.locked))
-        after = gate()
-        self.assertEqual(set(after["coverage_admitted"]["unruled_issues"]),
-                         {i["id"] for i in before["issues"]})
+    def test_a_gate_checked_before_the_audit_is_refused_at_adjudication(self):
+        """The ordering seam (found at the 2026-11-01 handoff): checked before
+        the review-only audit, as the runbook first ordered it, the gate reads
+        the replaced review's rulings (14 admitted, none unruled, where
+        admission sees every issue unruled once the audit stands), and
+        adjudicate would keep that figure as history. It refuses such a
+        report; re-run after the audit, the gate reads the new review's
+        binding and adjudication proceeds. A later review-only run makes the
+        report stale again. Credit never rested on the figure."""
+        payload = new_review(self.locked)
+        staged = self.stage("wf_review-1")
+        early = self.authoritative_gate()
+        self.assertEqual((early["verdict"], early["review_binding"],
+                          early["coverage_admitted"]["unruled_issues"]), ("pass", None, []))
+        self.assertGreater(early["coverage_admitted"]["targets_admitted"], 0)
+        self.audit("wf_review-1", payload, staged=staged)
+        gate_ids = {i["id"] for i in early["issues"]}
+        self.assertEqual(self.unruled_gate_issues(early), gate_ids)
+        run = self.run_dir("wf_review-1", ("rev-1", payload))
+        self.persist(run)
+        self.rule_unruled()
+        self.persist(run, force=True)
+        with self.assertRaisesRegex(lane.LaneError, "re-run check-attempt"):
+            lane.adjudicate(self.dir)
+        late = self.authoritative_gate()
+        identity = lane.replacing_review(lane.read_record(self.dir, lane.RUN_AUDIT_FILE))
+        self.assertEqual(late["review_binding"], identity)
         # The report's own issue records keep the gate's fingerprints.
-        self.assertEqual(after["issues"], before["issues"])
+        self.assertEqual(late["issues"], early["issues"])
+        result = lane.adjudicate(self.dir)
+        self.assertEqual(result["history"]["gate_checked_at"], late["checked_at"])
+        # A later review-only run replaces the review the report was read
+        # against, so the report is refused again until the gate re-runs.
+        self.audit("wf_review-2", new_review(self.locked), "rev-2")
+        with self.assertRaisesRegex(lane.LaneError, "checked under another review of record"):
+            lane.adjudicate(self.dir)
 
     def test_an_execute_mode_attempt_keeps_its_rulings(self):
         """The original attempt, whose run audit is its execute run's, binds
@@ -754,6 +817,8 @@ class ReviewOnlyTests(unittest.TestCase):
         report = json.loads((ATTEMPT_04 / lane.GATE_FILE).read_text(encoding="utf-8"))
         audit = lane.read_record(ATTEMPT_04, lane.RUN_AUDIT_FILE)
         self.assertIsNone(lane.replacing_review(audit))
+        # Its report predates review_binding; absent reads as bound to none.
+        self.assertNotIn("review_binding", report)
         self.assertEqual(lane.review_bound(report["issues"], audit), report["issues"])
         rulings = lane.load_rulings(ATTEMPT_04)
         self.assertTrue(all(lane.ruling_for(i, rulings) is not None
