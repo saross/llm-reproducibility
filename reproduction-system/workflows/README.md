@@ -1,6 +1,6 @@
 # Agentic reproduction lane — workflows and runbook
 
-**Version:** 1.4 (2026-11-01, the review-only re-run, independent of the review it replaces, with its audit before the authoritative gate; 1.3 2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
+**Version:** 1.4 (2026-11-01, the review-only re-run, independent of the review it replaces, with its audit before the authoritative gate; the pre-launch scan of definitions and pushed instruments; 1.3 2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
 **Status:** built for the Phase 2 shakedown (`wiki/planning/agentic-modernisation-plan.md`
 §5, Phase 2 option (a), approved 2026-10-02). It sits alongside the
 session-per-phase human lane (`reproduction-system/prompts/`), which remains
@@ -61,6 +61,19 @@ configuration (for the shakedown:
    instruction is a leak to remove, or a pointer an obedient agent would
    follow into a contaminating access; the gate 1.3.2 planner pilot had two
    such pointers before its launch.
+   **Then scan what reaches the agents outside the prompt** (Shawn,
+   2026-11-01; a standing step for every blinded run). Each agent also
+   reads its definition (`.claude/agents/<agent>.md`) and its pushed
+   instruments: the `shared_content` files in `manifest.yaml` whose
+   consumers list that agent with `mechanism: push`, named by the receipt
+   keys in the built args. Grep these for the run's blinding list and for
+   the blinded attempt's own markers (its slug and attempt directory, and
+   the file names of its records; for a review-only run, also the evidence
+   paths the replaced review cites). Treat a hit as in the prompt scan.
+   The prompt scan cannot see these files: reviewer definition v1.4 gave
+   attempt 04's T17 evidence file, the centre of its earlier review, as its
+   example of an evidence path (claude-obs 104). Examples in definitions
+   name files every attempt has, such as `comparisons/comparison.json`.
 4. **Run** `reproduction-plan.workflow.js` from the repository with the
    `Workflow` tool: `scriptPath` set to the committed file, `args` set to the
    builder's JSON, passed unedited. The builder stamps `args_checksum`. The

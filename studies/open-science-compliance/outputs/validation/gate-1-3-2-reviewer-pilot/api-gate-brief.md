@@ -116,7 +116,10 @@ attempt 04's image.
    folder starts empty. Check the executor binding above, 18 targets, and
    37 blinding entries (29 configured, 8 withheld records added by the
    lane). If a commit moves `HEAD` after this, rebuild.
-5. Re-render and scan the prompts (runbook step 3), as on 2026-10-30.
+5. Re-render and scan the prompts, then grep the reviewer's definition
+   and its two pushed instruments for the blinding list and attempt 04's
+   markers (runbook step 3, both scans). On 2026-11-01 the definition
+   (v1.4.1) and instruments were clean.
 6. API gate: present the table above with the args checksum; Shawn
    approves.
 7. Launch: the Workflow tool with `scriptPath` set to the committed workflow
