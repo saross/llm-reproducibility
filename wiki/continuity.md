@@ -68,12 +68,14 @@ merged here as PR #1).
     definitions and pushed instruments for the blinded attempt's markers,
     not only the rendered prompts (claude-obs 104); and check the planner's
     and executor's definitions for attempt-specific examples, as the
-    reviewer's had.
+    reviewer's had. **Shawn, 2026-11-01: yes, a standing pre-launch step
+    for every blinded run, made as a runbook edit in the v1.9 PR.**
   - [ ] From the block below: file the PR #14 and #15 exchange in agent
     mail; check for Astra's planner-pilot reply; the operational
     follow-ups.
-  - [ ] Working-notes candidates WN-ax to WN-bd await Shawn's verdict
+  - [ ] Working-notes candidates WN-ax to WN-bc await Shawn's verdict
     (session log).
+    - [x] 2026-11-01 WN-bd accepted by Shawn: Observation 60.
   - **Open question, not yet asked:** is re-ruling every carried issue
     worth its cost in routine production re-reviews, or only when a review
     is replaced for cause?
@@ -2978,8 +2980,9 @@ subagents. The state is in the NEXT SESSION block; the factual record is in
   definition as a blinding leak; one-way information flow in re-review
   pipelines.
 - **Working-notes candidate (held for Shawn's verdict):**
-  - **WN-bd:** human rulings on executor-side issues drew on the
-    adversarial review. On herskind attempt 04, besides the five obligation
+  - **WN-bd** (accepted 2026-11-01, Observation 60): human rulings on
+    executor-side issues drew on the adversarial review. On herskind
+    attempt 04, besides the five obligation
     rulings, which discharge on the reviewer's findings, 3 of the 12
     rulings on executor-side flags (11 issues) cite the review's findings:
     the tolerated statement at `S2.R` line 27, T13's method departure, and
