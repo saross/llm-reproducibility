@@ -1,12 +1,14 @@
 # Lane v1.9, the re-review's independence: PR and review drafts (2026-10-31)
 
-Drafts for branch `fix/review-only-independence` (head `3f62eee`; code
-`08d013b`, docs `a540e3c`, pilot brief `3f62eee`), written in session
-4c1fd032 on zbook and kept here so the amd-tower session can pick them up.
+Drafts for branch `fix/review-only-independence` (head `003a8e0`; code
+`08d013b` and `6d417e2`, docs `a540e3c`, `3f62eee`, `3da75d3`, and
+`003a8e0`), written in session 4c1fd032 on zbook and amended in session
+e765dd2a on amd-tower for the gate-ordering seam and the pre-launch scan.
 The change is described in `wiki/planning/reproduction-gate-1-3-design.md`,
 "Independence of a re-review".
 
-**Status (2026-11-01): neither draft is sent.**
+**Status (2026-11-01, session e765dd2a): neither draft is sent; both are
+amended and await Shawn's approval of the PR text.**
 
 - `pr-draft.md`: the pull request's title and body. **Not yet approved by
   Shawn, and the PR is not opened.** After his approval of the exact text,
@@ -19,7 +21,8 @@ The change is described in `wiki/planning/reproduction-gate-1-3-design.md`,
 
 Merge only after Astra approves and Shawn says to merge.
 
-**Before sending either (found at handoff, 2026-11-01):** on the branch,
+**Closed 2026-11-01 (`6d417e2`, `3da75d3`; Shawn chose reorder and
+guard), and mentioned in both drafts.** As found at handoff: on the branch,
 `check_attempt`'s comment and the test
 `test_the_gate_report_agrees_with_admission_after_a_review_only_audit` say
 that the gate's admitted coverage agrees with admission after a review-only
