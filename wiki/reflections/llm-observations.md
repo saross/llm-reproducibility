@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-10-13
+updated: 2026-11-01
 status: active
 ---
 
@@ -1171,3 +1171,46 @@ merge` on Astra's approval and my own plan, and the classifier refused it
 as a merge without review. Shawn then approved, and the merge went through.
 The block was right: a peer agent's approval of code is not the human's
 approval to change `main`.
+
+## 2026-10-30 → 11-01 — A blinded agent reads more than its prompt; a category stood in for evidence I had printed
+
+*Session 4c1fd032-b64c-45a9-b181-030d20a5c88e (Opus 5.5); primary throughout.*
+
+**The prompt scan saw only the prompt.** The runbook's pre-launch check
+renders each agent's prompt from the built args and scans it against the
+blinding list. The reviewer-only pilot's rendered prompts were clean. The
+leak was in the reviewer's agent definition, which the harness pushes
+outside both the workflow and the blinding: its example evidence path was
+attempt 04's T17 comparison file, the evidence the earlier review cited
+for its central concern. A model writing a definition reached for a
+concrete example from the attempt in front of it, and that example became
+an input to every later blinded run. Grepping the pushed files for the
+attempt's markers found it; nothing in the procedure would have.
+
+**I proposed a rule by category while the counter-example sat in my own
+output.** The same listing that showed four obligation rulings reading
+"Discharged by the reviewer" showed a flag ruling ending "(reviewer,
+provenance)". I still proposed that obligations lapse and flags carry,
+reasoning that flags rest on the executor's evidence. A side agent named
+the one exception; the rulings file had three. The category was a
+plausible proxy for "rested on the review", and I checked the proxy rather
+than the records it summarised.
+
+**A question about production reframed a pilot caveat.** My first framing
+of the gate report's leak was local: a known difference for this run.
+Shawn asked whether production would meet it. Answering required one fact
+already in the code (the eligible-executor guard means every re-review
+meets a fully ruled attempt), and that fact made the caveat a design gap.
+
+**Mutation checks gave the tests a falsifier.** Each fix was broken in turn
+on a backup copy (eight mutations), and each broke a named test. One
+mutation was caught only incidentally, through a truncated reason list in
+another test, which led to a direct count assertion. Earlier sessions
+recorded tests that asserted nothing; running the code wrong is the
+cheapest way to show a test can fail.
+
+**The lane refused my test's history rewrite.** A test sequence re-audited
+an older review run after a newer one, and `supersede` refused to
+overwrite `superseded/wf_review-1/` with a different record. The guard was
+right and the sequence unrealistic; the claim it was meant to test was
+already covered elsewhere, so the addition went.

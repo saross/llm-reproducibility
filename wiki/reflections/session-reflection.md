@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-10-13
+updated: 2026-11-01
 status: active
 ---
 
@@ -1795,3 +1795,60 @@ context?** Several, each with a reason the code comments state only briefly:
   Without it, any re-gate of an adjudicated attempt failed, which I found
   only by probing attempt 04 before designing the review-only mode around
   a re-gate.
+
+## Entry 30 (2026-10-30 → 11-01) — What a re-review may know
+
+**Project:** llm-reproducibility. **Session:**
+4c1fd032-b64c-45a9-b181-030d20a5c88e (Opus 5.5). **Instance:** primary
+throughout; no compaction. Run on zbook while Shawn was at eResearch
+Australasia and then travelling home; amd-tower and agent mail were
+unreachable, so nothing could launch or be sent.
+
+**What's the single most important thing a future reader should know
+about this session?** That the review-only mode, merged two days earlier
+after seven review rounds, would have broken its own premise in every
+production use. Its premise is a fresh review. Preparing the pilot found
+two routes by which the replaced review reached the new one. On the way
+in, the gate report the reviewer reads carried a figure derived from the
+rulings, telling it that every gate issue had been admitted, four of them
+on the earlier reviewer's word. On the way out, those rulings outlived the
+review they rested on. I first offered the input leak to Shawn as a pilot
+caveat, with "proceed and record it" as my recommendation. His question,
+whether production would meet the same thing, turned it into a design
+gap: Astra's F4 makes every re-review run on a fully ruled attempt, so
+every one would. The principle he then set (information moves one way,
+from execution to review to rulings) settled both halves, and the second
+half's scope, which rulings lapse, came from evidence rather than from my
+category. I had proposed that obligations lapse and flags carry. A side
+agent noted one flag ruling citing the review; the rulings file showed
+three.
+
+**What question emerged that wasn't pursued?** Whether the other agent
+definitions carry what the reviewer's did. The reviewer's v1.4 example
+evidence path named the very file the earlier review cited for T17, and
+the commit that put it there (`2ccda2e`, 2026-10-18) was co-authored by
+Claude. I found it by grepping the files pushed to the reviewer for
+attempt 04's markers, a step the runbook does not require: its pre-launch
+scan renders the workflow prompts, and an agent definition never passes
+through them. I checked the reviewer's definition and its two pushed
+instruments, and stopped there. The planner's and executor's definitions,
+and the runbook's scan itself, are the obvious next places, and before any
+further blinded run the scan should cover what the harness pushes as well
+as what the workflow writes.
+
+**What felt uncertain or unresolved at the end?** Three things. The PR is
+unopened, its text awaiting Shawn's approval, and Astra has not seen a
+change that reverses a carry-over she approved in PR #15; she may find a
+consumer that reads rulings around `review_bound`, as her rounds have
+found every gap I left so far. Second, writing this entry exposed an
+ordering seam I had claimed closed: I wrote that `check-attempt`'s
+admitted coverage now agrees with admission after a review-only run, but
+the runbook runs the authoritative gate before `audit-run`, so its report
+is computed while the old run audit stands, still applying the replaced
+review's rulings, and `adjudicate` copies that figure into its history.
+Credit is unaffected, but the claim is only true if the gate is re-run
+after the audit; the PR should say so, or the runbook should reorder.
+Third, the pilot now costs Shawn about fifteen re-rulings of issues he
+ruled two weeks ago, plus the new review's. That is the principle's price,
+and whether it is worth paying in routine production, rather than only
+when a review is replaced for cause, is a question no one has asked yet.

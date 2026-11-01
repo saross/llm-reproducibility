@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Claude Observations"
 tags: [human-ai-collaboration, llm-craft]
 created: 2026-07-03
-updated: 2026-10-13
+updated: 2026-11-01
 status: seed
 ---
 
@@ -2014,3 +2014,60 @@ Bash's own and-or-list semantics.
 down the semantics being approximated, then ask for or write a
 combinatorial probe against the real thing (Astra's 160 Bash cases) before
 the next fix, not after.
+
+## claude-obs 102 — 2026-10-31: Shawn's scepticism asked about production, not about the pilot
+
+**Pattern.** I presented the gate report's leak as a choice for this run
+("proceed and record it, or hold for a fix"), recommending proceed. Shawn
+replied: "I was initially sceptical, but it sounds like the production
+version will run into the same issue, is that right? Will the fix
+ultimately be needed? What's the principled approach given likely
+production conditions?" Answering took one fact already in the code (F4
+makes every re-review meet a fully ruled attempt), and the answer turned
+a run caveat into a design gap and a principle he then set.
+
+**Lesson.** A finding framed against the run at hand invites "proceed";
+the same finding framed against production conditions says whether it is
+a property of the system. Shawn asks the second question when I offer the
+first.
+
+**How to apply.** Before recommending "proceed and record it as a known
+difference", state whether the production path meets the same thing, and
+lead with that.
+
+## claude-obs 103 — 2026-10-31 (self-critique): I proposed a category rule with its counter-example on screen
+
+**Pattern.** I proposed that, on a re-review, obligation rulings lapse and
+flag rulings carry, "since flags rest on the executor's own evidence". The
+listing I had printed minutes earlier showed a flag ruling ending
+"(reviewer, provenance)". A side agent caught that one; the rulings file
+held three. Shawn had already approved the proposal, so the correction
+went back to him as a new question.
+
+**Lesson.** A category (issue kind) stood in for the property that
+mattered (whether the ruling drew on the review), and I checked the
+category, not the records.
+
+**How to apply.** Before recommending a rule that sorts records into
+classes, run it over the records in hand and list its exceptions in the
+recommendation, so Shawn approves the rule with its exceptions visible.
+
+## claude-obs 104 — 2026-10-31 (self-critique): An example I wrote became an input to a blinded run
+
+**Pattern.** The reviewer's v1.4 definition, from a Claude co-authored
+commit (`2ccda2e`, 2026-10-18), gave attempt 04's T17 comparison file as
+its example evidence path. That file is the evidence of the earlier
+review's central concern, and the definition is pushed to every reviewer
+outside the blinding. The runbook's scan of rendered prompts could not
+see it; I found it only by grepping the pushed files.
+
+**Lesson.** Text written into an agent definition while working on one
+attempt is read by every later agent on that attempt, including blinded
+ones. A concrete example from the case at hand is the most natural thing
+to write and the most likely to leak.
+
+**How to apply.** Write examples in definitions from files every attempt
+has (`comparisons/comparison.json`). Before a blinded run, grep the agent
+definitions and pushed instruments for the blinded attempt's markers as
+well as scanning the rendered prompts, and propose adding that to the
+runbook's step 3.

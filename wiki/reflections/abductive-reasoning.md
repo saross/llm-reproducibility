@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-10-13
+updated: 2026-11-01
 status: active
 ---
 
@@ -1828,3 +1828,85 @@ probe. The re-gate test added here does the latter for attempt 04 only.
 Before designing a step that re-runs an earlier stage, re-run that stage on
 the real records first. A pipeline's late records are the ones its early
 checks have never seen.
+
+## 2026-10-30 — The reviewer's own instructions pointed at the target
+
+**Session:** 4c1fd032-b64c-45a9-b181-030d20a5c88e
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Preparing the reviewer-only pilot, the rendered prompts passed the blinding
+scan clean. Grepping the files the harness pushes to the reviewer, for
+attempt 04's markers, found `comparisons/t17-cluster-objects-vs-table3.csv`
+in the reviewer's agent definition (v1.4, line 99), given as the example of
+an evidence path.
+
+### Probe
+
+The attempt's earlier review (`adversarial-review.json`) centres on T17's
+credit under ruling Q5, and that file is its evidence. The line came in
+with gate 1.3.2's criterion 1 (`2ccda2e`, 2026-10-18, Claude co-authored).
+The runbook's scan renders the workflow's prompts; the definition reaches
+the agent through the harness, outside both the workflow and the blinding
+list, so the scan cannot see it.
+
+### Belief revision
+
+I had treated "the rendered prompt is clean" as "the agent's inputs are
+clean". A blinded agent's inputs are its prompt, its definition, its
+pushed instruments, and anything in the repository those point at. An
+example written into a definition while working on one attempt is carried
+into every later run on that attempt. Fixed in v1.4.1 (`9527f1b`).
+
+### What would change this belief
+
+A harness that rendered an agent's full context (definition and pushed
+instruments with the prompt) for the scan would make the rendered input
+complete, and the separate grep unnecessary.
+
+### Implications for practice
+
+Before a blinded run, scan the agent definitions and pushed instruments for
+the blinded attempt's markers, not only the rendered prompts; and write
+examples into definitions from files every attempt has.
+
+## 2026-10-31 — The flag rulings rested on the review too
+
+**Session:** 4c1fd032-b64c-45a9-b181-030d20a5c88e
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+I proposed, and Shawn approved, that when a review-only run replaces the
+review of record, obligation rulings lapse and flag rulings carry, on the
+reasoning that flags rest on the executor's evidence. A side agent then
+noted one flag ruling citing the earlier review.
+
+### Probe
+
+Reading every ruling in attempt 04's `flag-rulings.json` for "review":
+three executor-side flag rulings cite the earlier review's findings (the
+tolerated statement at `S2.R` line 27, "(reviewer, provenance)"; T13, "The
+reviewer notes…"; T05's PAPER_ERROR, "(reviewer)"). The first was already
+in the listing I had printed before making the proposal.
+
+### Belief revision
+
+Issue kind is not the provenance of a ruling. A human rules with the
+review in hand, whatever the issue's kind, and a free-text note cannot
+show which rulings drew on it. Shawn ruled that all rulings lapse with the
+review they were made with; lane v1.9 binds every issue to the review of
+record (branch `fix/review-only-independence`, `08d013b`).
+
+### What would change this belief
+
+Rulings carrying structured provenance (which records each relied on)
+would let a lapse be targeted, and would make the all-lapse rule more
+conservative than it needs to be.
+
+### Implications for practice
+
+Before proposing a rule that classifies records, run it over the records
+in hand and list its exceptions, especially when the records are already
+on screen.

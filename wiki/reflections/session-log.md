@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-10-13
+updated: 2026-11-01
 status: active
 ---
 
@@ -1808,3 +1808,65 @@ bare-name Bash reads went unseen.
 - **Models:** Fable was not used (rationed); Astra was the only reviewer.
 - **The pilot** is not run: it needs amd-tower (attempt 04's image) and a
   fresh session, because a workflow script was added.
+
+## Session: 2026-10-30 → 2026-11-01 — Reviewer-only pilot prepared; reviewer v1.4.1; lane v1.9 (the re-review's independence) on a branch
+
+*Session 4c1fd032-b64c-45a9-b181-030d20a5c88e (Opus 5.5), zbook; primary
+throughout.*
+
+**Setup:** synced (0 ahead, 0 behind, `ad0d50f`); amd-tower unreachable
+("No route to host"), so no agent mail, launch, or image.
+
+**Pilot preparation (no API spend), on `main`:**
+
+- `2a3d577`: the labelled copy of herskind attempt 04, at
+  `studies/open-science-compliance/pilot-copies/gate-1-3-2-reviewer-pilot/`,
+  outside the outputs tree study reporting reads (339 files, byte-identical,
+  artefact state `f549d2f5…`, the executor clearance carrying cleanly).
+- `5084dd0`: run configuration (`mode: review-only`, run
+  `gate-1-3-2-reviewer-pilot-2026-11`). The original attempt 04 is blinded
+  by `outputs/herskind-riede-2024/`, not `reproduction/attempt-04`, which
+  would also match the copy, whose path the gate agent's commands name;
+  `tests/` blinded whole; a run note keeps the reviewer from following two
+  copied records' paths to the original.
+- `dca2cde`: the API gate brief ($3.50 to $5.50, 8 to 15 minutes, halt at
+  $8.25 or 22.5 minutes, from attempt 04's v1.3 review, $3.3045).
+- Rehearsed: a re-gate of a scratch copy (pass at 1.3.2), `build-review-args`,
+  both prompts rendered and scanned, `stage-review`, and the lane's scan of
+  the gate's commands.
+
+**Findings and Shawn's rulings:**
+
+- The reviewer's definition named attempt 04's T17 evidence file as its
+  example. Shawn chose v1.4.1 on `main`: `9527f1b`.
+- The re-gated report told a fresh reviewer every gate issue was ruled.
+  Shawn asked whether production would meet it (yes: F4), then set the
+  principle (information moves one way: execution, review, rulings) and
+  asked for both halves.
+- A side agent noted a flag ruling citing the review; the rulings file
+  showed three. Shawn chose that all rulings lapse.
+
+**Lane v1.9, branch `fix/review-only-independence`** (pushed; PR not
+opened):
+
+- `08d013b`: `unruled_coverage` and `shows_rulings` (staging and
+  `verify_staging`), `review_identity`, `replacing_review`, and
+  `review_bound` (every issue bound to the review of record in
+  `attempt_issues`, admission's three checks, and `check_attempt`); 7 new
+  and 3 updated tests, each change pinned by a mutation; 781 pass, 7 skip.
+- `a540e3c`: runbook 1.4 and the design note's "Independence of a
+  re-review". `3f62eee`: the pilot brief updated.
+- `b703ffc` (on `main`): the PR text and Astra's review request, as drafts
+  in `wiki/planning/reviews/2026-10-31-review-independence/`.
+
+**Open:** the PR text awaits Shawn's approval; the request needs the PR
+number; the authoritative gate runs before `audit-run`, so its admitted
+coverage still applies the replaced review's rulings (session-reflection
+entry 30).
+
+**Contextual assumptions:**
+
+- **Machines:** zbook only; Shawn was away until 2026-11-01, and the
+  launch needs amd-tower (attempt 04's image, agent mail, Astra).
+- **Models:** no subagents were spawned and no API calls made; Fable was
+  not used.
