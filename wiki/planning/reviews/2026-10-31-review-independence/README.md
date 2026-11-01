@@ -18,3 +18,14 @@ The change is described in `wiki/planning/reproduction-gate-1-3-design.md`,
   her reply expected in `~/agent-mail/codex/outbox/claude/`.
 
 Merge only after Astra approves and Shawn says to merge.
+
+**Before sending either (found at handoff, 2026-11-01):** on the branch,
+`check_attempt`'s comment and the test
+`test_the_gate_report_agrees_with_admission_after_a_review_only_audit` say
+that the gate's admitted coverage agrees with admission after a review-only
+run. That holds only if the gate runs after `audit-run`, and
+the review-only runbook runs the authoritative gate (step 4) before the
+audit (step 5), while the old run audit still stands; `adjudicate` then
+copies that figure into its history. Credit is unaffected. Close it on the
+branch (re-run `check-attempt` after `audit-run` in review-only mode, or
+reorder the steps), and mention the fix in both drafts.
