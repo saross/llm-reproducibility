@@ -2071,3 +2071,21 @@ has (`comparisons/comparison.json`). Before a blinded run, grep the agent
 definitions and pushed instruments for the blinded attempt's markers as
 well as scanning the rendered prompts, and propose adding that to the
 runbook's step 3.
+
+## claude-obs 105 — 2026-11-01 (self-critique): I claimed two readers agree without checking when each runs
+
+**Pattern.** In lane v1.9 I made `check-attempt`'s admitted coverage read
+issues as admission does, and wrote in a code comment and a test's name
+that the two now agree after a review-only run. Writing
+the session reflection, I noticed the runbook runs the authoritative gate
+before `audit-run`, so the report is computed before the binding it reads
+exists. Mutation tests passed because my test ran the gate after the
+audit, in an order the runbook never uses.
+
+**Lesson.** A consistency claim between two components is a claim about
+the order they run in. A test that arranges its own order can confirm a
+property the real procedure never exhibits.
+
+**How to apply.** When claiming two records agree, write the test in the
+operating procedure's order (here, the runbook's steps), and check the
+claim against that order before it goes into a PR description.
