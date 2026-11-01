@@ -2802,3 +2802,36 @@ with plan wording. Coverage and verdict counts built on labels inherit the
 plan's variance (attempt 03 17/20, attempt 04 14/18 raw and 13/18 ruled),
 so comparisons across attempts should align targets by display item and
 compare findings before labels.
+
+## Observation 60: Human rulings on executor-side issues drew on the adversarial review (2026-10-31)
+
+*(Approved by Shawn 2026-11-01; WN-bd.)*
+
+### Context
+
+The review-only mode replaces an attempt's review of record with a fresh
+review. Preparing its pilot raised the question of which earlier rulings
+rest on the replaced review. The first design assumed the answer followed
+the issue's kind: review obligations are discharged on the reviewer's
+findings, while flags on the executor's run would rest on the executor's
+evidence.
+
+### Observation
+
+On herskind attempt 04, all five obligation rulings discharge on the
+reviewer's findings, and 3 of the 12 rulings on executor-side flags (11
+issues) also cite the review's findings: the tolerated statement at
+`S2.R` line 27 ("reviewer, provenance"), T13's method departure ("The
+reviewer notes…"), and T05's PAPER_ERROR ("(reviewer)"). Anchor:
+`studies/open-science-compliance/outputs/herskind-riede-2024/reproduction/attempt-04/flag-rulings.json`.
+
+### Implication
+
+In this lane a human rules with the review in hand, whatever the issue's
+kind, and a free-text note cannot show which rulings drew on it, so a
+ruling's dependence on the review cannot be read from its issue's kind.
+Shawn ruled (2026-10-31) that every ruling lapses when its review is
+replaced (lane v1.9, branch `fix/review-only-independence`; the design
+note's "Independence of a re-review"). For the study, rulings are not
+independent of the reviewer's output, and adjudicated results inherit the
+review's influence through them.
