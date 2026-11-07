@@ -183,7 +183,7 @@ merged here as PR #1).
     home network, zbook reads it over SSH
     (`ssh amd-tower 'ls -t ~/agent-mail/codex/outbox/claude/ | head'`;
     worked 2026-10-23). **Away from home it is unreachable from zbook**:
-    amd-tower is `192.168.1.70`, and neither machine runs a VPN. During
+    amd-tower is reachable only on the home network. During
     the conference, Astra's reply is readable only through a
     remote-control session on amd-tower, or once Shawn is home; zbook
     sessions take the work that does not wait on her.
