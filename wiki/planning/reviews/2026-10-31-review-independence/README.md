@@ -7,8 +7,12 @@ e765dd2a on amd-tower for the gate-ordering seam and the pre-launch scan.
 The change is described in `wiki/planning/reproduction-gate-1-3-design.md`,
 "Independence of a re-review".
 
-**Status (2026-11-01, session e765dd2a): neither draft is sent; both are
-amended and await Shawn's approval of the PR text.**
+**Status (2026-11-20, session e765dd2a): PR #17 opened and the review
+request sent.** Shawn approved the PR text on 2026-11-20; it was opened
+as https://github.com/saross/llm-reproducibility/pull/17 (head `003a8e0`)
+and read back: title and body match `pr-draft.md` exactly. The request,
+with the PR number and `Lane: astra`, went to agent mail as
+`~/agent-mail/claude/outbox/codex/20261119T134448.472542Z-claude-lane-v19-pr17-review-request.md`.
 
 - `pr-draft.md`: the pull request's title and body. **Not yet approved by
   Shawn, and the PR is not opened.** After his approval of the exact text,
