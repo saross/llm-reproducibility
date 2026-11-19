@@ -2141,3 +2141,21 @@ facts as they become relevant rather than up front.
 **How to apply.** Offer deletion as his step, with the reclaimable figure,
 and do everything that does not depend on it meanwhile. Ask where durable
 storage is before choosing a location.
+
+## claude-obs 109 — 2026-11-20 (self-critique): I left an image out of the backup because of a copy my own next step put at risk
+
+**Pattern.** Archiving the lane's Docker images to rpi-server, I left
+`llmr-probe-marwick-1.3` out because zbook already held an identical copy
+(same image ID). In the same turn I put to Shawn that zbook's Docker
+should be pruned first, and quoted the 14.7 GB reclaimable figure, which a
+full prune reaches by deleting every image no container uses: Marwick
+among them, with its only other copy on a machine going into storage. A
+side agent caught it; Marwick was then added to the archive.
+
+**Lesson.** "Already there" justifies leaving something out of a backup
+only if nothing planned will remove it. A backup's scope has to be checked
+against the steps that follow it, not just the state before it.
+
+**How to apply.** Before excluding an item from a backup because another
+copy exists, list the planned operations that touch that copy (prunes,
+cleanups, moves), and include the item unless none can remove it.
