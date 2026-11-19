@@ -5,7 +5,7 @@ title: "Session Log"
 audience: "project team"
 tags: [session-shape, working-practices]
 created: 2026-02-09
-updated: 2026-11-01
+updated: 2026-11-20
 status: active
 ---
 
@@ -1870,3 +1870,64 @@ entry 30).
   launch needs amd-tower (attempt 04's image, agent mail, Astra).
 - **Models:** no subagents were spawned and no API calls made; Fable was
   not used.
+
+## Session: 2026-11-01 → 2026-11-20 — Lane v1.9's gate-ordering seam closed; PR #17 opened; open work deferred to zbook before amd-tower is stored
+
+*Session e765dd2a-faa2-4901-9c74-3f1bee76c82d (Opus 5.5), amd-tower.*
+
+**Start:** local `main` was 45 behind `origin/main` (zbook had pushed
+through `c441e98`, two past the brief's `3bcd0c4`); fast-forwarded.
+
+**The seam, shown on a copy of attempt 04:** the gate checked before
+`audit-run` read 14 admitted, 0 unruled; after it, 0 admitted, 6 of 6
+unruled. Shawn chose reorder and guard.
+
+**Branch `fix/review-only-independence`** (pushed, head `003a8e0`):
+
+- `6d417e2`: `check-attempt` records `review_binding`; `adjudicate`
+  refuses a gate report checked under another review of record;
+  `stage-review` clears the binding in the reviewer's copy. The end-to-end
+  test runs the authoritative gate after the audit; the old agreement test
+  became `test_a_gate_checked_before_the_audit_is_refused_at_adjudication`.
+  Four mutations each fail a named test. 33 pass in the file, 820 in the
+  suite (amd-tower).
+- `3da75d3`: the review-only runbook audits before the authoritative gate;
+  `reproduction-review.workflow.js` v1.1; the design note; the pilot brief.
+- `003a8e0`: runbook step 3 also greps each agent's definition and pushed
+  instruments (Shawn, 2026-11-01).
+
+**PR #17** (Shawn approved the text on 2026-11-20): opened and read back,
+title and body identical to `pr-draft.md`. Review request to Astra by
+agent mail (`20261119T134448.472542Z-claude-lane-v19-pr17-review-request.md`),
+`Lane:` corrected to `astra`. Not reviewed: Astra's overnight watch did not
+match it; Shawn deferred the review to zbook.
+
+**Other findings:** the planner's definition points at two locations both
+pilots blind (`.claude/agents/reproduction-planner.md` lines 79-80; for
+Shawn's decision). The reviewer's definition and instruments are clean.
+
+**Mail:** Claude's seven PR #14/#15 messages filed in agent mail as record
+copies (verbatim, checked). Astra replied to the 2026-10-21 planner-pilot
+mail on 2026-11-20 (route A accepted, qualified; the long-term fix within
+gate 1.3.2 under design conditions); filed verbatim as
+`studies/open-science-compliance/outputs/validation/gate-1-3-2-planner-pilot/astra-scoping-review-2026-11-20.md`
+and receipted.
+
+**Moving off amd-tower:** git complete (every branch, worktree, and agent
+branch pushed; no stashes). The 8 lane images archived on rpi-server's
+encrypted workspace (`llm-reproducibility-docker-images/`, 2,690,018,342
+bytes, sha256 matched both ends, `gzip -t` OK). `~/scratch/llmr-runs`
+copied to zbook (119 files, byte-equal). Found: workflow transcripts are
+not in the session archive (abductive entry, 2026-11-20). The final zbook
+sync is recorded in continuity's session log.
+
+**Main commits:** `9a0d016` (drafts amended), `a61f1c5`, `723cae1` (PR #17
+recorded), `27b29b6` (Astra's reply kept), `420d722` (deferral block).
+
+**Contextual assumptions:**
+
+- **Time pressure:** Shawn's last hours with amd-tower before storage;
+  zbook dropped off the network once and came back.
+- **zbook disk:** 98% full, so the images wait on Shawn pruning zbook's
+  Docker; rpi-server's workspace is backed up to the QNAP (Shawn).
+- **Models:** no subagents spawned, no API calls; Fable not used.

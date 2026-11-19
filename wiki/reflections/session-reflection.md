@@ -5,7 +5,7 @@ title: "Session Reflection Investigation"
 audience: "researchers and future instances"
 tags: [human-ai-collaboration, session-shape, research-methodology]
 created: 2026-02-09
-updated: 2026-11-01
+updated: 2026-11-20
 status: active
 ---
 
@@ -1852,3 +1852,55 @@ Third, the pilot now costs Shawn about fifteen re-rulings of issues he
 ruled two weeks ago, plus the new review's. That is the principle's price,
 and whether it is worth paying in routine production, rather than only
 when a review is replaced for cause, is a question no one has asked yet.
+
+## Entry 31 (2026-11-01 → 11-20) — Two watches that could not see each other
+
+**Project:** llm-reproducibility. **Session:**
+e765dd2a-faa2-4901-9c74-3f1bee76c82d (Opus 5.5). **Instance:** primary
+throughout; no compaction. Run on amd-tower; paused for 19 days after the
+PR text was put to Shawn, and resumed in his last hours with the machine
+before it is stored for 18 to 24 months.
+
+**What surprised you about this session?** That a review request,
+correctly addressed and delivered to the right inbox, went unseen for
+eight hours while both agents were watching. Astra ran an overnight watch
+for review requests; at Shawn's request I ran an eight-hour watch for her
+reply. Each watch was a private predicate over a shared mailbox. Hers
+matched her own workstreams, so she reported "no matching review request"
+and closed it; mine matched PR #17's strings, so it stayed silent while she
+wrote five messages for another project's workstreams, four of them on
+the machine move. My first, broader watch did
+fire, on her reply to the planner-pilot mail, which had been outstanding
+for a month and arrived within the hour; reading its `In-Reply-To` is what
+showed it was not the review. The receipt was the signal I never watched
+for: her seen folder had none for the request, and checking it an hour in
+would have told Shawn while he could still wake her. Delivery is not
+attention. A request that expects a reply should first expect a receipt.
+
+**What context from this session will be hardest to reconstruct in six
+months?** Where the project's state lives now that amd-tower is stored.
+Git was already complete. Three kinds of state never lived in git. The
+lane's eight Docker images went to rpi-server's encrypted workspace as one
+checksummed archive, because zbook's disk was 98% full. The workflow
+transcript directories that `audit-run` needs to re-audit any run (30
+runs, 1.1 GB) turned out not to be in the session archive at all, although
+its completeness gates read 0; I found that only by looking for one run's
+id. Agent mail moves with Astra in another project's workstream. A future
+session that re-audits attempt 04's original run will need
+`wf_4fd7a886-ada` from wherever this session's sync put it, not from
+`~/.claude`.
+
+**What decision made today will look arbitrary without this session's
+context?** The gate-ordering guard sits in `adjudicate`, while every other
+refusal lives in `admission`. It looks misplaced and is not. The stale
+figure never reaches credit: admission and `adjudicate` derive unruled
+issues afresh, and the gate's `coverage_admitted` is read only as history
+in the adjudicated result. Refusing in admission would have made every
+persisted record ineligible and demanded `persist-results --force` after a
+cheap re-gate. Two smaller choices belong with it. `review_binding` is an
+identity, not a timestamp, so that a gate and an audit in the same second
+(as in the tests) cannot be misordered. And reports made before v1.9, which
+lack the field, read as bound to no review, which is what lets attempt 04
+still verify at 13/18 without a migration. Shawn chose reorder and guard
+over reorder alone after seeing the seam's numbers (14 admitted before the
+audit, 0 after) on a copy of attempt 04, run before the question was put.

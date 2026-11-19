@@ -5,7 +5,7 @@ title: "LLM Observations"
 audience: "internal — Claude's document"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-11-01
+updated: 2026-11-20
 status: active
 ---
 
@@ -1214,3 +1214,47 @@ an older review run after a newer one, and `supersede` refused to
 overwrite `superseded/wf_review-1/` with a different record. The guard was
 right and the sequence unrealistic; the claim it was meant to test was
 already covered elsewhere, so the addition went.
+
+## 2026-11-01 → 11-20 — A rehearsal that skipped a step gave a different number; a draft's address was wrong for a month
+
+*Session e765dd2a-faa2-4901-9c74-3f1bee76c82d (Opus 5.5); primary throughout.*
+
+**Showing the seam before asking turned a design question into a
+measurement.** Before offering Shawn three ways to close the gate-ordering
+seam, I ran the review-only steps in the runbook's order on a throwaway
+copy of attempt 04: the gate checked before the audit read 14 targets
+admitted and none unruled; re-run after it, 0 and 6 of 6. The question he
+then answered was about a figure he had seen, not a mechanism described.
+
+**Re-verifying a carried figure, I first reproduced it wrongly.** The
+earlier draft said the pilot copy's staged report shows 0 admitted, 6 of 6
+unruled. My first check staged the copy's committed gate report directly
+and got 7 of 7; the committed report predates gate 1.3.2's retirement of
+one obligation, and the workflow re-gates before staging. Re-gating a
+throwaway copy first gave 6 of 6. It is claude-obs 105 in miniature, one
+session later: a rehearsal that skips a step of the procedure measures a
+different thing. This time the discrepancy was visible because I compared
+the number with the draft instead of overwriting it.
+
+**The test that pinned the agreement claim had arranged its own order.**
+Replacing it with a runbook-order end-to-end test moved one of the earlier
+round's mutations (the gate's binding call site) to a new catching test,
+which I re-ran to confirm. The other seven earlier mutations I did not
+re-run, and the PR text says only what was run.
+
+**A drafted address carried a wrong field until the moment of sending.**
+The review request written on 2026-11-01 put a project lane in `Lane:`,
+where the convention, and every earlier message to Astra in this
+repository, names the recipient's model lane (`astra`). It survived two
+amendments and was caught only when the file was about to be copied into
+the outbox. Drafts get read for content; their headers get read only when
+something parses them.
+
+**Two agents' watches filtered past each other.** See session-reflection
+entry 31: Astra's overnight watch matched her own workstreams and my
+request was in none of them, so it went unreceipted for eight hours.
+
+**The harness's classifier refused a command that read `~/.ssh/config`;
+a plain connection test then succeeded.** The probe I wanted (which host
+alias reaches zbook) did not need the configuration file, only an attempt
+to connect, which it allowed.

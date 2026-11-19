@@ -6,7 +6,7 @@ audience: "researchers"
 conditions: "debugging with surprising results, hypothesis generation, belief revision, default-following corrections"
 tags: [llm-craft, research-methodology]
 created: 2026-02-09
-updated: 2026-11-01
+updated: 2026-11-20
 status: active
 ---
 
@@ -1910,3 +1910,46 @@ conservative than it needs to be.
 Before proposing a rule that classifies records, run it over the records
 in hand and list its exceptions, especially when the records are already
 on screen.
+
+## 2026-11-20 — The archive read complete and lacked the runs
+
+**Session:** e765dd2a-faa2-4901-9c74-3f1bee76c82d
+**Instance:** primary (Opus 5.5)
+
+### Surprising fact
+
+Preparing to move the project off amd-tower, I read the session-archive
+gates: completeness 0, drift 0, staleness 0. By the archive's own
+reckoning nothing was missing. Yet continuity said the planner pilot's
+workflow transcript (`wf_88429e16-a85`, needed to re-run `audit-run`) was
+"only on amd-tower".
+
+### Probe
+
+`find ~/cc-archives/llm-reproducibility -path '*wf_88429e16*'` found
+nothing. The session that launched that run (`e854d6a4`) is archived, with
+its plain subagent transcript under `subagents/`. No archived session in
+this project has a `subagents/workflows/` folder at all, while 30 workflow
+runs (1.1 GB) sit under the live sessions' `subagents/workflows/`,
+including attempt 04's original run, `wf_4fd7a886-ada`.
+
+### Belief revision
+
+I had read "the archive gates report 0" as "this project's transcripts are
+preserved". The gates measure completeness against what the archiver
+enumerates, which is sessions and their plain subagents. Workflow agent
+transcripts fall outside that unit, so they can be absent with every gate
+green. For this project they are the most audit-critical records, because
+the run audit is recomputed from them.
+
+### What would change this belief
+
+A store I did not check (the canonical union on rpi-server, or R2) holding
+workflow folders that the local mirror omits by design. I checked only
+this project's local mirror.
+
+### Implications for practice
+
+Before retiring a machine, enumerate what the work needs (here,
+`audit-run --run-dir` for every run) and look for each item, rather than
+trusting a coverage report whose unit may not include it.

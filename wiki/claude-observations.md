@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Claude Observations"
 tags: [human-ai-collaboration, llm-craft]
 created: 2026-07-03
-updated: 2026-11-01
+updated: 2026-11-20
 status: seed
 ---
 
@@ -2089,3 +2089,55 @@ property the real procedure never exhibits.
 **How to apply.** When claiming two records agree, write the test in the
 operating procedure's order (here, the runbook's steps), and check the
 claim against that order before it goes into a PR description.
+
+## claude-obs 106 — 2026-11-01: a design question carrying its measured effect was decided at once
+
+**Pattern.** Before asking Shawn how to close lane v1.9's gate-ordering
+seam, I ran the review-only steps in the runbook's order on a throwaway
+copy of attempt 04 and put the numbers in the question: 14 admitted and
+none unruled with the gate before the audit, 0 and 6 of 6 after. He chose
+the recommended option (reorder and guard) with no follow-up, choosing the
+mechanical refusal over reorder alone, as he chose the principled fix in
+claude-obs 96.
+
+**Lesson.** A question about a mechanism is answered faster and with more
+confidence when it carries the mechanism's measured effect on real
+records, and the measurement costs minutes.
+
+**How to apply.** Before a design question, run the defect on a disposable
+copy and quote the figures. When one option is procedural and one
+mechanical, state what the procedural one leaves silent.
+
+## claude-obs 107 — 2026-11-20 (self-critique): I watched for the reply, not the receipt
+
+**Pattern.** Shawn asked for an eight-hour watch for Astra's PR #17 review.
+I watched her outbox for a reply naming PR #17. It expired empty. Her own
+overnight watch had filtered for her workstreams, so she never saw the
+request, and her seen folder held no receipt for it the whole time. A
+receipt check an hour in would have shown that while Shawn could still
+wake her; instead the review was deferred to zbook.
+
+**Lesson.** A delivered request is not a seen one. The first signal of a
+review is the receipt, and its absence is information well before a reply
+is due.
+
+**How to apply.** When sending a request someone is waiting on, check for
+the recipient's receipt within the first hour, and tell the human if there
+is none, then watch for the reply.
+
+## claude-obs 108 — 2026-11-20: Shawn sequenced the machine retirement himself and kept deletions on his machines his own
+
+**Pattern.** Leaving amd-tower for 18 to 24 months, Shawn set the order
+(PR, Astra's review, deferral, reflection, handoff, final sync), asked for
+an eight-hour watch for any review, and when zbook's disk was 98% full
+chose to prune its Docker himself rather than have me load only what fits.
+He also added, mid-turn, that rpi-server's workspace was available and
+backed up to the QNAP.
+
+**Lesson.** On his own machines, space-freeing deletions are his call even
+when a reclaimable figure makes them look routine. He supplies storage
+facts as they become relevant rather than up front.
+
+**How to apply.** Offer deletion as his step, with the reclaimable figure,
+and do everything that does not depend on it meanwhile. Ask where durable
+storage is before choosing a location.
