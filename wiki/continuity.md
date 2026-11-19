@@ -32,7 +32,71 @@ merged here as PR #1).
 
 ## Repo state (2026-10-09, session be70c3be, Shawn's rulings) — START HERE
 
-- **⏩ NEXT SESSION (from the 2026-11-01 handoff, session 4c1fd032).**
+- **⏩ NEXT SESSION: resume on zbook (from the 2026-11-20 handoff, session
+  e765dd2a).** **amd-tower is stored for 18 to 24 months from 2026-11-20**;
+  work continues on zbook. Everything below was deferred there by Shawn
+  (2026-11-20). Machine state: the "Moved off amd-tower" list below says
+  what was synced and where the rest lives. On `main`; PR #17 is open.
+  - [ ] **PR #17, Astra's review (deferred, Shawn 2026-11-20).**
+    https://github.com/saross/llm-reproducibility/pull/17, branch
+    `fix/review-only-independence`, head `003a8e0` (lane v1.9: the
+    re-review's independence, the gate-ordering guard, and the pre-launch
+    scan). The request, as sent, is
+    `wiki/planning/reviews/2026-10-31-review-independence/astra-review-request.md`;
+    it went to amd-tower's agent mail
+    (`20261119T134448.472542Z-claude-lane-v19-pr17-review-request.md`),
+    but Astra's overnight watch filtered for her own workstreams and never
+    saw it (no receipt). Once Astra runs on zbook (the personal-assistant
+    move-infra workstream's Sunday resume), send it again by whatever mail
+    path exists there, or have Shawn paste it; say it is a resend. Merge
+    only after her approval and on Shawn's word.
+  - [ ] **Then the reviewer-only pilot**, from a fresh session after the
+    merge: the launch checklist in
+    `studies/open-science-compliance/outputs/validation/gate-1-3-2-reviewer-pilot/api-gate-brief.md`,
+    a pre-run review, and the API gate ($3.50 to $5.50). Needs attempt 04's
+    image on zbook (`docker image inspect llmr-herskind-riede-2024-attempt-04`;
+    if absent, load it from the rpi-server archive below). Post-run order is
+    now audit, then the authoritative gate. Expect to re-rule about 15
+    carried issues plus the new review's.
+  - [ ] **The long-term planner fix, under Astra's conditions** (her reply
+    of 2026-11-20, filed as
+    `studies/open-science-compliance/outputs/validation/gate-1-3-2-planner-pilot/astra-scoping-review-2026-11-20.md`;
+    summary in the 2026-11-01 block below): within gate 1.3.2, as an
+    addendum to criterion 3 and the planner part of criterion 4; branch +
+    PR, Astra's review. Then a fresh blinded re-plan under its own API gate,
+    which must itself produce the not-creditable application, used then as
+    the mechanical fixture. Attempt 05's hold stands until then.
+  - [ ] **Shawn to decide, before the re-plan:** the planner's definition
+    tells it to read `verification-strategies.md` and
+    `references/examples/pilot-reproduction-summary.md`
+    (`.claude/agents/reproduction-planner.md` lines 79-80), which both
+    pilots' run configurations blind. How should a definition treat a
+    pulled reference that a run's blinding list forbids? (A definition
+    change: launch the next paid run from a fresh session.)
+  - [ ] **Operational follow-ups**, each on a branch + PR: the launch word
+    rule, the args-builder guard, the cost and time watcher, the one-turn
+    cost lag, and Bash write detection for planners and reviewers.
+  - [ ] Working-notes candidates WN-ax to WN-bc await Shawn's verdict
+    (session log).
+  - **Open question, not yet asked:** is re-ruling every carried issue
+    worth its cost in routine production re-reviews, or only when a review
+    is replaced for cause?
+  - **Noted, no action:** the executor's pushed instrument
+    `verdicts-and-precision.md` (line 52, frozen by the OSF registration)
+    names Herskind as its deterministic exact-match example.
+  - **Moved off amd-tower (2026-11-20):** git is complete (every branch,
+    worktree, and agent branch pushed; no stashes). On rpi-server's
+    encrypted workspace (backed up to the QNAP),
+    `/opt/encrypted/workspace/llm-reproducibility-docker-images/`: all 8
+    lane images (attempts 02 to 04, Dye attempt 02, launcher-matrix 4.3.2,
+    three Crema probes) as one archive, sha256 `b98a2ace...`, with
+    `README.md` (load steps) and `manifest.txt` (tags and image IDs).
+    `~/scratch/llmr-runs/` copied to zbook (119 files, byte-equal). The
+    final sync's results, and anything it could not do, are in this
+    session's log entry. Astra's own runtime and agent mail move with the
+    personal-assistant move-infra workstream, not this project.
+
+- **⏩ Earlier (from the 2026-11-01 handoff, session 4c1fd032).**
   Shawn is home: continue on **amd-tower**, where agent mail reaches Astra
   and attempt 04's image is. On `main`: reviewer v1.4.1 (`9527f1b`) and the
   prepared reviewer-only pilot (labelled copy `2a3d577`, run configuration
