@@ -2,7 +2,7 @@
 title: "llm-reproducibility — Continuity (Living Doc)"
 tags: [infrastructure, coding-practices]
 created: 2026-06-07
-updated: 2026-11-01
+updated: 2026-11-20
 status: active
 ---
 
@@ -130,17 +130,24 @@ merged here as PR #1).
     - [x] 2026-11-01 Both drafts amended for the seam and the scan
       (`9a0d016`); branch head `003a8e0`. Awaiting Shawn's approval of
       the PR text.
+    - [x] 2026-11-20 Shawn approved; opened as **PR #17** and read back
+      (title and body identical); recorded in the folder's README
+      (`723cae1`).
   - [ ] **Astra's review**: send `astra-review-request.md` from the same
     folder through agent mail, with the PR number and the seam noted. It
     reverses the PR #15 carry-over of executor and gate rulings that she
     approved. Merge only on Shawn's word after her approval.
+    - [x] 2026-11-20 Sent with the PR number (`Lane: astra`). Not seen:
+      her overnight watch filtered for her own workstreams. **Deferred
+      to zbook** by Shawn: the 2026-11-20 block above.
   - [ ] **Then the pilot**, from a fresh session after the merge (the lane
     and the reviewer definition changed): the launch checklist in
     `validation/gate-1-3-2-reviewer-pilot/api-gate-brief.md` (the branch's
     version until merged), a pre-run review, and the API gate ($3.50 to
     $5.50). Afterwards expect to re-rule about 15 carried issues plus the
     new review's.
-  - [ ] **Extend the runbook's pre-launch scan** (step 3) to grep agent
+    - Carried into the 2026-11-20 block above.
+  - [x] 2026-11-01 **Extend the runbook's pre-launch scan** (step 3) to grep agent
     definitions and pushed instruments for the blinded attempt's markers,
     not only the rendered prompts (claude-obs 104); and check the planner's
     and executor's definitions for attempt-specific examples, as the
@@ -3073,6 +3080,54 @@ February). Low priority; logged from llm-observations 2026-07-06.
   B as its own migration commit).
 
 ## Session log
+
+### 2026-11-01 → 11-20 (session e765dd2a) — lane v1.9's gate-ordering seam closed; PR #17 opened; open work deferred to zbook as amd-tower is stored
+
+One session on Opus 5.5, on amd-tower, no compaction, paused 19 days
+while the PR text waited; resumed in Shawn's last hours with amd-tower
+before it is stored for 18 to 24 months. No API calls and no
+subagents. The state is in the "resume on zbook" block; the factual
+record is in `wiki/reflections/session-log.md`.
+
+- **The seam**, shown on a copy of attempt 04 before asking (gate before
+  the audit: 14 admitted, 0 unruled; after: 0, 6 of 6). Shawn chose
+  reorder and guard: `6d417e2` (`review_binding`; `adjudicate` refuses a
+  report checked under another review of record), `3da75d3` (runbook,
+  review workflow v1.1, design note, pilot brief), and `003a8e0` (the
+  pre-launch scan of definitions and pushed instruments). 33 and 820
+  pass on amd-tower; four mutations each fail a named test.
+- **PR #17** opened with Shawn's approved text and read back; Astra's
+  review requested by mail and deferred to zbook, unseen.
+- **Mail:** the PR #14 and #15 exchange filed; Astra's planner-pilot
+  reply received and kept (`27b29b6`).
+- **Found:** the planner's definition points at two locations both
+  pilots blind (for Shawn); **the session archive carries no workflow
+  transcripts** (`subagents/workflows/`), in this project at least, with
+  every gate at 0, which is a personal-assistant archiver gap (flagged to
+  Shawn).
+- **Moving off amd-tower:** the 8 lane images, then Marwick's, archived
+  on rpi-server; scratch copied to zbook; the final sync follows below.
+- **Records:** reflections and claude-obs 106 to 109 (`39978a0` and the
+  handoff commits).
+- **Working-notes candidates (held for Shawn's verdict):**
+  - **WN-be:** in a review-only re-review, the gate's recorded admitted
+    coverage depends on the order of gate and run audit. On a copy of
+    herskind attempt 04, the gate checked before the review-only audit
+    recorded 14 of 18 targets admitted and no issue unruled (the
+    replaced review's rulings); checked after it, 0 of 18 with all six
+    gate issues unruled. Credit was unaffected. Anchors:
+    `tests/test_review_only_mode.py`,
+    `test_a_gate_checked_before_the_audit_is_refused_at_adjudication`
+    (branch `fix/review-only-independence`, `6d417e2`).
+  - **WN-bf:** a cross-model review request, addressed and delivered by
+    agent mail, went unreceipted for eight hours while the reviewer ran
+    an overnight watch, which matched requests by the reviewer's own
+    workstreams; her reply to an older request in the same project
+    arrived meanwhile. Anchors (amd-tower agent mail, in the snapshot):
+    the request `20261119T134448.472542Z-claude-lane-v19-pr17-review-request.md`;
+    her closure `20261119T215030.683878Z-codex-sunday-handoff-working-copy-complete.md`
+    ("no matching review request").
+  - WN-ax to WN-bc are still held.
 
 ### 2026-10-30 → 11-01 (session 4c1fd032) — reviewer-only pilot prepared; reviewer v1.4.1; lane v1.9, the re-review's independence, on a branch
 
