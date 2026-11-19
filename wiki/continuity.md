@@ -92,9 +92,27 @@ merged here as PR #1).
     three Crema probes) as one archive, sha256 `b98a2ace...`, with
     `README.md` (load steps) and `manifest.txt` (tags and image IDs).
     `~/scratch/llmr-runs/` copied to zbook (119 files, byte-equal). The
-    final sync's results, and anything it could not do, are in this
-    session's log entry. Astra's own runtime and agent mail move with the
-    personal-assistant move-infra workstream, not this project.
+    final sync's results are in this session's log entry. Astra's own
+    runtime and agent mail move with the personal-assistant move-infra
+    workstream, not this project.
+  - [ ] **On zbook, first: load the lane's Docker images** (needs
+    space: zbook's root was 99% full at handoff; Shawn is pruning its
+    Docker). From rpi-server's
+    `/opt/encrypted/workspace/llm-reproducibility-docker-images/`, check
+    each archive's sha256 against `README.md`, then
+    `gunzip -c <archive> | docker load`, and compare every tag's ID
+    with `manifest.txt`. At least attempt 04's image (the pilot) and
+    `llmr-launcher-matrix:4.3.2` (seven tests skip without it).
+  - **amd-tower's workflow transcripts are on zbook as a tarball**:
+    `~/scratch/llmr-runs/amd-tower-claude-projects/llmr-claude-projects-amd-tower-20261119T2259Z.tar.gz`
+    (and on rpi-server under
+    `/opt/encrypted/workspace/llm-reproducibility-transcripts/`). It
+    holds amd-tower's whole `~/.claude/projects/` folder for this
+    project, including all 30 `subagents/workflows/wf_*` runs that
+    `audit-run --run-dir` needs (attempt 04's original is
+    `wf_4fd7a886-ada`; the planner pilot's `wf_88429e16-a85`). The
+    session archive does not carry them. Extract into scratch, not
+    into zbook's `~/.claude`.
 
 - **⏩ Earlier (from the 2026-11-01 handoff, session 4c1fd032).**
   Shawn is home: continue on **amd-tower**, where agent mail reaches Astra
@@ -3105,8 +3123,27 @@ record is in `wiki/reflections/session-log.md`.
   transcripts** (`subagents/workflows/`), in this project at least, with
   every gate at 0, which is a personal-assistant archiver gap (flagged to
   Shawn).
-- **Moving off amd-tower:** the 8 lane images, then Marwick's, archived
-  on rpi-server; scratch copied to zbook; the final sync follows below.
+- **Moving off amd-tower (final sync, 2026-11-20):**
+  - rpi-server's encrypted workspace (QNAP-backed):
+    `llm-reproducibility-docker-images/` holds the 8 lane images
+    (2,690,018,342 bytes, sha256 `b98a2ace...`) and, after a side
+    agent's note that a zbook prune could remove zbook's copy, Marwick's
+    (2,119,702,520 bytes, sha256 `019bca69...`), both `gzip -t` OK, with
+    `README.md` and `manifest.txt`; `llm-reproducibility-transcripts/`
+    and `agent-mail-snapshots/` hold the tarballs below.
+  - zbook: clone fast-forwarded to `25ba4e9` with the PR branch at
+    `003a8e0` and the hook present; venv matches (zbook has one extra
+    package, `typing_extensions`); corpus store identical by checksum;
+    the one missing session archive (`2026-10-20T22-57_a9c4834d`)
+    copied and verified (136 entries each); `~/scratch/llmr-runs/`
+    copied (119 files); amd-tower's project transcripts
+    (1,359,847,952 bytes, all 30 workflow runs) and a read-only
+    agent-mail snapshot
+    (`~/agent-mail-snapshots/agent-mail-amd-tower-20261119T2258Z.tar.gz`,
+    sha256 `45e53c01...`) copied, each digest verified on both machines.
+  - **Not done:** the images are not loaded into zbook's Docker (it
+    waits on Shawn's prune; the resume block says how). This session's
+    transcript is in the tarball only up to 22:59Z.
 - **Records:** reflections and claude-obs 106 to 109 (`39978a0` and the
   handoff commits).
 - **Working-notes candidates (held for Shawn's verdict):**
