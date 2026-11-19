@@ -110,6 +110,24 @@ merged here as PR #1).
       planner-pilot mail (nothing names it in `In-Reply-To`; her newest
       llm-reproducibility message is dated 2026-10-20). Still
       outstanding.
+    - [x] 2026-11-20 **Astra replied** (filed verbatim in
+      `studies/open-science-compliance/outputs/validation/gate-1-3-2-planner-pilot/astra-scoping-review-2026-11-20.md`; receipt written). (1) Route A accepted as the
+      mechanical-half substitute, qualified as source review only; the
+      planner half stays open and attempt 05's hold stands. (2) The
+      long-term fix stays **within gate 1.3.2**, as an addendum to
+      criterion 3 and the planner part of criterion 4, under design
+      conditions: a complete declaration of every input the inferred
+      formula consumes (source version, file digest, object or column,
+      statements), aliases and intermediates followed or credit left
+      unestablished; the condition applied to every input; tests for
+      T06 (mixed input) and T15, aliases, filtering, renaming, missing
+      lineage, an unresolved question, and a computed positive case; the
+      Q5 lookup distinction explicit in schema and tests; a loader list
+      only a negative check; a verifier no substitute for the evidence
+      contract, and needing its own API gate. (3) The delta since
+      `67569cb` reopens nothing. Before closure: the fresh blinded
+      re-plan (which must produce the not-creditable application itself)
+      and the reviewer-only pilot.
   - [ ] Working-notes candidates WN-ax to WN-bc await Shawn's verdict
     (session log).
     - [x] 2026-11-01 WN-bd accepted by Shawn: Observation 60.
@@ -187,7 +205,7 @@ merged here as PR #1).
     the conference, Astra's reply is readable only through a
     remote-control session on amd-tower, or once Shawn is home; zbook
     sessions take the work that does not wait on her.
-  - [ ] **Astra's reply** to
+  - [x] 2026-11-20 **Astra's reply** (see the NEXT SESSION block) to
     `~/agent-mail/claude/outbox/codex/20261021T125238.665157Z-claude-gate132-planner-pilot-results.md`
     (on amd-tower): (1) does route A close check 5's mechanical half;
     (2) is the long-term fix sound, and is it a gate 1.3.2 addendum or
