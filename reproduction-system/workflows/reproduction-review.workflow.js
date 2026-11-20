@@ -3,9 +3,11 @@ export const meta = {
   description: 'Reproduction lane review-only re-run: per executed attempt, a mechanical gate check that stages a clean copy of the reviewable state, then a fresh-context adversarial reviewer on that copy; no executor',
   phases: [{ title: 'Gate', model: 'haiku' }, { title: 'Review' }],
 }
-// reproduction-review.workflow.js v1.0 (2026-10-30, gate 1.3.2 criterion 4:
-// the review-only mode; design in wiki/planning/reproduction-gate-1-3-design.md,
-// "The review-only mode as designed").
+// reproduction-review.workflow.js v1.1 (2026-11-01: the closing message gives
+// the review-only post-run order, audit-run before the authoritative gate, for
+// lane v1.9). v1.0 (2026-10-30, gate 1.3.2 criterion 4: the review-only mode;
+// design in wiki/planning/reproduction-gate-1-3-design.md, "The review-only
+// mode as designed").
 //
 // Re-reviews attempts that have already been executed, with a fresh reviewer
 // and no executor spawn. Runs only on attempts whose persisted executor result
@@ -25,10 +27,12 @@ export const meta = {
 //             where the copy was staged: with no copy there is nothing to
 //             review.
 //
-// The operator afterwards re-runs check-attempt (the authoritative gate),
-// audits the run with audit-run (which carries the executor's clearance from
-// the attempt's earlier run audit), rules the new issues, persists the review
-// with persist-results, and adjudicates. Prompt line formats are the single
+// The operator afterwards audits the run with audit-run (which carries the
+// executor's clearance from the attempt's earlier run audit and makes this
+// review the review of record), then re-runs check-attempt (the authoritative
+// gate, after the audit, so its admitted coverage reads the new review's
+// binding; adjudicate refuses a report checked before it), rules every issue
+// again, persists the review with persist-results, and adjudicates. Prompt line formats are the single
 // source of truth for the regexes in scripts/reproduction-lane.py (PAPER_RE,
 // PROVENANCE_RE, REVIEW_COPY_RE) — change both together. audit-run binds the
 // review to the copy its gate step staged: the "Review copy:" line must name it.
@@ -233,9 +237,10 @@ for (const r of done) {
   else if (r.review && r.review.overall !== 'CONFIRMED') queue.push(`${r.slug}: review ${r.review.overall}`)
 }
 log(`${done.length}/${papers.length} papers through the pipeline; missing: ${missing.join(', ') || 'none'}; ` +
-    `${queue.length} item(s) for human attention. Next, in this order: check-attempt with the ` +
-    `executor's --launch-commit, audit-run, human-queue (the authoritative queue, reconciled ` +
-    `against this one), rule-flags, persist-results, and adjudicate last (study data reads its record).`)
+    `${queue.length} item(s) for human attention. Next, in this order: audit-run (before ` +
+    `clearing the scratch folder), then check-attempt with the executor's --launch-commit ` +
+    `(after the audit), human-queue (the authoritative queue, reconciled against this one), ` +
+    `rule-flags (every issue again), persist-results, and adjudicate last (study data reads its record).`)
 return {
   run_id,
   mode,

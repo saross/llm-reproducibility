@@ -1,6 +1,6 @@
 # Agentic reproduction lane — workflows and runbook
 
-**Version:** 1.3 (2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
+**Version:** 1.4 (2026-11-01, the review-only re-run, independent of the review it replaces, with its audit before the authoritative gate; the pre-launch scan of definitions and pushed instruments; 1.3 2026-10-18, gate 1.3.2: target-scoped rulings and the adjudicated result; 1.2 2026-10-12, gate 1.3; 1.1 2026-10-04; 1.0 2026-10-03)
 **Status:** built for the Phase 2 shakedown (`wiki/planning/agentic-modernisation-plan.md`
 §5, Phase 2 option (a), approved 2026-10-02). It sits alongside the
 session-per-phase human lane (`reproduction-system/prompts/`), which remains
@@ -61,6 +61,19 @@ configuration (for the shakedown:
    instruction is a leak to remove, or a pointer an obedient agent would
    follow into a contaminating access; the gate 1.3.2 planner pilot had two
    such pointers before its launch.
+   **Then scan what reaches the agents outside the prompt** (Shawn,
+   2026-11-01; a standing step for every blinded run). Each agent also
+   reads its definition (`.claude/agents/<agent>.md`) and its pushed
+   instruments: the `shared_content` files in `manifest.yaml` whose
+   consumers list that agent with `mechanism: push`, named by the receipt
+   keys in the built args. Grep these for the run's blinding list and for
+   the blinded attempt's own markers (its slug and attempt directory, and
+   the file names of its records; for a review-only run, also the evidence
+   paths the replaced review cites). Treat a hit as in the prompt scan.
+   The prompt scan cannot see these files: reviewer definition v1.4 gave
+   attempt 04's T17 evidence file, the centre of its earlier review, as its
+   example of an evidence path (claude-obs 104). Examples in definitions
+   name files every attempt has, such as `comparisons/comparison.json`.
 4. **Run** `reproduction-plan.workflow.js` from the repository with the
    `Workflow` tool: `scriptPath` set to the committed file, `args` set to the
    builder's JSON, passed unedited. The builder stamps `args_checksum`. The
@@ -219,22 +232,47 @@ follow the main runbook, with these differences:
    harness records the copy the reviewer was handed. The reviewer reads
    only the copy, named in its prompt as `Review copy:`. The executor's
    report, the earlier review, the rulings, the audits, and the
-   adjudicated result are withheld.
-4. **Authoritative gate** as in step 10, with the executor's launch commit.
-5. **Audit** as in step 11, **before clearing the scratch folder**. The run
-   audit (1.2) carries the executor's clearance from the attempt's earlier
-   run audit, which moves to `superseded/<its workflow run>/`. The reviewed
-   state is the successful staging record's, never a `check-attempt`
-   digest, and the audit re-hashes the staged copy and its gate report and
-   checks the reviewer was handed that copy; admission needs it verified.
-   A later re-audit of the same run that finds the copy gone keeps that
-   first verification, so the scratch folder may be cleared once this audit
-   has passed; a copy still there but changed fails.
-6. **Human queue** and **rulings** as in steps 12 and 13. The new review's
-   concerns, method rows, and verdict flag are new issues and need new
-   rulings, even where their content repeats an earlier review's, since
-   they are fingerprinted with this review's identity; the executor's
-   issues and gate issues whose fingerprints are unchanged keep theirs.
+   adjudicated result are withheld. So is anything derived from the
+   rulings: the copied gate report's admitted coverage is recomputed with
+   no rulings (lane v1.9), so the reviewer meets every issue unruled, as a
+   first reviewer does, and never learns what a human admitted with the
+   replaced review in hand. The attempt's own gate report keeps the ruled
+   figure for the operator.
+4. **Audit** as in step 11, **before clearing the scratch folder**, and
+   **before the authoritative gate** (the reverse of steps 10 and 11). The
+   run audit (1.2) carries the executor's clearance from the attempt's
+   earlier run audit, which moves to `superseded/<its workflow run>/`. The
+   reviewed state is the successful staging record's, never a
+   `check-attempt` digest, and the audit re-hashes the staged copy and its
+   gate report and checks the reviewer was handed that copy; admission
+   needs it verified. It also fails a staged gate report that counts any
+   issue as ruled. A later re-audit of the same run that finds the copy
+   gone keeps that first verification, so the scratch folder may be
+   cleared once this audit has passed; a copy still there but changed
+   fails.
+5. **Authoritative gate** as in step 10, with the executor's launch
+   commit, **after the audit**. This audit makes the new review the review
+   of record, and the gate's admitted coverage reads the rulings through
+   that review (lane v1.9, step 6). Checked before the audit, the gate
+   would apply the replaced review's rulings: on attempt 04's labelled
+   copy, 14 targets admitted and nothing unruled, where admission then sees
+   every issue unruled. `adjudicate` keeps the gate's figure as history, so
+   the report records the review it read (`review_binding`), and
+   `adjudicate` refuses one checked under another review of record: re-run
+   this step, then adjudicate. Credit never rests on the figure.
+6. **Human queue** and **rulings** as in steps 12 and 13. **Every issue
+   needs a new ruling** (Shawn, 2026-10-31). Rulings follow the review:
+   obligations are discharged on its findings, and rulings on the
+   executor's own issues have cited them too, while a ruling's note cannot
+   show which did. So once the audit makes this review the review of
+   record, every issue the attempt holds (the gate's flags and
+   obligations, the transcript audit's, and the executor's) is bound to
+   this review's identity, as its own concerns, method rows, and verdict
+   flag are (lane v1.9). Rule each against the new review; where an
+   earlier decision still holds, restate it, with a note saying it was
+   checked against the new review. The earlier rulings stay in the
+   rulings file as history. A re-audit of the same run keeps the new
+   rulings.
 7. **Persist results** as in step 14. Only the review is persisted. The
    review it replaces, and the adjudicated result derived from that
    review, move to `superseded/<their workflow run>/`. Admission binds the

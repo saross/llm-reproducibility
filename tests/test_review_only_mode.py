@@ -24,6 +24,18 @@ real records (the real attempt is never written):
 6. The workflow script: its prompt lines match the lane's regexes, its
    checksum guard is the lane's, and, run under node with stub agents, it
    reviews only a staged copy.
+7. Independence of the re-review (lane v1.9, Shawn 2026-10-31): the
+   reviewer's gate report shows every issue unruled, exactly as attempt
+   04's first reviewer was shown it, and the audit refuses a staged report
+   that shows rulings; once a review-only audit replaces the review of
+   record, every ruling made with the replaced review in hand lapses (the
+   gate's, the transcript audit's, and the executor's issues alike), a
+   re-audit of the same run keeps the new rulings, and the original attempt
+   is unchanged. The gate's admitted coverage reads the same binding, so
+   the review-only runbook audits before the authoritative gate: in that
+   order the gate agrees with admission and the adjudicated history keeps
+   the pre-ruling figure, and adjudicate refuses a gate report checked
+   under another review of record (2026-11-01).
 
 Run: ``venv/bin/python -m pytest tests/test_review_only_mode.py -q``
 """
@@ -171,23 +183,50 @@ class ReviewOnlyTests(unittest.TestCase):
                 config=self.config_path, run_dir=run_dir, force=force, record_unruled=False))
 
     def rule_unruled(self) -> list[str]:
-        """Rule every unruled issue admissible; returns their ids."""
+        """Rule every unruled issue admissible (an obligation discharged);
+        returns their ids."""
         report = json.loads((self.dir / lane.GATE_FILE).read_text(encoding="utf-8"))
         rulings = lane.load_rulings(self.dir)
-        unruled = [i["id"] for i in lane.attempt_issues(self.dir, report).values()
+        unruled = [i for i in lane.attempt_issues(self.dir, report).values()
                    if lane.ruling_for(i, rulings) is None]
+        entries = [{"issue": i["id"],
+                    "decision": "discharged" if i["kind"] == "obligation" else "admissible",
+                    "note": "fixture: the review-only test's ruling"} for i in unruled]
         path = self.root / "rulings.json"
-        path.write_text(json.dumps([{"issue": i, "decision": "admissible",
-                                     "note": "fixture: the review-only test's ruling"}
-                                    for i in unruled]), encoding="utf-8")
+        path.write_text(json.dumps(entries), encoding="utf-8")
         with contextlib.redirect_stdout(io.StringIO()):
             lane.cmd_rule_flags(argparse.Namespace(config=self.config_path, slug=SLUG,
                                                    approver="fixture", rulings=path))
-        return unruled
+        return [i["id"] for i in unruled]
 
     def binding_reasons(self, reasons: list[str]) -> list[str]:
         """Admission reasons other than unruled issues."""
         return [r for r in reasons if "unruled" not in r]
+
+    def authoritative_gate(self) -> dict:
+        """Run check-attempt on the copy with the executor's launch commit and
+        write its report into the copy, as the runbook's authoritative gate
+        does. Skips when that commit is not in this clone's history."""
+        commit = json.loads((self.dir / lane.EXECUTION_FILE).read_text(
+            encoding="utf-8"))["launch_commit"]
+        known = subprocess.run(["git", "-C", str(REPO_ROOT), "cat-file", "-e", commit],
+                               capture_output=True, timeout=30)
+        if known.returncode != 0:
+            self.skipTest("the original run's launch commit is not in this clone's history")
+        report = lane.check_attempt(
+            self.dir, self.dir / lane.PLAN_FILE,
+            lane.full_schema(lane.expand(lane.DEFAULT_COMPARISON_SCHEMA)),
+            code_manifest_schema=lane.full_schema(lane.expand(lane.DEFAULT_CODE_MANIFEST_SCHEMA)),
+            launch_commit=commit)
+        lane.write_json(self.dir / lane.GATE_FILE, report)
+        return report
+
+    def unruled_gate_issues(self, report: dict) -> set[str]:
+        """The gate report's issues admission counts as unruled now."""
+        rulings = lane.load_rulings(self.dir)
+        bound = lane.review_bound(report["issues"],
+                                  lane.read_record(self.dir, lane.RUN_AUDIT_FILE))
+        return {i["id"] for i in bound if lane.ruling_for(i, rulings) is None}
 
     # -- 1. the executor binding ---------------------------------------------
 
@@ -314,8 +353,22 @@ class ReviewOnlyTests(unittest.TestCase):
     # -- 3 and 4. the run audit, persistence, and adjudication -----------------
 
     def test_a_review_only_run_is_audited_persisted_and_adjudicated(self):
+        """The review-only runbook end to end, in its order: audit (step 4),
+        the authoritative gate (step 5), queue and rulings, persistence, and
+        adjudication. Run after the audit, the gate reads the new review's
+        binding, so its admitted coverage agrees with admission (every
+        issue unruled) and the adjudicated history keeps that pre-ruling
+        figure (claude-obs 105: the claim is tested in the order it is run)."""
         payload = new_review(self.locked)
         doc = self.audit("wf_review-1", payload)
+        report = self.authoritative_gate()
+        gate_ids = {i["id"] for i in report["issues"]}
+        self.assertEqual(report["review_binding"],
+                         lane.replacing_review(lane.read_record(self.dir, lane.RUN_AUDIT_FILE)))
+        self.assertIsNotNone(report["review_binding"])
+        self.assertEqual(set(report["coverage_admitted"]["unruled_issues"]), gate_ids)
+        self.assertEqual(self.unruled_gate_issues(report), gate_ids)
+        self.assertEqual(report["coverage_admitted"]["targets_admitted"], 0)
         self.assertEqual(doc["run_audit_version"], "1.2")
         self.assertEqual(doc["missing_roles"], [])
         self.assertEqual(doc["roles"]["executor"]["workflow_run"], ORIGINAL_RUN)
@@ -340,12 +393,21 @@ class ReviewOnlyTests(unittest.TestCase):
         self.assertFalse(review["admission"]["eligible"])
         ruled = self.rule_unruled()
         self.assertIn("review-concern:C1", ruled)
+        # v1.9: every issue comes back to be ruled on the new review, the
+        # gate's and the executor's as well as the review's own.
+        gate = json.loads((self.dir / lane.GATE_FILE).read_text(encoding="utf-8"))["issues"]
+        self.assertTrue({i["id"] for i in gate} <= set(ruled))
+        self.assertTrue(any(i.startswith("escalation:executor:") for i in ruled))
         self.persist(run, force=True)
         result = lane.adjudicate(self.dir)
         self.assertEqual(result["workflow_run"], ORIGINAL_RUN)
         self.assertEqual(result["review_run"],
                          {"run_id": "review-only-test", "workflow_run": "wf_review-1"})
         self.assertEqual(result["coverage"]["targets_enumerated"], 18)
+        # The history is the gate's pre-ruling figure under the new review.
+        history = result["history"]["gate_coverage_admitted"]
+        self.assertEqual((history["targets_admitted"], set(history["unruled_issues"])),
+                         (0, gate_ids))
 
     def test_history_is_never_overwritten(self):
         path = self.dir / "record.json"
@@ -435,8 +497,11 @@ class ReviewOnlyTests(unittest.TestCase):
 
     def test_a_fresh_reviewer_meets_no_earlier_rulings(self):
         """F2: identical review content from another run's reviewer is new
-        to rule; a re-audit of the same run keeps its rulings, and the
-        executor's issues keep theirs."""
+        to rule; a re-audit of the same run keeps its rulings. The run
+        audit's records keep the executor's own fingerprints; as the
+        attempt's issues are read (v1.9, Shawn 2026-10-31) none of the first
+        review's rulings applies to the second, the executor's included
+        (``test_rulings_on_the_replaced_review_lapse``)."""
         payload = new_review(self.locked)
         staged = self.stage("wf_review-1")
         first = self.audit("wf_review-1", payload, staged=staged)
@@ -463,8 +528,10 @@ class ReviewOnlyTests(unittest.TestCase):
         payload = new_review(self.locked)
         staged = self.stage("wf_review-1")
         first = self.audit("wf_review-1", payload, staged=staged)
+        # Rulings as rule-flags records them: on the issues as read (v1.9).
+        report = json.loads((self.dir / lane.GATE_FILE).read_text(encoding="utf-8"))
         rulings = [{"issue_id": i["id"], "fingerprint": i["fingerprint"]}
-                   for i in first["issues"]]
+                   for i in lane.attempt_issues(self.dir, report).values()]
         verdict = next(i for i in first["issues"] if i["id"] == "review:qualified")
         self.assertIn("review", verdict["files"])
         self.assertIn("review_identity", verdict["files"])
@@ -568,6 +635,197 @@ class ReviewOnlyTests(unittest.TestCase):
         self.assertEqual(audit["run_audit_version"], "1.1")
         for role in ("executor", "reviewer"):
             self.assertEqual(lane.role_identity(audit, role)["workflow_run"], ORIGINAL_RUN)
+
+    # -- 7. independence of the re-review (lane v1.9) ------------------------
+
+    def ruled_report(self) -> dict:
+        """The copy's gate report as a re-gate writes it: its admitted
+        coverage computed with the attempt's rulings, every issue ruled."""
+        report = json.loads((self.dir / lane.GATE_FILE).read_text(encoding="utf-8"))
+        records = lane.target_records(self.dir)
+        reproduced = [t for t, r in records.items() if t in self.locked
+                      and lane.reproduced_record(r)]
+        report["coverage_admitted"] = lane.admitted_coverage(
+            report["verdict"], report["issues"], lane.load_rulings(self.dir), self.locked,
+            reproduced, {})
+        (self.dir / lane.GATE_FILE).write_text(json.dumps(report), encoding="utf-8")
+        return report
+
+    def test_the_reviewer_is_handed_the_first_reviewers_gate_report(self):
+        """Input side: attempt 04's committed gate report predates its
+        rulings (its first reviewer saw every issue unruled). After a re-gate
+        that reads the rulings, the staged copy still hands the fresh
+        reviewer exactly that admitted coverage, while the attempt's own
+        report, the operator's record, keeps the ruled one."""
+        first = json.loads((ATTEMPT_04 / lane.GATE_FILE).read_text(encoding="utf-8"))
+        self.assertEqual(first["coverage_admitted"]["targets_admitted"], 0)
+        self.assertIsNone(first.get("review_binding"))
+        ruled = self.ruled_report()
+        self.assertTrue(lane.shows_rulings(ruled))
+        self.assertEqual(ruled["coverage_admitted"]["unruled_issues"], [])
+        # As a re-gate after an earlier review-only run records it.
+        ruled["review_binding"] = "b" * 64
+        (self.dir / lane.GATE_FILE).write_text(json.dumps(ruled), encoding="utf-8")
+        result = lane.stage_review(self.dir, self.root / "review")
+        staged = json.loads((self.root / "review" / lane.GATE_FILE).read_text(encoding="utf-8"))
+        self.assertEqual(staged["coverage_admitted"], first["coverage_admitted"])
+        self.assertIsNone(staged["review_binding"])
+        self.assertFalse(lane.shows_rulings(staged))
+        derived = ("coverage_admitted", "review_binding")
+        self.assertEqual({k: v for k, v in staged.items() if k not in derived},
+                         {k: v for k, v in ruled.items() if k not in derived})
+        self.assertEqual(result["gate_report_source_sha256"],
+                         lane.sha256_file(self.dir / lane.GATE_FILE))
+        self.assertEqual(result["gate_report_sha256"],
+                         lane.sha256_file(self.root / "review" / lane.GATE_FILE))
+        self.assertTrue(lane.shows_rulings(
+            json.loads((self.dir / lane.GATE_FILE).read_text(encoding="utf-8"))))
+
+    def test_the_unruled_coverage_is_the_gates_own_without_rulings(self):
+        """The recomputation equals check-attempt's admitted coverage on the
+        same attempt with no rulings file, so the staged report is what the
+        gate itself would have written before any ruling."""
+        commit = json.loads((self.dir / lane.EXECUTION_FILE).read_text(
+            encoding="utf-8"))["launch_commit"]
+        known = subprocess.run(["git", "-C", str(REPO_ROOT), "cat-file", "-e", commit],
+                               capture_output=True, timeout=30)
+        if known.returncode != 0:
+            self.skipTest("the original run's launch commit is not in this clone's history")
+        bare = self.root / "bare" / "outputs" / SLUG / "reproduction" / "attempt-04"
+        shutil.copytree(self.dir, bare)
+        (bare / lane.RULINGS_FILE).unlink()
+        result = subprocess.run(
+            [str(REPO_ROOT / "venv" / "bin" / "python"),
+             str(REPO_ROOT / "scripts" / "reproduction-lane.py"), "check-attempt", str(bare),
+             "--plan", str(bare / lane.PLAN_FILE), "--launch-commit", commit, "--out", "-"],
+            capture_output=True, text=True, timeout=600, cwd=REPO_ROOT)
+        report = json.loads(result.stdout)
+        self.assertEqual(report["verdict"], "pass", result.stderr)
+        # The copy still holds its rulings; the recomputation ignores them.
+        self.assertTrue(lane.load_rulings(self.dir))
+        self.assertEqual(lane.unruled_coverage(self.dir, report), report["coverage_admitted"])
+
+    def test_a_staged_report_showing_rulings_is_refused(self):
+        staged = self.stage("wf_review-1")
+        copy = Path(staged["review_dir"])
+        report = json.loads((copy / lane.GATE_FILE).read_text(encoding="utf-8"))
+        report["coverage_admitted"] = {**report["coverage_admitted"], "unruled_issues": []}
+        (copy / lane.GATE_FILE).write_text(json.dumps(report), encoding="utf-8")
+        record = {**staged, "gate_report_sha256": lane.sha256_file(copy / lane.GATE_FILE)}
+        result = lane.verify_staging([record], f"Review copy: {record['review_dir']}")
+        self.assertFalse(result["verified"])
+        self.assertTrue(any("counts issues as ruled" in p for p in result["problems"]))
+
+    def test_rulings_on_the_replaced_review_lapse(self):
+        """Output side (Shawn, 2026-10-31): rulings follow the review, and
+        attempt 04's show it, since its obligations were discharged on the
+        earlier review's findings and three executor-side rulings cite them
+        too. Once a review-only audit makes a new review the review of
+        record, every issue the attempt holds is unruled (the gate's, the
+        transcript audit's, and the executor's), and admission says so for
+        each record. Ruled again, they hold through a re-audit of the same
+        run, and lapse again for a later review-only run. The earlier
+        rulings stay in the file as history."""
+        report = json.loads((self.dir / lane.GATE_FILE).read_text(encoding="utf-8"))
+        cited = [r["issue_id"] for r in lane.load_rulings(self.dir)
+                 if r.get("kind") == "flag" and "reviewer" in r.get("note", "")]
+        self.assertGreaterEqual(len(cited), 3, cited)
+
+        def unruled() -> set[str]:
+            rulings = lane.load_rulings(self.dir)
+            return {i["id"] for i in lane.attempt_issues(self.dir, report).values()
+                    if lane.ruling_for(i, rulings) is None}
+        self.assertEqual(unruled(), set())
+        held = set(lane.attempt_issues(self.dir, report))
+        before = len(lane.load_rulings(self.dir))
+        payload = new_review(self.locked)
+        staged = self.stage("wf_review-1")
+        doc = self.audit("wf_review-1", payload, staged=staged)
+        everything = set(lane.attempt_issues(self.dir, report))
+        self.assertEqual(unruled(), everything)
+        # The executor's and the transcript audit's issues are among them.
+        self.assertTrue({i for i in held if i.startswith(("escalation:executor:", "host-run:"))}
+                        <= unruled())
+        # Admission counts every issue of each record as unruled.
+        transcript = lane.read_record(self.dir, lane.AUDIT_FILE)["issues"]
+        reasons = " | ".join(lane.admission(self.dir, None)["reasons"])
+        for count, record in ((len(report["issues"]), "unruled issue(s)"),
+                              (len(transcript), "unruled transcript-audit issue(s)"),
+                              (len(doc["issues"]), "unruled run-audit issue(s)")):
+            self.assertIn(f"{count} {record}", reasons)
+        self.rule_unruled()
+        self.assertEqual(unruled(), set())
+        self.assertEqual(len(lane.load_rulings(self.dir)), before + len(everything))
+        self.audit("wf_review-1", payload, staged=staged)
+        self.assertEqual(unruled(), set())
+        self.audit("wf_review-2", new_review(self.locked), "rev-2")
+        self.assertEqual(unruled(), set(lane.attempt_issues(self.dir, report)))
+
+    def test_binding_is_idempotent_for_the_reviews_own_issues(self):
+        """The new review's issues were bound to its identity when audited
+        (F2); reading them bound again leaves their fingerprints as
+        recorded, so rulings made on the run audit's records apply."""
+        doc = self.audit("wf_review-1", new_review(self.locked))
+        report = json.loads((self.dir / lane.GATE_FILE).read_text(encoding="utf-8"))
+        read = lane.attempt_issues(self.dir, report)
+        own = [i for i in doc["issues"] if "review_identity" in i["files"]]
+        self.assertTrue(own)
+        for issue in own:
+            self.assertEqual(read[issue["id"]]["fingerprint"], issue["fingerprint"])
+
+    def test_a_gate_checked_before_the_audit_is_refused_at_adjudication(self):
+        """The ordering seam (found at the 2026-11-01 handoff): checked before
+        the review-only audit, as the runbook first ordered it, the gate reads
+        the replaced review's rulings (14 admitted, none unruled, where
+        admission sees every issue unruled once the audit stands), and
+        adjudicate would keep that figure as history. It refuses such a
+        report; re-run after the audit, the gate reads the new review's
+        binding and adjudication proceeds. A later review-only run makes the
+        report stale again. Credit never rested on the figure."""
+        payload = new_review(self.locked)
+        staged = self.stage("wf_review-1")
+        early = self.authoritative_gate()
+        self.assertEqual((early["verdict"], early["review_binding"],
+                          early["coverage_admitted"]["unruled_issues"]), ("pass", None, []))
+        self.assertGreater(early["coverage_admitted"]["targets_admitted"], 0)
+        self.audit("wf_review-1", payload, staged=staged)
+        gate_ids = {i["id"] for i in early["issues"]}
+        self.assertEqual(self.unruled_gate_issues(early), gate_ids)
+        run = self.run_dir("wf_review-1", ("rev-1", payload))
+        self.persist(run)
+        self.rule_unruled()
+        self.persist(run, force=True)
+        with self.assertRaisesRegex(lane.LaneError, "re-run check-attempt"):
+            lane.adjudicate(self.dir)
+        late = self.authoritative_gate()
+        identity = lane.replacing_review(lane.read_record(self.dir, lane.RUN_AUDIT_FILE))
+        self.assertEqual(late["review_binding"], identity)
+        # The report's own issue records keep the gate's fingerprints.
+        self.assertEqual(late["issues"], early["issues"])
+        result = lane.adjudicate(self.dir)
+        self.assertEqual(result["history"]["gate_checked_at"], late["checked_at"])
+        # A later review-only run replaces the review the report was read
+        # against, so the report is refused again until the gate re-runs.
+        self.audit("wf_review-2", new_review(self.locked), "rev-2")
+        with self.assertRaisesRegex(lane.LaneError, "checked under another review of record"):
+            lane.adjudicate(self.dir)
+
+    def test_an_execute_mode_attempt_keeps_its_rulings(self):
+        """The original attempt, whose run audit is its execute run's, binds
+        nothing to a review: every issue keeps its ruling and its adjudicated
+        result still verifies."""
+        report = json.loads((ATTEMPT_04 / lane.GATE_FILE).read_text(encoding="utf-8"))
+        audit = lane.read_record(ATTEMPT_04, lane.RUN_AUDIT_FILE)
+        self.assertIsNone(lane.replacing_review(audit))
+        # Its report predates review_binding; absent reads as bound to none.
+        self.assertNotIn("review_binding", report)
+        self.assertEqual(lane.review_bound(report["issues"], audit), report["issues"])
+        rulings = lane.load_rulings(ATTEMPT_04)
+        self.assertTrue(all(lane.ruling_for(i, rulings) is not None
+                            for i in lane.attempt_issues(ATTEMPT_04, report).values()))
+        stored = lane.verify_adjudicated(ATTEMPT_04)
+        self.assertEqual((stored["coverage"]["targets_credited"],
+                          stored["coverage"]["targets_enumerated"]), (13, 18))
 
 
 class ReviewWorkflowTests(unittest.TestCase):
